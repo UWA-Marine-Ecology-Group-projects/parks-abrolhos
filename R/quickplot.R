@@ -19,14 +19,17 @@ library(viridis)
 # get and sort spatial boundaries
 aus <- ne_countries(country = "Australia", scale = "medium", 
                     returnclass = "sf")                                         # all aus coast
-mpa <- st_read("data/spatial/shp/WA_MPA_2018.shp")                              # all wa mpas
-ab_mpa <- mpa[mpa$NAME == "Abrolhos Islands", ]
+aumpa  <- st_read("data/spatial/shp/AustraliaNetworkMarineParks.shp")           # all aus mpas
+wampa  <- st_read("data/spatial/shp/WA_MPA_2018.shp")                           # all wa mpas
+ab_mpa <- mpa[mpa$NAME == "Abrolhos Islands", ]                                 # wa abrolhos
+sw_mpa <- aumpa[aumpa$NetName == "South-west", ]                                # nat sw
 
 # build basic plot
 p1 <- ggplot(data = aus) +
   geom_sf(fill = "grey90", colour = "grey80") +
   geom_sf(data = ab_mpa, fill = "yellow", alpha = 3/5, colour = "grey80") +
-  coord_sf(xlim = c(112, 116), ylim = c(-30, -26), expand = FALSE)
+  geom_sf(data = sw_mpa, aes(fill = ZoneName), alpha = 3/5, colour = "grey80") +
+  coord_sf(xlim = c(108, 116), ylim = c(-40, -20), expand = FALSE)
 
 p1
 
