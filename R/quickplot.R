@@ -15,6 +15,7 @@ library(dplyr)
 library(ggplot2)
 library(viridis)
 library(googlesheets4)
+library(patchwork)
 
 # get and sort spatial boundaries
 aus <- ne_countries(country = "Australia", scale = "medium", 
@@ -39,10 +40,8 @@ p1 <- ggplot(data = aus) +
   geom_sf(data = sw_mpa, aes(fill = ZoneName), alpha = 4/5, colour = "grey90") +
   geom_point(data = bruvd, aes(Longitude, Latitude, colour = "BRUV"), shape = 3) +
   geom_point(data = bossd, aes(Longitude, Latitude, colour = "BOSS"), shape = 3) +
-  coord_sf(xlim = c(108, 116), ylim = c(-30, -20))
-
-# tweak theme
-p1 + labs(colour = "Sample") +
+  coord_sf(xlim = c(108, 116), ylim = c(-30, -20)) +
+  labs(colour = "Sample", x = NULL, y = NULL) +
   guides(fill = guide_legend(element_blank())) +
   theme_minimal()
 
@@ -54,5 +53,18 @@ p1 + labs(colour = "Sample") +
 #                                                                shape = c(16, NA)))) +
 
 
-ggsave("figures/quickplot.png", dpi = 150)
+# inset map
 
+p2 <- ggplot(data = aus) +
+  geom_sf(fill = "grey90", colour = "grey80") +
+  coord_sf(xlim = c(108, 130), ylim = c(-37, -10)) +
+  annotate("rect", xmin = 108, xmax = 116, ymin = -30, ymax = -20, colour = "black", alpha = 1/5, size = 0.2) +
+  theme_minimal() +
+  theme(axis.text = element_blank())
+p2
+
+# plot both
+p2 + p1 + plot_layout(widths = c(1, 2))
+
+
+ggsave("figures/quickplot.png", dpi = 150)
