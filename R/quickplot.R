@@ -14,30 +14,45 @@ library(reshape2)
 library(dplyr)
 library(ggplot2)
 library(viridis)
-
+library(googlesheets4)
 
 # get and sort spatial boundaries
 aus <- ne_countries(country = "Australia", scale = "medium", 
                     returnclass = "sf")                                         # all aus coast
 aumpa  <- st_read("data/spatial/shp/AustraliaNetworkMarineParks.shp")           # all aus mpas
 wampa  <- st_read("data/spatial/shp/WA_MPA_2018.shp")                           # all wa mpas
-ab_mpa <- mpa[mpa$NAME == "Abrolhos Islands", ]                                 # wa abrolhos
+ab_mpa <- wampa[wampa$NAME == "Abrolhos Islands", ]                                 # wa abrolhos
 sw_mpa <- aumpa[aumpa$NetName == "South-west", ]                                # nat sw
 
-# build basic plot
+# get sampling data
+bruvd <- as.data.frame(read_sheet("https://docs.google.com/spreadsheets/d/1ZfW-XJKP0BmY2UXPNquTxnO5-iHnG9Kw3UuJbALCcrs/edit#gid=814068592", 
+                                  sheet = "2021-05_Abrolhos_stereo-BRUVs"))
+bossd <- as.data.frame(read_sheet("https://docs.google.com/spreadsheets/d/1ZfW-XJKP0BmY2UXPNquTxnO5-iHnG9Kw3UuJbALCcrs/edit#gid=814068592", 
+                                  sheet = "2021-05_Abrolhos_BOSS"))
+
+# fix mpa colour scheming
+
+# build basic plot elements
 p1 <- ggplot(data = aus) +
   geom_sf(fill = "grey90", colour = "grey80") +
-  geom_sf(data = ab_mpa, fill = "yellow", alpha = 3/5, colour = "grey80") +
-  geom_sf(data = sw_mpa, aes(fill = ZoneName), alpha = 3/5, colour = "grey80") +
-  coord_sf(xlim = c(108, 116), ylim = c(-40, -20), expand = FALSE)
-
-p1
+  geom_sf(data = ab_mpa, aes(fill = "WA Fish Habitat Protection Zone"), alpha = 4/5, colour = "grey90") +
+  geom_sf(data = sw_mpa, aes(fill = ZoneName), alpha = 4/5, colour = "grey90") +
+  geom_point(data = bruvd, aes(Longitude, Latitude, colour = "BRUV"), shape = 3) +
+  geom_point(data = bossd, aes(Longitude, Latitude, colour = "BOSS"), shape = 3) +
+  coord_sf(xlim = c(108, 116), ylim = c(-30, -20))
 
 # tweak theme
-themer <- theme_bw()
+p1 + labs(colour = "Sample") +
+  guides(fill = guide_legend(element_blank())) +
+  theme_minimal()
 
-# final plot and save
-p1 + themer
+# customise 
+# scale_fill_manual(values = c("A" = "yellow"), 
+#                   guide = guide_legend(override.aes = list(linetype = "blank", shape = NA))) +
+#   scale_colour_manual(values = c("B" = "pink", "C" = "purple"),
+#                       guide = guide_legend(override.aes = list(linetype = c("blank", "solid"), 
+#                                                                shape = c(16, NA)))) +
+
 
 ggsave("figures/quickplot.png", dpi = 150)
 
