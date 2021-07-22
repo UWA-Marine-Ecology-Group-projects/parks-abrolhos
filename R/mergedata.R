@@ -1,7 +1,7 @@
 ###
 # Project: Parks - Abrolhos Post-Survey
 # Data:    BRUVS, BOSS Habitat data
-# Task:    Habitat predictions
+# Task:    Merging habitat data
 # author:  Kingsley Griffin
 # date:    July 2021
 ##
