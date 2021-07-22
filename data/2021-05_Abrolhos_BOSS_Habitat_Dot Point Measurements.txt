@@ -1,6 +1,6 @@
 Dot Point Measurements
 
-Generated: Wednesday 14 July 2021 15:03:45
+Generated: Friday 16 July 2021 10:40:06
 
 Filename	Frame	Time (mins)	Image row	Image col	Date	Location	Site #	Transect #	Latitude	Longitude	Rugosity	Depth	Collector	Fishing status	Spare	Spare	BROAD	MORPHOLOGY	TYPE	FieldOfView	Relief	CODE			Radius %
 npz6.1.jpg	      0		1017	589													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			58.7
@@ -15,7 +15,7 @@ npz6.1.jpg	      0		993	279													Unconsolidated	Sand	mud (coarse sand)	Op
 npz6.1.jpg	      0		1033	225													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			75.4
 npz6.1.jpg	      0		617	1838													Unknown			Open					35.1
 npz6.1.jpg	      0		731	272													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			77.5
-npz6.1.jpg	      0		1034	1736													Invertebrate Complex	Complex 1		Open					15.3
+npz6.1.jpg	      0		1034	1736													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			15.3
 npz6.1.jpg	      0		882	1233													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			34.3
 npz6.1.jpg	      0		1050	450													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			64.8
 npz6.1.jpg	      0		824	47													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			86.1
@@ -27,11 +27,11 @@ npz6.1.jpg	      0		550	2238													Unknown			Open					44.0
 npz6.1.jpg	      0		1046	3060													Consolidated	Rock	Turf mat	Open		82001002			62.8
 npz6.1.jpg	      0		837	3104													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			67.7
 npz6.1.jpg	      0		838	3683													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			93.9
-npz6.1.jpg	      0		641	2006													Unknown			Open					35.6
-npz6.1.jpg	      0		710	3778													Invertebrate Complex	Complex 1		Open					100.0
+npz6.1.jpg	      0		641	2006													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			35.6
+npz6.1.jpg	      0		710	3778													Consolidated	Rock	Turf mat	Open		82001002			100.0
 npz6.1.jpg	      0		615	2867													Invertebrate Complex	Complex 1		Open					62.6
 npz6.1.jpg	      0		550	3013													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			70.1
-npz6.1.jpg	      0		543	2420													Unknown			Open					49.2
+npz6.1.jpg	      0		543	2420													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			49.2
 npz6.1.jpg	      0		531	1940													Unknown			Open					39.9
 npz6.1.jpg	      0		828	2542													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			44.1
 npz6.1.jpg	      0		985	2861													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			54.5
@@ -52,21 +52,21 @@ npz6.1.jpg	      0		2011	2083													Consolidated	Rock	Turf mat	Open		82001
 npz6.1.jpg	      0		1908	2802													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			55.4
 npz6.1.jpg	      0		1810	2197													Consolidated	Rock	Turf mat	Open		82001002			29.5
 npz6.1.jpg	      0		1808	2710													Consolidated	Rock	Turf mat	Open		82001002			49.4
-npz6.1.jpg	      0		1693	2084													Invertebrate Complex	Complex 1		Open					21.8
+npz6.1.jpg	      0		1693	2084													Consolidated	Rock	Turf mat	Open		82001002			21.8
 npz6.1.jpg	      0		1763	3667													Consolidated	Rock	Turf mat	Open		82001002			92.0
 npz6.1.jpg	      0		1766	2221													Invertebrate Complex	Complex 1		Open					28.8
 npz6.1.jpg	      0		1921	1994													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			28.9
 npz6.1.jpg	      0		2148	2860													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			63.9
 npz6.1.jpg	      0		1979	3466													Consolidated	Rock	Turf mat	Open		82001002			85.6
-npz6.1.jpg	      0		1872	3474													Sponges	Massive forms		Open		10000903			84.4
-npz6.1.jpg	      0		1767	3552													Sponges	Small mixed		Open		10000000			86.7
+npz6.1.jpg	      0		1872	3474													Consolidated	Rock	Turf mat	Open		82001002			84.4
+npz6.1.jpg	      0		1767	3552													Consolidated	Rock	Turf mat	Open		82001002			86.7
 npz6.1.jpg	      0		1677	3398													Sponges	Small mixed		Open		10000000			78.6
 npz6.1.jpg	      0		2009	3203													Invertebrate Complex	Complex 1		Open					74.7
 npz6.1.jpg	      0		1647	2755													Consolidated	Rock	Turf mat	Open		82001002			48.6
 npz6.1.jpg	      0		2132	1066													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			50.2
 npz6.1.jpg	      0		1783	1357													Sponges	Massive forms		Open		10000903			28.6
 npz6.1.jpg	      0		1743	332													Sponges	Small mixed		Open		10000000			71.2
-npz6.1.jpg	      0		1703	1091													Sponges	Small mixed		Open		10000000			36.7
+npz6.1.jpg	      0		1703	1091													Consolidated	Rock	Turf mat	Open		82001002			36.7
 npz6.1.jpg	      0		1877	852													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			50.6
 npz6.1.jpg	      0		2029	1708													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			32.3
 npz6.1.jpg	      0		1759	308													Sponges	Small mixed		Open		10000000			72.5
@@ -74,7 +74,7 @@ npz6.1.jpg	      0		1928	66													Unconsolidated	Sand	mud (coarse sand)	Op
 npz6.1.jpg	      0		1986	1334													Consolidated	Rock	Turf mat	Open		82001002			36.7
 npz6.1.jpg	      0		2115	472													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			71.9
 npz6.1.jpg	      0		1886	957													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			46.6
-npz6.1.jpg	      0		1692	52													Unknown			Open					83.6
+npz6.1.jpg	      0		1692	52													Consolidated	Rock	Turf mat	Open		82001002			83.6
 npz6.1.jpg	      0		1734	542													Sponges	Massive forms		Open		10000903			61.5
 npz6.1.jpg	      0		2044	423													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			72.3
 npz6.1.jpg	      0		1795	1454													Sponges	Small mixed		Open		10000000			26.0
@@ -234,7 +234,7 @@ npz6.11.jpg	      0		1734	206													Macroalgae	Erect fine branching	Red	Op
 npz6.11.jpg	      0		1917	421													Macroalgae	Erect fine branching	Red	Open		90300910			80.6
 npz6.11.jpg	      0		1968	1656													Macroalgae	Erect fine branching	Red	Open		90300910			34.9
 npz6.11.jpg	      0		1625	935													Macroalgae	Erect course branching	Brown	Open		80300904			51.5
-npz6.11.jpg	      0		1611	1604													Unknown			Open					21.5
+npz6.11.jpg	      0		1611	1604													Macroalgae	Erect fine branching	Green	Open		80300909			21.5
 npz6.11.jpg	      0		1799	936													Macroalgae	Erect fine branching	Red	Open		90300910			54.7
 npz6.11.jpg	      0		1681	1025													Consolidated	Rock	Turf mat	Open		82001002			48.2
 npz6.11.jpg	      0		2064	1847													Macroalgae	Erect course branching	Brown	Open		80300904			37.3
@@ -406,7 +406,7 @@ npz6.13.jpg	      0		1864	62													Consolidated	Cobbles	Turf mat	Open		820
 npz6.14.jpg	      0		1059	1751													Consolidated	Rock	Turf mat	Open		82001002			15.7
 npz6.14.jpg	      0		823	733													Consolidated	Rock	Turf mat	Open		82001002			61.6
 npz6.14.jpg	      0		903	1487													Consolidated	Rock	Veneer	Open		82001002			28.4
-npz6.14.jpg	      0		760	214																					87.6
+npz6.14.jpg	      0		760	214													Consolidated	Rock	Turf mat	Open		82001002			87.6
 npz6.14.jpg	      0		896	169													Macroalgae	Erect course branching	Brown	Open		80300904			87.6
 npz6.14.jpg	      0		648	1092													Macroalgae	Erect fine branching	Red	Open		90300910			51.7
 npz6.14.jpg	      0		844	1707													Macroalgae	Erect fine branching	Red	Open		90300910			27.1
@@ -441,7 +441,7 @@ npz6.14.jpg	      0		950	3420													Consolidated	Rock	Turf mat	Open		82001
 npz6.14.jpg	      0		679	2242													Macroalgae	Erect course branching	Brown	Open		80300904			42.4
 npz6.14.jpg	      0		965	2784													Macroalgae	Erect fine branching	Red	Open		90300910			55.6
 npz6.14.jpg	      0		953	2828													Macroalgae	Erect fine branching	Red	Open		90300910			57.9
-npz6.14.jpg	      0		958	3672													Unknown			Open					100.0
+npz6.14.jpg	      0		958	3672													Consolidated	Rock	Turf mat	Open		82001002			100.0
 npz6.14.jpg	      0		766	2851													Macroalgae	Erect fine branching	Red	Open		90300910			63.2
 npz6.14.jpg	      0		2112	2311													Macroalgae	Erect fine branching	Red	Open		90300910			47.6
 npz6.14.jpg	      0		1690	2625													Unknown			Open					46.7
@@ -450,7 +450,7 @@ npz6.14.jpg	      0		2096	3552													Macroalgae	Erect fine branching	Red	O
 npz6.14.jpg	      0		1650	2494													Unknown			Open					39.6
 npz6.14.jpg	      0		2098	2968													Macroalgae	Erect fine branching	Red	Open		90300910			72.3
 npz6.14.jpg	      0		1972	3028													Macroalgae	Erect fine branching	Red	Open		90300910			71.8
-npz6.14.jpg	      0		1720	3009													Unknown			Open					66.1
+npz6.14.jpg	      0		1720	3009													Macroalgae	Erect fine branching	Red	Open		90300910			66.1
 npz6.14.jpg	      0		1908	2459													Macroalgae	Erect fine branching	Red	Open		90300910			45.0
 npz6.14.jpg	      0		1952	2744													Macroalgae	Erect fine branching	Red	Open		90300910			58.4
 npz6.14.jpg	      0		1708	2586													Unknown			Open					45.2
@@ -517,19 +517,19 @@ npz6.15.jpg	      0		579	3611													Invertebrate Complex	Complex 1		Open		
 npz6.15.jpg	      0		576	2842													Sponges	Massive forms		Open		10000903			56.2
 npz6.15.jpg	      0		675	1973													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			31.3
 npz6.15.jpg	      0		1029	3616													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			82.0
-npz6.15.jpg	      0		662	3589													Invertebrate Complex	Complex 1		Open					85.6
+npz6.15.jpg	      0		662	3589													Octocoral/Black	Fan (2D)		Open		11168912			85.6
 npz6.15.jpg	      0		901	3396													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			72.9
 npz6.15.jpg	      0		596	3291													Sponges	Massive forms		Open		10000903			73.8
 npz6.15.jpg	      0		601	2777													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			53.0
 npz6.15.jpg	      0		827	3332													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			71.1
 npz6.15.jpg	      0		547	3640													Invertebrate Complex	Complex 1		Open					90.2
-npz6.15.jpg	      0		1808	2021													Invertebrate Complex	Complex 1		Open					24.1
+npz6.15.jpg	      0		1808	2021													Bryozoa			Open		20000000			24.1
 npz6.15.jpg	      0		1731	2018													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			20.4
-npz6.15.jpg	      0		1800	2381													Sponges	Small mixed		Open		10000000			31.3
+npz6.15.jpg	      0		1800	2381													Octocoral/Black	Branching (3D)		Open		11168902			31.3
 npz6.15.jpg	      0		1620	3404													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			72.0
 npz6.15.jpg	      0		1730	3674													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			86.0
 npz6.15.jpg	      0		1847	2294													Sponges	Erect forms		Open		10000912			30.6
-npz6.15.jpg	      0		1899	2415													Sponges	Small mixed		Open		10000000			36.0
+npz6.15.jpg	      0		1899	2415													Invertebrate Complex	Complex 1		Open					36.0
 npz6.15.jpg	      0		1870	3648													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			86.7
 npz6.15.jpg	      0		2043	2737													Consolidated	Rock	Turf mat	Open		82001002			51.9
 npz6.15.jpg	      0		1790	3521													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			79.6
@@ -543,26 +543,26 @@ npz6.15.jpg	      0		1708	2782													Consolidated	Rock	Turf mat	Open		8200
 npz6.15.jpg	      0		1950	3038													Consolidated	Rock	Turf mat	Open		82001002			61.0
 npz6.15.jpg	      0		2001	2249													Consolidated	Rock	Turf mat	Open		82001002			36.2
 npz6.15.jpg	      0		2110	2755													Consolidated	Rock	Turf mat	Open		82001002			54.8
-npz6.15.jpg	      0		1907	1362													Invertebrate Complex	Complex 1		Open					41.0
+npz6.15.jpg	      0		1907	1362													Consolidated	Rock	Turf mat	Open		82001002			41.0
 npz6.15.jpg	      0		1951	647													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			71.2
-npz6.15.jpg	      0		1823	1103													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			48.6
+npz6.15.jpg	      0		1823	1103													Consolidated	Rock	Turf mat	Open		82001002			48.6
 npz6.15.jpg	      0		1909	429													Consolidated	Rock	Turf mat	Open		82001002			80.1
-npz6.15.jpg	      0		1679	98													Invertebrate Complex	Complex 1		Open					92.6
+npz6.15.jpg	      0		1679	98													Consolidated	Rock	Turf mat	Open		82001002			92.6
 npz6.15.jpg	      0		1998	1501													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			40.1
 npz6.15.jpg	      0		1909	1832													Invertebrate Complex	Complex 1		Open					29.6
 npz6.15.jpg	      0		2014	33													Sponges	Small mixed		Open		10000000			100.0
 npz6.15.jpg	      0		1951	338													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			85.0
-npz6.15.jpg	      0		1932	1356													Invertebrate Complex	Complex 1		Open					42.1
+npz6.15.jpg	      0		1932	1356													Consolidated	Rock	Turf mat	Open		82001002			42.1
 npz6.15.jpg	      0		1817	1288													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			40.9
 npz6.15.jpg	      0		1718	824													Invertebrate Complex	Complex 1		Open					58.8
 npz6.15.jpg	      0		2076	572													Consolidated	Rock	Turf mat	Open		82001002			77.2
-npz6.15.jpg	      0		1855	1707													Hydroids			Open		11001000			29.0
+npz6.15.jpg	      0		1855	1707													Consolidated	Rock	Turf mat	Open		82001002			29.0
 npz6.15.jpg	      0		1639	1534													Unknown			Open					26.0
-npz6.15.jpg	      0		1673	1334													Invertebrate Complex	Complex 1		Open					35.2
+npz6.15.jpg	      0		1673	1334													Consolidated	Rock	Turf mat	Open		82001002			35.2
 npz6.15.jpg	      0		2026	1232													Sponges	Erect forms		Open		10000912			49.6
 npz6.15.jpg	      0		1693	1154													Invertebrate Complex	Complex 1		Open					43.4
-npz6.15.jpg	      0		1753	1457													Invertebrate Complex	Complex 1		Open					32.5
-npz6.15.jpg	      0		1991	1729													Hydroids			Open		11001000			34.8
+npz6.15.jpg	      0		1753	1457													Consolidated	Rock	Turf mat	Open		82001002			32.5
+npz6.15.jpg	      0		1991	1729													Invertebrate Complex	Complex 1		Open					34.8
 npz6.15.jpg	      0		2013	330													Consolidated	Rock	Turf mat	Open		82001002			86.5
 npz6.16.jpg	      0		946	106													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			93.9
 npz6.16.jpg	      0		679	1805													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			34.5
@@ -644,24 +644,24 @@ npz6.16.jpg	      0		2122	851													Unconsolidated	Sand	mud (coarse sand)	
 npz6.16.jpg	      0		1642	1860													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			14.8
 npz6.16.jpg	      0		1783	281													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			85.6
 npz6.16.jpg	      0		1997	1131													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			51.7
-npz6.17.jpg	      0		927	1184													Consolidated	Rock	Turf mat	Open		82001002			40.5
+npz6.17.jpg	      0		927	1184													Hydroids			Open		11001000			40.5
 npz6.17.jpg	      0		893	397													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			76.4
 npz6.17.jpg	      0		1059	279													Sponges	Small mixed		Open		10000000			79.9
 npz6.17.jpg	      0		650	1387													Consolidated	Rock	Turf mat	Open		82001002			43.0
 npz6.17.jpg	      0		790	1252													Sponges	Small mixed		Open		10000000			42.0
 npz6.17.jpg	      0		1034	941													Sponges	Small mixed		Open		10000000			48.8
-npz6.17.jpg	      0		746	1750													Sponges	Small mixed		Open		10000000			31.6
+npz6.17.jpg	      0		746	1750													Consolidated	Rock	Turf mat	Open		82001002			31.6
 npz6.17.jpg	      0		1072	319													Sponges	Small mixed		Open		10000000			77.8
 npz6.17.jpg	      0		818	427													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			76.2
 npz6.17.jpg	      0		839	1493													Consolidated	Rock	Turf mat	Open		82001002			32.4
 npz6.17.jpg	      0		930	1871													Consolidated	Rock	Turf mat	Open		82001002			21.9
 npz6.17.jpg	      0		905	213													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			84.8
 npz6.17.jpg	      0		1047	705													Sponges	Small mixed		Open		10000000			59.7
-npz6.17.jpg	      0		879	566													Sponges	Massive forms		Open		10000903			68.8
+npz6.17.jpg	      0		879	566													Consolidated	Rock	Turf mat	Open		82001002			68.8
 npz6.17.jpg	      0		772	30													Consolidated	Rock	Turf mat	Open		82001002			95.3
-npz6.17.jpg	      0		826	1259													Sponges	Small mixed		Open		10000000			40.6
+npz6.17.jpg	      0		826	1259													Consolidated	Rock	Turf mat	Open		82001002			40.6
 npz6.17.jpg	      0		799	1488													Consolidated	Rock	Turf mat	Open		82001002			34.2
-npz6.17.jpg	      0		872	629													Sponges	Small mixed		Open		10000000			66.0
+npz6.17.jpg	      0		872	629													Consolidated	Rock	Turf mat	Open		82001002			66.0
 npz6.17.jpg	      0		589	1048													Invertebrate Complex	Complex 1		Open					56.1
 npz6.17.jpg	      0		587	1292													Consolidated	Rock	Turf mat	Open		82001002			48.2
 npz6.17.jpg	      0		1037	3542													Invertebrate Complex	Complex 1		Open					83.4
@@ -669,11 +669,11 @@ npz6.17.jpg	      0		971	3818													Sponges	Small mixed		Open		10000000			
 npz6.17.jpg	      0		1043	1954													Sponges	Small mixed		Open		10000000			16.8
 npz6.17.jpg	      0		831	2857													Consolidated	Rock	Turf mat	Open		82001002			55.1
 npz6.17.jpg	      0		812	3227													Consolidated	Rock	Turf mat	Open		82001002			71.8
-npz6.17.jpg	      0		642	2375													Sponges	Small mixed		Open		10000000			43.6
+npz6.17.jpg	      0		642	2375													Consolidated	Rock	Turf mat	Open		82001002			43.6
 npz6.17.jpg	      0		873	1972													Sponges	Small mixed		Open		10000000			25.2
 npz6.17.jpg	      0		938	2640													Sponges	Small mixed		Open		10000000			43.2
 npz6.17.jpg	      0		943	2705													Sponges	Hollow forms		Open		10000909			45.9
-npz6.17.jpg	      0		901	2261													Sponges	Small mixed		Open		10000000			30.0
+npz6.17.jpg	      0		901	2261													Consolidated	Rock	Turf mat	Open		82001002			30.0
 npz6.17.jpg	      0		826	3632													Sponges	Small mixed		Open		10000000			90.3
 npz6.17.jpg	      0		1049	3403													Invertebrate Complex	Complex 1		Open					76.6
 npz6.17.jpg	      0		718	2091													Consolidated	Rock	Turf mat	Open		82001002			34.0
@@ -700,7 +700,7 @@ npz6.17.jpg	      0		1692	3646													Unknown			Open					88.2
 npz6.17.jpg	      0		2043	2498													Consolidated	Rock	Turf mat	Open		82001002			44.7
 npz6.17.jpg	      0		1998	2035													Consolidated	Rock	Turf mat	Open		82001002			31.4
 npz6.17.jpg	      0		1623	3622													Open Water			Open					86.5
-npz6.17.jpg	      0		2031	3722													Sponges	Small mixed		Open		10000000			96.1
+npz6.17.jpg	      0		2031	3722													Consolidated	Rock	Turf mat	Open		82001002			96.1
 npz6.17.jpg	      0		1651	2668													Consolidated	Rock	Turf mat	Open		82001002			41.1
 npz6.17.jpg	      0		1877	2531													Sponges	Small mixed		Open		10000000			40.4
 npz6.17.jpg	      0		1860	2684													Sponges	Small mixed		Open		10000000			46.2
@@ -869,7 +869,7 @@ npz6.19.jpg	      0		1973	1010													Sponges	Massive forms		Open		10000903
 npz6.19.jpg	      0		1763	60													Consolidated	Rock	Turf mat	Open		82001002			89.4
 npz6.19.jpg	      0		2012	1810													Macroalgae	Erect course branching	Red	Open		80300906			32.6
 npz6.19.jpg	      0		2040	66													Macroalgae	Erect course branching	Brown	Open		80300904			93.3
-npz6.19.jpg	      0		2092	336																					82.0
+npz6.19.jpg	      0		2092	336													Macroalgae	Erect course branching	Red	Open		80300906			82.0
 npz6.19.jpg	      0		2114	238													Sponges	Small mixed		Open		10000000			86.8
 npz6.19.jpg	      0		1755	1081													Macroalgae	Erect course branching	Red	Open		80300906			41.1
 npz6.19.jpg	      0		1909	992													Ascidians			Open		35000000			49.0
@@ -1270,7 +1270,7 @@ npz6.24.jpg	      0		1644	661													Consolidated	Rock	Turf mat	Open		82001
 npz6.24.jpg	      0		1995	599													Macroalgae	Erect course branching	Brown	Open		80300904			74.3
 npz6.24.jpg	      0		1877	984													Consolidated	Rock	Turf mat	Open		82001002			54.7
 npz6.24.jpg	      0		1669	1343													Consolidated	Rock	Turf mat	Open		82001002			34.1
-npz6.24.jpg	      0		1849	1518													Octocoral/Black	Branching (3D)		Open		11168902			32.7
+npz6.24.jpg	      0		1849	1518													Sponges	Erect forms		Open		10000912			32.7
 npz6.24.jpg	      0		2004	1177													Consolidated	Rock	Turf mat	Open		82001002			50.2
 npz6.24.jpg	      0		2140	101													Macroalgae	Erect course branching	Brown	Open		80300904			99.7
 npz6.24.jpg	      0		1805	773													Consolidated	Rock	Turf mat	Open		82001002			62.7
@@ -1702,7 +1702,7 @@ npz6.3.jpg	      0		641	1569													Sponges	Crusts		Open		10000901			38.3
 npz6.3.jpg	      0		798	583													Consolidated	Rock	Turf mat	Open		82001002			69.5
 npz6.3.jpg	      0		753	419													Sponges	Small mixed		Open		10000000			77.9
 npz6.3.jpg	      0		629	1004													Sponges	Hollow forms		Open		10000909			55.9
-npz6.3.jpg	      0		1050	1034																					44.0
+npz6.3.jpg	      0		1050	1034													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			44.0
 npz6.3.jpg	      0		847	634													Consolidated	Rock	Turf mat	Open		82001002			66.2
 npz6.3.jpg	      0		1051	911													Sponges	Erect forms		Open		10000912			49.8
 npz6.3.jpg	      0		935	3215													Sponges	Hollow forms		Open		10000909			70.1
@@ -2931,7 +2931,7 @@ npz6.45.jpg	      0		1982	3322													Unconsolidated	Pebble	gravel (gravel 
 npz6.45.jpg	      0		2032	2321													Unconsolidated	Pebble	gravel (gravel 2-10mm)	Open		82001011			40.5
 npz6.45.jpg	      0		1878	2512													Unconsolidated	Pebble	gravel (gravel 2-10mm)	Open		82001011			41.7
 npz6.45.jpg	      0		1737	3201													Unconsolidated	Pebble	gravel (gravel 2-10mm)	Open		82001011			69.1
-npz6.45.jpg	      0		2152	3734																					100.0
+npz6.45.jpg	      0		2152	3734													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			100.0
 npz6.45.jpg	      0		1845	2973													Unconsolidated	Pebble	gravel (gravel 2-10mm)	Open		82001011			60.4
 npz6.45.jpg	      0		1940	3363													Unconsolidated	Pebble	gravel (gravel 2-10mm)	Open		82001011			79.5
 npz6.45.jpg	      0		1917	3753													Unconsolidated	Pebble	gravel (gravel 2-10mm)	Open		82001011			97.1
@@ -3126,7 +3126,7 @@ npz6.47.jpg	      0		1793	1600													Consolidated	Rock	Turf mat	Open		8200
 npz6.47.jpg	      0		1995	245													Consolidated	Rock	Turf mat	Open		82001002			89.2
 npz6.47.jpg	      0		1955	322													Consolidated	Rock	Turf mat	Open		82001002			85.1
 npz6.47.jpg	      0		2016	1542													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			39.0
-npz6.49.jpg	      0		563	546																					79.5
+npz6.49.jpg	      0		563	546													Macroalgae	Erect fine branching	Red	Open		90300910			79.5
 npz6.49.jpg	      0		585	299													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			89.7
 npz6.49.jpg	      0		860	1130													Sponges	Massive forms		Open		10000903			47.7
 npz6.49.jpg	      0		582	534													Macroalgae	Erect fine branching	Red	Open		90300910			79.5
@@ -3167,7 +3167,7 @@ npz6.49.jpg	      0		623	3311													Macroalgae	Erect fine branching	Red	Op
 npz6.49.jpg	      0		638	3680													Macroalgae	Erect fine branching	Red	Open		90300910			88.8
 npz6.49.jpg	      0		551	3724													Unknown			Open					92.5
 npz6.49.jpg	      0		1904	2505													Macroalgae	Erect fine branching	Red	Open		90300910			37.2
-npz6.49.jpg	      0		2030	3472																					79.4
+npz6.49.jpg	      0		2030	3472													Sponges	Massive forms		Open		10000903			79.4
 npz6.49.jpg	      0		1705	3826													Macroalgae	Erect fine branching	Red	Open		90300910			90.9
 npz6.49.jpg	      0		1870	2097													Macroalgae	Erect fine branching	Red	Open		90300910			26.3
 npz6.49.jpg	      0		1725	3682													Macroalgae	Erect fine branching	Red	Open		90300910			84.3
@@ -3670,7 +3670,7 @@ npz6.9.jpg	      0		1712	248													Unconsolidated	Sand	mud (coarse sand)	O
 npz6.9.jpg	      0		1964	721													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			67.2
 npz6.9.jpg	      0		1826	1800													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			23.8
 npz6.9.jpg	      0		1745	877													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			55.6
-npz6.9.jpg	      0		1851	1280													Invertebrate Complex	Complex 1		Open					40.3
+npz6.9.jpg	      0		1851	1280													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			40.3
 npz6.9.jpg	      0		1884	433													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			79.0
 npz6.9.jpg	      0		1993	898													Unconsolidated	Pebble	gravel (gravel 2-10mm)	Open		82001011			60.1
 npz6.9.jpg	      0		2046	880													Unconsolidated	Pebble	gravel (gravel 2-10mm)	Open		82001011			62.3
@@ -4971,7 +4971,7 @@ npz9.43.jpg	      0		565	1507													Sponges	Erect forms		Open		10000912			
 npz9.43.jpg	      0		907	475													Consolidated	Rock	Turf mat	Open		82001002			74.5
 npz9.43.jpg	      0		970	1444													Consolidated	Rock	Turf mat	Open		82001002			30.0
 npz9.43.jpg	      0		1026	406													Sponges	Hollow forms		Open		10000909			76.2
-npz9.43.jpg	      0		930	1480													Octocoral/Black	Branching (3D)		Open		11168902			30.0
+npz9.43.jpg	      0		930	1480													Octocoral/Black	Fan (2D)		Open		11168912			30.0
 npz9.43.jpg	      0		950	966													Sponges	Massive forms		Open		10000903			51.0
 npz9.43.jpg	      0		685	274													Sponges	Massive forms		Open		10000903			87.4
 npz9.43.jpg	      0		1034	521													Sponges	Erect forms		Open		10000912			70.7
@@ -4995,10 +4995,10 @@ npz9.43.jpg	      0		805	2225													Consolidated	Rock	Turf mat	Open		82001
 npz9.43.jpg	      0		632	2099													Sponges	Massive forms		Open		10000903			36.5
 npz9.43.jpg	      0		913	3120													Sponges	Massive forms		Open		10000903			62.8
 npz9.43.jpg	      0		981	2184													Sponges	Massive forms		Open		10000903			22.3
-npz9.43.jpg	      0		958	2575													Hydroids			Open		11001000			37.6
+npz9.43.jpg	      0		958	2575													Invertebrate Complex	Complex 1		Open					37.6
 npz9.43.jpg	      0		710	3447													Consolidated	Rock	Turf mat	Open		82001002			81.5
 npz9.43.jpg	      0		951	3340													Consolidated	Rock	Turf mat	Open		82001002			72.6
-npz9.43.jpg	      0		723	2914													Hydroids			Open		11001000			57.8
+npz9.43.jpg	      0		723	2914													Invertebrate Complex	Complex 1		Open					57.8
 npz9.43.jpg	      0		1050	2640													Sponges	Massive forms		Open		10000903			38.4
 npz9.43.jpg	      0		970	2178													Sponges	Massive forms		Open		10000903			22.6
 npz9.43.jpg	      0		705	3450													Sponges	Massive forms		Open		10000903			81.7
@@ -5040,7 +5040,7 @@ npz9.43.jpg	      0		2040	1236													Consolidated	Rock	Turf mat	Open		8200
 npz9.43.jpg	      0		1688	1831													Consolidated	Rock	Turf mat	Open		82001002			17.1
 npz9.43.jpg	      0		1824	930													Sponges	Erect forms		Open		10000912			54.0
 npz9.43.jpg	      0		2091	828													Consolidated	Rock	Turf mat	Open		82001002			65.0
-npz9.43.jpg	      0		1953	1353													Sponges	Erect forms		Open		10000912			40.7
+npz9.43.jpg	      0		1953	1353													Invertebrate Complex	Complex 1		Open					40.7
 npz9.43.jpg	      0		1820	649													Sponges	Erect forms		Open		10000912			66.7
 npz9.43.jpg	      0		1964	706													Consolidated	Rock	Turf mat	Open		82001002			67.0
 npz9.43.jpg	      0		1823	1409													Sponges	Massive forms		Open		10000903			34.3
@@ -5067,8 +5067,8 @@ npz9.44.jpg	      0		1039	594													Unconsolidated	Sand	mud (coarse sand)	
 npz9.44.jpg	      0		654	1309													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			45.4
 npz9.44.jpg	      0		669	1504													Consolidated	Rock	Turf mat	Open		82001002			39.0
 npz9.44.jpg	      0		684	2168													Invertebrate Complex	Complex 1		Open					33.8
-npz9.44.jpg	      0		923	2795																					46.1
-npz9.44.jpg	      0		605	3829																					98.2
+npz9.44.jpg	      0		923	2795													Sponges	Small mixed		Open		10000000			46.1
+npz9.44.jpg	      0		605	3829													Consolidated	Rock	Turf mat	Open		82001002			98.2
 npz9.44.jpg	      0		562	3453													Consolidated	Rock	Turf mat	Open		82001002			82.5
 npz9.44.jpg	      0		873	3001													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			56.2
 npz9.44.jpg	      0		585	3745													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			94.8
@@ -5083,7 +5083,7 @@ npz9.44.jpg	      0		811	2841													Unconsolidated	Sand	mud (coarse sand)	
 npz9.44.jpg	      0		828	2873													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			51.6
 npz9.44.jpg	      0		630	2249													Consolidated	Rock	Turf mat	Open		82001002			37.6
 npz9.44.jpg	      0		940	2681													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			40.8
-npz9.44.jpg	      0		1066	3822																					92.1
+npz9.44.jpg	      0		1066	3822													Consolidated	Rock	Turf mat	Open		82001002			92.1
 npz9.44.jpg	      0		618	2859													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			56.7
 npz9.44.jpg	      0		619	2380													Consolidated	Rock	Turf mat	Open		82001002			41.0
 npz9.44.jpg	      0		1855	3317													Consolidated	Rock	Turf mat	Open		82001002			71.1
@@ -5725,7 +5725,7 @@ npz9.6.jpg	      0		763	2585													Invertebrate Complex	Complex 1		Open			
 npz9.6.jpg	      0		577	2972													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			65.8
 npz9.6.jpg	      0		1020	2533													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			35.7
 npz9.6.jpg	      0		738	2697													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			50.0
-npz9.6.jpg	      0		836	3426													Hydroids			Open		11001000			80.7
+npz9.6.jpg	      0		836	3426													Octocoral/Black	Branching (3D)		Open		11168902			80.7
 npz9.6.jpg	      0		2118	3282													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			80.2
 npz9.6.jpg	      0		1841	3611													Unconsolidated	Sand	mud (coarse sand)	Open		82001014			90.0
 npz9.6.jpg	      0		1718	2573													Invertebrate Complex	Complex 1		Open					39.5
