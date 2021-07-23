@@ -21,11 +21,11 @@ reldat <- read.table('data/2021-05_Abrolhos_BOSS_Habitat_Relief_Dot Point Measur
 # clean all and merge to combine
 head(reldat)
 reldat <- reldat[ , c(1, 22)]
-colnames(reldat) <- c("Site", "relief")
+colnames(reldat) <- c("Sample", "relief") # Brooke changed to Sample
 reldat$relief <- substr(reldat$relief, start = 1, stop =3)
 reldat$relief <- as.numeric(gsub("\\.", "", reldat$relief))
-reldat$Site   <- gsub(".jpg", "", reldat$Site)
-reldat <- as.data.frame(summarise(group_by(reldat, Site), 
+reldat$Sample   <- gsub(".jpg", "", reldat$Sample) # Changed to Sample
+reldat <- as.data.frame(summarise(group_by(reldat, Sample), 
                                   relief = mean(relief, na.rm = TRUE)))
 head(reldat)
 
@@ -33,17 +33,17 @@ summary(habdat)
 habdat <- habdat[ , c(1, 4, 5, 18:21, 23, 26)]                                  # omit bare columns
 colnames(habdat) <- c("Filename", "Image row", "Image col", "Broad", 
                       "Morphology", "Type", "FOV", "CODE", "Radius")            # fix colnames
-habdat$Site      <- gsub(".jpg", "", habdat$Filename)
-bosmet <- bosmet[, colnames(bosmet) %in% c("Date", "Time", "Latitude", 
+habdat$Sample      <- gsub(".jpg", "", habdat$Filename)
+bosmet <- bosmet[, colnames(bosmet) %in% c("Sample","Date", "Time", "Latitude", 
                                            "Longitude", "Site", "Sample", 
                                            "Location", "Status", "Depth",
                                            "Type")]                             # only cols of interest
-allhab <- merge(bosmet, habdat, by = "Site")
-allhab <- merge(allhab, reldat, by = "Site")
+allhab <- merge(bosmet, habdat, by = "Sample")
+allhab <- merge(allhab, reldat, by = "Sample")
 head(allhab)
 allhab$pa <- c(1)
 # long to wide and summarise
-allhabw <- reshape2::dcast(allhab, Site + Latitude + Longitude + Depth + relief ~ Broad + Morphology, 
+allhabw <- reshape2::dcast(allhab, Sample + Site + Latitude + Longitude + Depth + relief ~ Broad + Morphology, 
                            value.var = "pa", fun.aggregate = sum, drop = TRUE)
 allhabw$totalpts <- rowSums(allhabw[, 7:31]) - allhabw$Unknown_
 head(allhabw)
