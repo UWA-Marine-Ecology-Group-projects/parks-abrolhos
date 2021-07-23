@@ -60,6 +60,15 @@ ggplot(allhabl, aes(relief, Count/totalpts)) +
   geom_point() + geom_smooth() + 
   facet_wrap (~ Tag, scales = "free_y")
 
+# data checks (Brooke)
+# check for habitat data that is missing metadata
+t1 <- dplyr::anti_join(allhabw, bosmet) # none
+
+# check for samples in metadata missing habitat
+t2 <- dplyr::anti_join(bosmet, allhabw) # none
+
+
+
 # begin basic models
 
 
