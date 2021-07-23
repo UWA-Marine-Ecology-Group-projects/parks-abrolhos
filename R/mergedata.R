@@ -67,7 +67,7 @@ t1 <- dplyr::anti_join(allhabw, bosmet) # none
 # check for samples in metadata missing habitat
 t2 <- dplyr::anti_join(bosmet, allhabw) # none
 
-
+unique(allhabw$Site)
 
 # begin basic models
 
