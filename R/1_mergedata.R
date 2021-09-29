@@ -2,7 +2,7 @@
 # Project: Parks - Abrolhos Post-Survey
 # Data:    BRUVS, BOSS Habitat data
 # Task:    Merging habitat data
-# author:  Kingsley Griffin
+# author:  Kingsley Griffin, Brooke Gibbons
 # date:    July 2021
 ##
 
@@ -13,9 +13,9 @@ library(ggplot2)
 
 # read in data
 bosmet <- readRDS("data/2105_abrolhos_boss.rds")                                # metadata
-habdat <- read.table('data/2021-05_Abrolhos_BOSS_Habitat_Dot Point Measurements.txt', 
+habdat <- read.table('data/raw/TM Export/2021-05_Abrolhos_BOSS_Habitat_Dot Point Measurements.txt', 
                      skip = 5, sep = "\t")                                      # habitat annotations
-reldat <- read.table('data/2021-05_Abrolhos_BOSS_Habitat_Relief_Dot Point Measurements.txt', 
+reldat <- read.table('data/raw/TM Export/2021-05_Abrolhos_BOSS_Habitat_Relief_Dot Point Measurements.txt', 
                      skip = 5, sep = "\t")                                      # habitat annotations
 
 # clean all and merge to combine
@@ -45,20 +45,22 @@ allhab$pa <- c(1)
 # long to wide and summarise
 allhabw <- reshape2::dcast(allhab, Sample + Site + Latitude + Longitude + Depth + relief ~ Broad + Morphology, 
                            value.var = "pa", fun.aggregate = sum, drop = TRUE)
-allhabw$totalpts <- rowSums(allhabw[, 7:31]) - allhabw$Unknown_
+allhabw$totalpts <- rowSums(allhabw[, 8:34]) - allhabw$Unknown_
 head(allhabw)
 
-# visualise relationships
-allhabl <- melt(allhabw, measure.vars = c(6:32))
-colnames(allhabl)[7:8] <- c("Tag", "Count")
+saveRDS(allhabw, "data/tidy/merged_habitat.rds")
 
-ggplot(allhabl, aes(Depth, Count/totalpts)) + 
-  geom_point() + geom_smooth() + 
-  facet_wrap (~ Tag, scales = "free_y")
-
-ggplot(allhabl, aes(relief, Count/totalpts)) + 
-  geom_point() + geom_smooth() + 
-  facet_wrap (~ Tag, scales = "free_y")
+# # visualise relationships
+# allhabl <- melt(allhabw, measure.vars = c(8:34))
+# colnames(allhabl)[10:11] <- c("Tag", "Count")
+# 
+# ggplot(allhabl, aes(Depth, Count/totalpts)) + 
+#   geom_point() + geom_smooth() + 
+#   facet_wrap (~ Tag, scales = "free_y")
+# 
+# ggplot(allhabl, aes(relief, Count/totalpts)) + 
+#   geom_point() + geom_smooth() + 
+#   facet_wrap (~ Tag, scales = "free_y")
 
 # data checks (Brooke)
 # check for habitat data that is missing metadata
@@ -68,5 +70,3 @@ t1 <- dplyr::anti_join(allhabw, bosmet) # none
 t2 <- dplyr::anti_join(bosmet, allhabw) # none
 
 unique(allhabw$Site)
-
-# begin basic models
