@@ -8,6 +8,8 @@
 
 library(reshape2)
 library(dplyr)
+library(raster)
+library(sp)
 library(ggplot2)
 
 
@@ -48,20 +50,6 @@ allhabw <- reshape2::dcast(allhab, Sample + Site + Latitude + Longitude + Depth 
 allhabw$totalpts <- rowSums(allhabw[, 8:34]) - allhabw$Unknown_
 head(allhabw)
 
-saveRDS(allhabw, "data/tidy/merged_habitat.rds")
-
-# # visualise relationships
-# allhabl <- melt(allhabw, measure.vars = c(8:34))
-# colnames(allhabl)[10:11] <- c("Tag", "Count")
-# 
-# ggplot(allhabl, aes(Depth, Count/totalpts)) + 
-#   geom_point() + geom_smooth() + 
-#   facet_wrap (~ Tag, scales = "free_y")
-# 
-# ggplot(allhabl, aes(relief, Count/totalpts)) + 
-#   geom_point() + geom_smooth() + 
-#   facet_wrap (~ Tag, scales = "free_y")
-
 # data checks (Brooke)
 # check for habitat data that is missing metadata
 t1 <- dplyr::anti_join(allhabw, bosmet) # none
@@ -70,3 +58,21 @@ t1 <- dplyr::anti_join(allhabw, bosmet) # none
 t2 <- dplyr::anti_join(bosmet, allhabw) # none
 
 unique(allhabw$Site)
+
+## extract bathy derivatives for modelling
+# spatial setup
+wgscrs <- CRS("+proj=longlat +datum=WGS84 +south")
+utmcrs <- CRS("+proj=utm +zone=50 +south +datum=WGS84 +units=m +no_defs")
+preds  <- readRDS("data/spatial/spatial_covariates.rds")
+
+# align crs and check samples over bathy and extract terrain data
+allhab_sp <- SpatialPointsDataFrame(coords = allhabw[4:3], data = allhabw, 
+                                    proj4string = wgscrs)
+allhab_t  <- spTransform(allhab_sp, CRS = utmcrs)
+habt_df   <- as.data.frame(allhab_t, xy = T)
+plot(preds[[1]])
+plot(allhab_t, add=T)
+habi      <- cbind(habt_df, extract(preds, allhab_t))
+saveRDS(habi, "data/tidy/merged_habitat.rds")
+
+
