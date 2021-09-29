@@ -16,18 +16,30 @@ bosmet <- readRDS("data/2105_abrolhos_boss.rds")                                
 habdat <- read.table('data/2021-05_Abrolhos_BOSS_Habitat_Dot Point Measurements.txt', 
                      skip = 5, sep = "\t")                                      # habitat annotations
 reldat <- read.table('data/2021-05_Abrolhos_BOSS_Habitat_Relief_Dot Point Measurements.txt', 
-                     skip = 5, sep = "\t")                                      # habitat annotations
+                     skip = 5, sep = "\t")                                      # relief annotations
+subrel <- read.table('data/2021-05_Abrolhos_BOSS_Habitat_Substrate-Relief_Dot Point Measurements.txt', 
+                     skip = 5, sep = "\t")                                      # relief annotations
 
 # clean all and merge to combine
 head(reldat)
 reldat <- reldat[ , c(1, 22)]
 colnames(reldat) <- c("Site", "relief")
-reldat$relief <- substr(reldat$relief, start = 1, stop =3)
+reldat$relief <- substr(reldat$relief, start = 1, stop = 3)
 reldat$relief <- as.numeric(gsub("\\.", "", reldat$relief))
 reldat$Site   <- gsub(".jpg", "", reldat$Site)
 reldat <- as.data.frame(summarise(group_by(reldat, Site), 
                                   relief = mean(relief, na.rm = TRUE)))
 head(reldat)
+
+head(subrel)
+subrel <- subrel[ , c(1, 22)]
+colnames(subrel)  <- c("Site", "sub_relief")
+subrel$sub_relief <- substr(subrel$sub_relief, start = 1, stop = 3)
+subrel$sub_relief <- as.numeric(gsub("\\.", "", subrel$sub_relief))
+subrel$Site       <- gsub(".jpg", "", subrel$Site)
+subrel <- as.data.frame(summarise(group_by(subrel, Site), 
+                                  sub_relief = mean(sub_relief, na.rm = TRUE)))
+head(subrel)
 
 summary(habdat)
 habdat <- habdat[ , c(1, 4, 5, 18:21, 23, 26)]                                  # omit bare columns
@@ -40,17 +52,19 @@ bosmet <- bosmet[, colnames(bosmet) %in% c("Date", "Time", "Latitude",
                                            "Type")]                             # only cols of interest
 allhab <- merge(bosmet, habdat, by = "Site")
 allhab <- merge(allhab, reldat, by = "Site")
+allhab <- merge(allhab, subrel, by = "Site")
 head(allhab)
 allhab$pa <- c(1)
 # long to wide and summarise
-allhabw <- reshape2::dcast(allhab, Site + Latitude + Longitude + Depth + relief ~ Broad + Morphology, 
+allhabw <- reshape2::dcast(allhab, Site + Latitude + Longitude + Depth + 
+                             relief + sub_relief ~ Broad + Morphology, 
                            value.var = "pa", fun.aggregate = sum, drop = TRUE)
-allhabw$totalpts <- rowSums(allhabw[, 7:31]) - allhabw$Unknown_
+allhabw$totalpts <- rowSums(allhabw[, 7:32]) - allhabw$Unknown_
 head(allhabw)
 
-# visualise relationships
-allhabl <- melt(allhabw, measure.vars = c(6:32))
-colnames(allhabl)[7:8] <- c("Tag", "Count")
+# visualise
+allhabl <- melt(allhabw, measure.vars = c(7:32))
+colnames(allhabl)[9:10] <- c("Tag", "Count")
 
 ggplot(allhabl, aes(Depth, Count/totalpts)) + 
   geom_point() + geom_smooth() + 
@@ -60,6 +74,8 @@ ggplot(allhabl, aes(relief, Count/totalpts)) +
   geom_point() + geom_smooth() + 
   facet_wrap (~ Tag, scales = "free_y")
 
-# begin basic models
+ggplot(allhabl, aes(sub_relief, Count/totalpts)) + 
+  geom_point() + geom_smooth() + 
+  facet_wrap (~ Tag, scales = "free_y")
 
 
