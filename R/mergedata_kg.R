@@ -23,11 +23,16 @@ subrel <- read.table('data/2021-05_Abrolhos_BOSS_Habitat_Substrate-Relief_Dot Po
 # clean all and merge to combine
 head(reldat)
 reldat <- reldat[ , c(1, 22)]
+<<<<<<< HEAD
 colnames(reldat) <- c("Site", "relief")
 reldat$relief <- substr(reldat$relief, start = 1, stop = 3)
+=======
+colnames(reldat) <- c("Sample", "relief") # Brooke changed to Sample
+reldat$relief <- substr(reldat$relief, start = 1, stop =3)
+>>>>>>> 357350f122c51583d03ff8362a8cba9809f94d17
 reldat$relief <- as.numeric(gsub("\\.", "", reldat$relief))
-reldat$Site   <- gsub(".jpg", "", reldat$Site)
-reldat <- as.data.frame(summarise(group_by(reldat, Site), 
+reldat$Sample   <- gsub(".jpg", "", reldat$Sample) # Changed to Sample
+reldat <- as.data.frame(summarise(group_by(reldat, Sample), 
                                   relief = mean(relief, na.rm = TRUE)))
 head(reldat)
 
@@ -45,11 +50,12 @@ summary(habdat)
 habdat <- habdat[ , c(1, 4, 5, 18:21, 23, 26)]                                  # omit bare columns
 colnames(habdat) <- c("Filename", "Image row", "Image col", "Broad", 
                       "Morphology", "Type", "FOV", "CODE", "Radius")            # fix colnames
-habdat$Site      <- gsub(".jpg", "", habdat$Filename)
-bosmet <- bosmet[, colnames(bosmet) %in% c("Date", "Time", "Latitude", 
+habdat$Sample      <- gsub(".jpg", "", habdat$Filename)
+bosmet <- bosmet[, colnames(bosmet) %in% c("Sample","Date", "Time", "Latitude", 
                                            "Longitude", "Site", "Sample", 
                                            "Location", "Status", "Depth",
                                            "Type")]                             # only cols of interest
+<<<<<<< HEAD
 allhab <- merge(bosmet, habdat, by = "Site")
 allhab <- merge(allhab, reldat, by = "Site")
 allhab <- merge(allhab, subrel, by = "Site")
@@ -58,6 +64,14 @@ allhab$pa <- c(1)
 # long to wide and summarise
 allhabw <- reshape2::dcast(allhab, Site + Latitude + Longitude + Depth + 
                              relief + sub_relief ~ Broad + Morphology, 
+=======
+allhab <- merge(bosmet, habdat, by = "Sample")
+allhab <- merge(allhab, reldat, by = "Sample")
+head(allhab)
+allhab$pa <- c(1)
+# long to wide and summarise
+allhabw <- reshape2::dcast(allhab, Sample + Site + Latitude + Longitude + Depth + relief ~ Broad + Morphology, 
+>>>>>>> 357350f122c51583d03ff8362a8cba9809f94d17
                            value.var = "pa", fun.aggregate = sum, drop = TRUE)
 allhabw$totalpts <- rowSums(allhabw[, 7:32]) - allhabw$Unknown_
 head(allhabw)
@@ -74,8 +88,21 @@ ggplot(allhabl, aes(relief, Count/totalpts)) +
   geom_point() + geom_smooth() + 
   facet_wrap (~ Tag, scales = "free_y")
 
+<<<<<<< HEAD
 ggplot(allhabl, aes(sub_relief, Count/totalpts)) + 
   geom_point() + geom_smooth() + 
   facet_wrap (~ Tag, scales = "free_y")
+=======
+# data checks (Brooke)
+# check for habitat data that is missing metadata
+t1 <- dplyr::anti_join(allhabw, bosmet) # none
+
+# check for samples in metadata missing habitat
+t2 <- dplyr::anti_join(bosmet, allhabw) # none
+
+unique(allhabw$Site)
+
+# begin basic models
+>>>>>>> 357350f122c51583d03ff8362a8cba9809f94d17
 
 
