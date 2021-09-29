@@ -25,7 +25,7 @@ ab_mpa <- wampa[wampa$NAME %in% c("Abrolhos Islands", #"Jurien Bay", "Ningaloo",
                                   "Hamelin Pool", "Shark Bay"), ]               # just wa parks nearby
 sw_mpa <- aumpa[aumpa$NetName %in% c("South-west", "North-west"), ]             # just W nat parks
 ab_nmp <- sw_mpa[sw_mpa$ResName %in% c("Abrolhos", "Jurien", "Shark Bay"), ]    # just nat parks nearby
-cwatr  <- readRDS('output/coastal_waters_limit_trimmed.rds')                    # coastal waters line trimmined in 'R/GA_coast_trim.R'
+cwatr  <- readRDS('output/coastal_waters_limit_trimmed.rds')                    # coastal waters line trimmed in 'R/GA_coast_trim.R'
 bathdf <- readRDS("output/ga_bathy_trim.rds")                                   # bathymetry trimmed in 'R/GA_coast_trim.R'
 colnames(bathdf)[3] <- "Depth"
 st_crs(aus)         <- st_crs(aumpa)

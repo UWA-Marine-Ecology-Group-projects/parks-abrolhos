@@ -3,7 +3,7 @@
 # Data:    BRUVS, BOSS Habitat data
 # Task:    Merging habitat data
 # author:  Kingsley Griffin, Brooke Gibbons
-# date:    July 2021
+# date:    July-Oct 2021
 ##
 
 library(reshape2)

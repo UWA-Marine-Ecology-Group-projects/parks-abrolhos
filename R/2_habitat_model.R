@@ -3,13 +3,19 @@
 # Data:    BRUVS, BOSS Habitat data
 # Task:    Basic habitat models
 # author:  Kingsley Griffin
-# date:    July 2021
+# date:    July-Oct 2021
 ##
 
 library(reshape2)
 library(dplyr)
 library(ggplot2)
 library(raster)
+
+# read in
+allhab <- readRDS("data/tidy/merged_habitat.rds")                               # merged data from 'R/1_mergedata.R'
+preds  <- readRDS("data/spatial/")
+
+# get spatial layers
 
 
 # visualise relationships
