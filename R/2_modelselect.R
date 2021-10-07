@@ -124,7 +124,8 @@ habi <- habi %>%
 
 # # Re-set the predictors for modeling----
 pred.vars <- c("logdepth","sqrttri","sqrtrough","sqrtslope",
-               "tpi","aspect", "Longitude.1", "Latitude.1") 
+               # "tpi",
+               "aspect", "Longitude.1", "Latitude.1") 
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars     <- unique(as.character(habi$Taxa))
@@ -198,12 +199,12 @@ for(i in 1:length(resp.vars)){
 names(out.all) <- resp.vars
 names(var.imp) <- resp.vars
 all.mod.fits <- do.call("rbind", out.all)
-all.var.imp <- do.call("rbind", var.imp)
+all.var.imp  <- do.call("rbind", var.imp)
 write.csv(all.mod.fits[ , -2], file = paste(outdir, name, "all.mod.fits.csv", sep = ""))
-write.csv(all.var.imp, file = paste(outdir, name, "all.var.imp.csv", sep = "_"))
+write.csv(all.var.imp, file = paste(outdir, name, "all.var.imp.csv", sep = ""))
 
-# Generic importance plots-
-heatmap.2(all.var.imp,notecex = 0.4,  dendrogram = "none",
+# Generic importance plots- - unsure why we're not getting any value for the other preds. internal m.cor exclusion?
+heatmap.2(all.var.imp, notecex = 0.4,  dendrogram = "none",
           col = colorRampPalette(c("white", "yellow", "red"))(10),
           trace = "none", key.title = "", keysize = 2,
           notecol = "black", key = T,
@@ -214,9 +215,10 @@ heatmap.2(all.var.imp,notecex = 0.4,  dendrogram = "none",
 
 # Load the importance score dataset produced above
 # dat.taxa <-read.csv(text=getURL("https://raw.githubusercontent.com/beckyfisher/FSSgam/master/case_study2_model_out/clams_all.var.imp.csv"))%>% #from github
-dat.taxa <- read.csv("clams_all.var.imp.csv")%>% #from local copy
-  rename(resp.var=X)%>%
-  gather(key=predictor,value=importance,2:ncol(.))%>%
+dat.taxa <- all.var.imp %>%
+  # read.csv("clams_all.var.imp.csv") %>% #from local copy
+  rename(resp.var = X) %>%
+  gather(key = predictor, value = importance, 2:ncol(.)) %>%
   glimpse()
 
 
