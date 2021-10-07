@@ -3,7 +3,7 @@
 # Data:    BRUVS, BOSS Habitat data
 # Task:    Basic habitat models
 # author:  Kingsley Griffin
-# date:    July-Oct 2021
+# date:    Sept-Oct 2021
 ##
 
 library(reshape2)
@@ -12,17 +12,23 @@ library(ggplot2)
 library(viridis)
 
 # read in
-habi   <- readRDS("data/tidy/merged_habitat.rds")                             # merged data from 'R/1_mergedata.R'
-preds  <- readRDS("data/spatial/spatial_covariates.rds")                      # stack of spatial covs from 'R/1_mergedata.R'
+habi   <- readRDS("data/tidy/merged_habitat.rds")                               # merged data from 'R/1_mergedata.R'
+preds  <- readRDS("data/spatial/spatial_covariates.rds")                        # spatial covs from 'R/1_mergedata.R'
 preddf <- as.data.frame(preds, xy = TRUE, na.rm = TRUE)
 preddf$Depth <- preddf$Z * -1
 
 # reduce predictor space to fit survey area
 preddf <- preddf[preddf$Depth > min(habi$Depth), ]
 preddf <- preddf[preddf$Depth < 200, ]
+spredf <- preddf[(preddf$y > 6880000 & preddf$y < 6900000 & preddf$x > 130000 & preddf$x < 165000) | 
+                   (preddf$y > 6986000 & preddf$y < 7000000 & preddf$x > 110000 & preddf$x < 125000), ]
 
-# broad macroalgae classification ----
-habi$macroalgae <- rowSums(habi[, grep("Macroalgae", colnames(habi))])        # sum all macroalgae tags
+# broad macroalgae, sponge classification ----
+habi$macroalgae <- rowSums(habi[ , grep("Macroalgae", colnames(habi))])         # sum all macroalgae tags
+habi$sponge     <- rowSums(habi[ , grep("Sponge", colnames(habi))])
+
+# something up with one point - needs investigation
+habi <- habi[!(habi$totalpts - habi$macroalgae < 0), ]
 
 # visualise
 covs <- c("Depth", "slope", "roughness", "tpi", "tri")
@@ -31,8 +37,9 @@ ggplot(habl, aes(value, macroalgae/totalpts)) +
   geom_point() + geom_smooth() + 
   facet_wrap(~ variable, scales = "free_x")
 
-# something up with one point - needs investigation
-habi <- habi[!(habi$totalpts - habi$macroalgae < 0), ]
+ggplot(habl, aes(value, sponge/totalpts)) + 
+  geom_point() + geom_smooth() + 
+  facet_wrap(~ variable, scales = "free_x")
 
 # quick model
 m1 <- gam(cbind(macroalgae, totalpts - macroalgae) ~ 
@@ -43,10 +50,18 @@ summary(m1)
 gam.check(m1)
 vis.gam(m1)
 
-# predict and plot
-preds <- cbind(preddf, "ps" = predict(m1, preddf, type = "response"))
+m2 <- gam(cbind(sponge, totalpts - sponge) ~ 
+            s(log(Depth), bs = "cr") + s(slope, bs = "cr"), 
+          data = habi, method = "REML", family = binomial("logit"))
+summary(m2)
+gam.check(m2)
+vis.gam(m2)
 
-ggplot(preds, aes(x, y, fill = ps)) +
+# predict and plot
+bpreds <- cbind(preddf, "pma" = predict(m1, preddf, type = "response"),
+               "ps" = predict(m2, preddf, type = "response"))
+
+ggplot(bpreds, aes(x, y, fill = pma)) +
   geom_raster() + 
   scale_fill_viridis(option = "E") +
   theme_minimal() +
@@ -54,16 +69,38 @@ ggplot(preds, aes(x, y, fill = ps)) +
 
 ggsave("figures/broad_macroalgae.png", width = 10, height = 8, dpi = 160)
 
+ggplot(bpreds, aes(x, y, fill = ps)) +
+  geom_raster() + 
+  scale_fill_viridis(option = "E") +
+  theme_minimal() +
+  labs(x = NULL, y = NULL, fill = "Sponge (p)")
+
+# predict only to survey areas
+
+spreds <- cbind(spredf, "pma" = predict(m1, spredf, type = "response"),
+                "ps" = predict(m2, spredf, type = "response"))
+
+ggplot(spreds, aes(x, y)) +
+  geom_tile(aes(fill = ps)) +
+  scale_fill_viridis(option = "E") +
+  geom_point(data = habi, aes(Longitude.1, Latitude.1, colour = (sponge/totalpts))) +
+  scale_colour_viridis(option = "E") +
+  theme_minimal() +
+  labs(x = NULL, y = NULL, fill = "Sponge (p)", colour = NULL)
+
+
+
+
 # ### NOTES ----
 # ## visualise all relationships
 # colnames(habi)
 # habl <- melt(habi, measure.vars = c(8:34))
 # colnames(habl)[19:20] <- c("Tag", "Count")
 # 
-# ggplot(habl, aes(Depth, Count/totalpts)) + 
-#   geom_point() + geom_smooth() + 
+# ggplot(habl, aes(Depth, Count/totalpts)) +
+#   geom_point() + geom_smooth() +
 #   facet_wrap (~ Tag, scales = "free_y")
-# 
+
 # ggplot(habl, aes(Z, Count/totalpts)) + 
 #   geom_point() + geom_smooth() + 
 #   facet_wrap (~ Tag, scales = "free_y")
