@@ -124,8 +124,7 @@ habi <- habi %>%
 
 # # Re-set the predictors for modeling----
 pred.vars <- c("logdepth","sqrttri","sqrtrough","sqrtslope",
-               # "tpi",
-               "aspect", "Longitude.1", "Latitude.1") 
+               "tpi", "aspect", "Longitude.1", "Latitude.1") 
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars     <- unique(as.character(habi$Taxa))
@@ -154,9 +153,14 @@ for(i in 1:length(resp.vars)){
   use.dat <- use.dat[!(use.dat$totalpts - use.dat$response < 0), ] # added to fix weird point
   
   Model1  <- gam(cbind(response, (totalpts - response)) ~ 
-                   s(logdepth, k = 3, bs = 'cr') + 
-                   s(Longitude.1, k = 3, bs = "cr") +
-                   s(Latitude.1, k = 3, bs = "cr" ),
+                   s(logdepth, bs = 'cr') +
+                   s(sqrttri, bs = "cr") +
+                   s(sqrtrough, bs = "cr") +
+                   s(sqrtslope, bs = "cr") +
+                   s(tpi, bs = "cr") +
+                   s(aspect, bs = "cr") +
+                   s(Latitude.1, bs = "cr") +
+                   s(Longitude.1, bs = "cr"),
                  family = binomial("logit"),  data = use.dat)
   
   model.set <- generate.model.set(use.dat = use.dat,
@@ -176,7 +180,7 @@ for(i in 1:length(resp.vars)){
   mod.table <- out.list$mod.data.out  # look at the model selection table
   mod.table <- mod.table[order(mod.table$AICc), ]
   mod.table$cumsum.wi <- cumsum(mod.table$wi.AICc)
-  out.i     <- mod.table[which(mod.table$delta.AICc <= 3),]
+  out.i     <- mod.table[which(mod.table$delta.AICc <= 3), ]
   out.all   <- c(out.all, list(out.i))
   # var.imp=c(var.imp,list(out.list$variable.importance$aic$variable.weights.raw)) #Either raw importance score
   var.imp   <- c(var.imp, list(out.list$variable.importance$aic$variable.weights.raw)) #Or importance score weighted by r2
