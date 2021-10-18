@@ -1,3 +1,11 @@
-"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","logdepth","sqrttri","sqrtrough","sqrtslope","tpi","aspect","Longitude.1","Latitude.1","cumsum.wi"
-"macroalgae","logdepth+tpi",457.825719458814,468.387406570499,0.23097,NA,4.96,0,0,0,1,1,1,0,0,0,1,0,0,0,1
-"sponge","logdepth+tpi",1061.22315370453,1071.90069290218,0.14663,NA,4.98,0,0,0,1,1,1,0,0,0,1,0,0,0,1
+"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","Depth","roughness","aspect","tpi","cumsum.wi"
+"macroalgae.Depth+roughness+tpi","Depth+roughness+tpi",380.058216107462,402.626868247949,0.13596,NA,12.02,0,0,0,1,1,1,1,0,1,1
+"macroalgae.aspect+Depth+tpi","aspect+Depth+tpi",401.709097212042,423.195657398582,0.08454,NA,11.27,0,21.651,20.569,0,0,1,0,1,1,1
+"macroalgae.Depth+tpi","Depth+tpi",423.413840720461,440.25922249544,0.0992,NA,8.36,0,43.356,37.632,0,0,1,0,0,1,1
+"macroalgae.aspect+Depth+roughness","aspect+Depth+roughness",521.161569349944,538.850519992886,0.34388,NA,8.86,0,141.103,136.224,0,0,1,1,1,0,1
+"macroalgae.Depth+roughness","Depth+roughness",534.373602125966,547.232646034394,0.30485,NA,6.15,0,154.315,144.606,0,0,1,1,0,0,1
+"macroalgae.aspect+Depth","aspect+Depth",539.561220170832,550.789696075923,0.32507,NA,5.3,0,159.503,148.163,0,0,1,0,1,0,1
+"macroalgae.Depth","Depth",559.121801298013,565.404992656082,0.28925,NA,2.86,0,179.064,162.778,0,0,1,0,0,0,1
+"sponge.Depth+roughness+tpi","Depth+roughness+tpi",766.305650468949,790.406799522574,0.04599,NA,12.96,0,0,0,1,1,1,1,0,1,1
+"sponge.aspect+Depth+tpi","aspect+Depth+tpi",898.178833432178,919.403124642443,0.04408,NA,10.95,0,131.873,128.996,0,0,1,0,1,1,1
+"sponge.Depth+tpi","Depth+tpi",928.645292341748,946.658755621228,0.04384,NA,8.96,0,162.34,156.252,0,0,1,0,0,1,1

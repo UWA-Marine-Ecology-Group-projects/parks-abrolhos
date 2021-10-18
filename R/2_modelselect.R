@@ -90,41 +90,40 @@ habi <- habi %>%
 habi <- melt(habi, measure.vars = c(8:35, 46:47))
 
 # Set predictor variables---
-pred.vars <- c("Depth","tri","tpi", "roughness", "slope", "aspect", "Longitude.1", "Latitude.1") 
+pred.vars <- c("Depth","tri", "tpi", "roughness", "slope", "aspect", "Longitude.1", "Latitude.1") 
 
 # predictor variables Removed at first pass---
 # broad.Sponges and broad.Octocoral.Black and broad.Consolidated , "InPreds","BioTurb" are too rare
 
 # Check for correlation of predictor variables- remove anything highly correlated (>0.95)---
-round(cor(habi[,pred.vars]),2)
+round(cor(habi[ , pred.vars]), 2)
 # several highly correlated terrain variables here but I think we need to keep them?
 
 # Review of individual predictors for even distribution---
 # Plot of likely transformations - Anna Cresswell loop
-par(mfrow=c(3,2))
+par(mfrow = c(3, 2))
 for (i in pred.vars) {
-  x<-habi[ ,i]
+  x<-habi[ , i]
   x = as.numeric(unlist(x))
   hist((x))#Looks best
-  plot((x),main = paste(i))
+  plot((x), main = paste(i))
   hist(sqrt(x))
   plot(sqrt(x))
-  hist(log(x+1))
-  plot(log(x+1))
+  hist(log(x + 1))
+  plot(log(x + 1))
 }
 
 # review and create cols for best transforms
 habi <- habi %>%
   mutate(logdepth = log(Depth)) %>%
-  mutate(sqrttri = sqrt(tri)) %>%
+  # mutate(sqrttri = sqrt(tri)) %>%
   mutate(sqrtrough = sqrt(roughness)) %>%
-  mutate(sqrtslope = sqrt(slope)) %>%
+  # mutate(sqrtslope = sqrt(slope)) %>%
   rename(Taxa = variable) %>%
   rename(response = value)
 
 # # Re-set the predictors for modeling----
-pred.vars <- c("logdepth","sqrttri","sqrtrough","sqrtslope",
-               "tpi", "aspect", "Longitude.1", "Latitude.1") 
+pred.vars <- c("Depth","roughness", "aspect", "tpi") 
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars     <- unique(as.character(habi$Taxa))
@@ -151,16 +150,9 @@ name <- "eg"
 for(i in 1:length(resp.vars)){
   use.dat <- habi[habi$Taxa == resp.vars[i],]
   use.dat <- use.dat[!(use.dat$totalpts - use.dat$response < 0), ] # added to fix weird point
-  
+  # use.dat$Site <- as.factor(use.dat$Site)
   Model1  <- gam(cbind(response, (totalpts - response)) ~ 
-                   s(logdepth, bs = 'cr') +
-                   s(sqrttri, bs = "cr") +
-                   s(sqrtrough, bs = "cr") +
-                   s(sqrtslope, bs = "cr") +
-                   s(tpi, bs = "cr") +
-                   s(aspect, bs = "cr") +
-                   s(Latitude.1, bs = "cr") +
-                   s(Longitude.1, bs = "cr"),
+                   s(Depth, bs = 'cr'),
                  family = binomial("logit"),  data = use.dat)
   
   model.set <- generate.model.set(use.dat = use.dat,
@@ -168,7 +160,9 @@ for(i in 1:length(resp.vars)){
                                pred.vars.cont = pred.vars,
                                # pred.vars.fact=factor.vars,
                                # linear.vars="Distance",
-                               k = 3
+                               cyclic.vars = c("aspect"),
+                               k = 5,
+                               cov.cutoff = 0.7
                                # null.terms = "s(Site, bs='re')"
                                )
   out.list <- fit.model.set(model.set,
@@ -180,10 +174,9 @@ for(i in 1:length(resp.vars)){
   mod.table <- out.list$mod.data.out  # look at the model selection table
   mod.table <- mod.table[order(mod.table$AICc), ]
   mod.table$cumsum.wi <- cumsum(mod.table$wi.AICc)
-  out.i     <- mod.table[which(mod.table$delta.AICc <= 3), ]
+  out.i     <- mod.table[which(mod.table$delta.AICc <= 200), ]
   out.all   <- c(out.all, list(out.i))
-  # var.imp=c(var.imp,list(out.list$variable.importance$aic$variable.weights.raw)) #Either raw importance score
-  var.imp   <- c(var.imp, list(out.list$variable.importance$aic$variable.weights.raw)) #Or importance score weighted by r2
+  var.imp   <- c(var.imp, list(out.list$variable.importance$aic$variable.weights.raw))
   
   # plot the best models
   for(m in 1:nrow(out.i)){
@@ -207,7 +200,7 @@ all.var.imp  <- do.call("rbind", var.imp)
 write.csv(all.mod.fits[ , -2], file = paste(outdir, name, "all.mod.fits.csv", sep = ""))
 write.csv(all.var.imp, file = paste(outdir, name, "all.var.imp.csv", sep = ""))
 
-# Generic importance plots- - unsure why we're not getting any value for the other preds. internal m.cor exclusion?
+ # Generic importance plots- - unsure why we're not getting any value for the other preds. internal m.cor exclusion?
 heatmap.2(all.var.imp, notecex = 0.4,  dendrogram = "none",
           col = colorRampPalette(c("white", "yellow", "red"))(10),
           trace = "none", key.title = "", keysize = 2,
@@ -217,12 +210,15 @@ heatmap.2(all.var.imp, notecex = 0.4,  dendrogram = "none",
 
 # Part 2 - custom plot of importance scores----
 
+dat.taxa <- as.data.frame(all.var.imp)
+
 # Load the importance score dataset produced above
 # dat.taxa <-read.csv(text=getURL("https://raw.githubusercontent.com/beckyfisher/FSSgam/master/case_study2_model_out/clams_all.var.imp.csv"))%>% #from github
-dat.taxa <- all.var.imp %>%
+dat.taxa <- dat.taxa %>%
   # read.csv("clams_all.var.imp.csv") %>% #from local copy
-  rename(resp.var = X) %>%
-  gather(key = predictor, value = importance, 2:ncol(.)) %>%
+  mutate(resp.var = rownames(dat.taxa)) %>%
+  # rename(resp.var = rownames(dat.taxa)) %>%
+  gather(key = predictor, value = importance, 1:ncol(.)-1) %>%
   glimpse()
 
 
@@ -269,41 +265,12 @@ gg.importance.scores <- ggplot(dat.taxa.label, aes(x=predictor,y=resp.var,fill=i
   geom_tile(show.legend=T) +
   scale_fill_gradientn(legend_title,colours=c("white", re), na.value = "grey98",
                        limits = c(0, max(dat.taxa.label$importance)))+
-  scale_x_discrete(limits=c("Distance",
-                            "Status",
-                            "lobster",
-                            "snapper",
-                            "fetch",
-                            "org",
-                            "sqrt.X4mm",
-                            "sqrt.X2mm",
-                            "sqrt.X1mm",
-                            "sqrt.X500um"),
-                   labels=c(
-                     "Distance",
-                     "Status",
-                     "Lobster",
-                     "Snapper",
-                     "Fetch (km)",
-                     "Organic content",
-                     "Grain size: 4mm",
-                     "            2mm",
-                     "            1mm",
-                     "            500um"
-                   ))+
-  scale_y_discrete(limits = c("CPN",
-                              "BMS",
-                              "BDS"),
-                   labels=c("P. novizelandiae",
-                            "M. striata",
-                            "D. subrosea"))+
   xlab(NULL)+
   ylab(NULL)+
   theme_classic()+
   Theme1+
   geom_text(aes(label=label))
 gg.importance.scores
-
 
 # Part 3 - plots of the most parsimonious models----
 
@@ -333,8 +300,7 @@ Theme1 <-
 
 
 # Bring in and format the raw data----
-setwd("~/GitHub/FSSgam")
-name<-"clams"
+
 
 # Load the dataset - from github
 # dat <-read.csv(text=getURL("https://raw.githubusercontent.com/beckyfisher/FSSgam/master/case_study2_dataset.csv?token=AOSO6uyYhat9-Era46nbjALQpTydsTskks5ZY3vhwA%3D%3D"))%>%
@@ -601,25 +567,6 @@ combine.plot<-arrangeGrob(ggmod.bds.status,ggmod.bds.distance.x.status,ggmod.bds
                           ggmod.cpn.lobster,ggmod.cpn.4mm,blank,nrow=3,ncol=3)
 
 ggsave(combine.plot,file="Langlois_gamm.plot.png", width = 30, height = 30,units = "cm")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

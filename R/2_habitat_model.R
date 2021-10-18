@@ -41,9 +41,9 @@ ggplot(habl, aes(value, sponge/totalpts)) +
   geom_point() + geom_smooth() + 
   facet_wrap(~ variable, scales = "free_x")
 
-# quick model
+# top model from '2_modelselect.R'
 m1 <- gam(cbind(macroalgae, totalpts - macroalgae) ~ 
-            s(log(Depth), bs = "cr") + s(tri, bs = "cr"), 
+            s(Depth, k = 5, bs = "cr") + s(roughness, k = 5, bs = "cr") + s(tpi, k = 5, bs = "cr"), 
           data = habi, method = "REML", family = binomial("logit"))
 summary(m1)
 
@@ -51,7 +51,7 @@ gam.check(m1)
 vis.gam(m1)
 
 m2 <- gam(cbind(sponge, totalpts - sponge) ~ 
-            s(log(Depth), bs = "cr") + s(slope, bs = "cr"), 
+            s(Depth, k = 5, bs = "cr") + s(roughness, k = 5, bs = "cr") + s(tpi, k = 5, bs = "cr"), 
           data = habi, method = "REML", family = binomial("logit"))
 summary(m2)
 gam.check(m2)
@@ -65,7 +65,8 @@ ggplot(bpreds, aes(x, y, fill = pma)) +
   geom_raster() + 
   scale_fill_viridis(option = "E") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Macroalgae (p)")
+  labs(x = NULL, y = NULL, fill = "Macroalgae (p)") + 
+  coord_equal()
 
 ggsave("figures/broad_macroalgae.png", width = 10, height = 8, dpi = 160)
 
@@ -73,7 +74,8 @@ ggplot(bpreds, aes(x, y, fill = ps)) +
   geom_raster() + 
   scale_fill_viridis(option = "E") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Sponge (p)")
+  labs(x = NULL, y = NULL, fill = "Sponge (p)") + 
+  coord_equal()
 
 # predict only to survey areas
 
@@ -86,8 +88,17 @@ ggplot(spreds, aes(x, y)) +
   geom_point(data = habi, aes(Longitude.1, Latitude.1, colour = (sponge/totalpts))) +
   scale_colour_viridis(option = "E") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Sponge (p)", colour = NULL)
+  labs(x = NULL, y = NULL, fill = "Sponge (p)", colour = NULL) +
+  coord_equal()
 
+ggplot(spreds, aes(x, y)) +
+  geom_tile(aes(fill = pma)) +
+  scale_fill_viridis(option = "E") +
+  geom_point(data = habi, aes(Longitude.1, Latitude.1, colour = (macroalgae/totalpts))) +
+  scale_colour_viridis(option = "E") +
+  theme_minimal() +
+  labs(x = NULL, y = NULL, fill = "Macroalgae (p)", colour = NULL) +
+  coord_equal()
 
 
 
