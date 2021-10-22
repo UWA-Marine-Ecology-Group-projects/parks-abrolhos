@@ -1,15 +1,17 @@
 
 ###
 # Project: Parks - Abrolhos Post-Survey
-# Data:    GA Coarse Bathy/elevation data
-# Task:    Trim down huge GA raster
+# Data:    Bathymetry Data
+# Task:    Prepare spatial layers for modelling
 # author:  Kingsley Griffin
-# date:    Jul 2021
+# date:    Jul-Oct 2021
 ##
 
+library(sp)
 library(raster)
 library(sf)
-library(sp)
+library(stars)
+library(starsExtra)
 
 # read in and merge GA coarse bathy tiles from https://ecat.ga.gov.au/geonetwork/srv/eng/catalog.search#/metadata/67703
 cbaths <- list.files("data/spatial/raster", "*tile", full.names = TRUE)
@@ -40,11 +42,24 @@ sppcrs  <- CRS("+proj=utm +zone=50 +south +datum=WGS84 +units=m +no_defs")     #
 proj4string(fbath) <- wgscrs
 fbath_t <- projectRaster(fbath, crs = sppcrs)
 
+# reduce bathy area further to keep lightweight
+fbath_t <- crop(fbath_t, extent(c(105000, 165000, 6880000, 7000000)))
+
 # calculate terrain on fine bathy
 preds <- terrain(fbath_t, neighbors = 8,
                  opt = c("slope", "aspect", "TPI", "TRI", "roughness"))
 preds <- stack(fbath_t, preds)
+
+# detrend bathy to highlight local topo
+zstar <- st_as_stars(fbath_t)
+detre <- detrend(zstar, parallel = 8)
+detre <- as(object = detre, Class = "Raster")
+names(detre) <- c("detrended", "lineartrend")
+preds <- stack(preds, detre)
+plot(preds)
+
 saveRDS(preds, "data/spatial/spatial_covariates.rds")
+
 
 # clear workspace of large rasters etc
 rm(ls())
