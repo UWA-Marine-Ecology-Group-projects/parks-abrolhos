@@ -8,6 +8,7 @@
 
 library(INLA)
 library(sp)
+library(ggnewscale)
 
 habi   <- readRDS("data/tidy/merged_habitat.rds")                               # merged data from 'R/1_mergedata.R'
 preds  <- readRDS("data/spatial/spatial_covariates.rds")                        # spatial covs from 'R/1_mergedata.R'
@@ -97,13 +98,34 @@ datpred <- na.omit(datpred)
 predrast <- rasterize(x = cbind(datpred$x, datpred$y), 
                       y = preds, field = datpred$pred)
 
-sitebuf  <- buffer(habisp, 20000)
+sitebuf  <- buffer(habisp, 10000)
 predrast <- mask(predrast, sitebuf)
 predrast <- crop(predrast, extent(sitebuf))
 plot(predrast)
 plot(habisp, add = TRUE, col = "red")
 
 # predict relief score across mesh using model formula
+modout  <- m1$summary.fixed
+pmask   <- predrast / predrast
+pcells  <- preds[[c(1, 4, 7)]] * pmask
+pcells  <- stack(pcells, predrast)
+names(pcells) <- c("depth", "rough", "dtren", "p_sp")
+pcelldf <- as.data.frame(pcells, na.rm = TRUE, xy = TRUE)
+head(pcelldf)
 
+# recall formula: y ~ depth + rough + dtren + f(sp, model = spde)
+pcelldf$prelief <- modout$mean[1] + pcelldf$depth * modout$mean[2] + 
+  pcelldf$rough * modout$mean[3] + pcelldf$dtren * modout$mean[4] + 
+  pcelldf$p_sp
 
+ggplot(pcelldf, aes(x, y)) +
+  geom_tile(aes(fill = prelief)) +
+  scale_fill_viridis() +
+  geom_point(data = habi, aes(Longitude.1, Latitude.1, colour = relief)) +
+  scale_colour_viridis() +
+  coord_equal()
+
+prelief <- rasterFromXYZ(cbind(pcelldf[c(1:2, 7)]))
+
+plot(prelief)
 
