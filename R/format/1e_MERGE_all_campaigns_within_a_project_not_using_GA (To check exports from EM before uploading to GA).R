@@ -1,10 +1,3 @@
-### Merge EventMeasure database output tables into maxn and length files
-
-### OBJECTIVES ###
-# combine database tables into single Metadata, MaxN and Length files for subsequent validation and data analysis.
-
-### Please forward any updates and improvements to tim.langlois@uwa.edu.au & brooke.gibbons@uwa.edu.au or raise an issue in the "globalarchive-query" GitHub repository
-
 rm(list=ls()) # Clear memory
 
 ## Load Libraries ----
@@ -27,53 +20,19 @@ library(googlesheets)
 
 ## Set Study Name ----
 # Change this to suit your study name. This will also be the prefix on your final saved files.
-study<-"database.tables.example" 
-
-## Folder Structure ----
-# This script uses one main folder ('working directory')
-# Three subfolders will be created within the 'working directory'. They are 'EM Export','Staging' and 'Tidy data'
-# Save the database exports into the 'EM Export' folder
-# The 'Staging' folder is used to save the combined files (e.g. metadata, maxn or length) NOTE: These initial outputs have not gone through any check (e.g. checks against the life-history sheet)
-
-# Naming in the script is extremely important! Names need to be consistent or the script will break
-
-# **The only folder you will need to create is your working directory**
+study<-"2021-05_Abrolhos_BOSS" 
 
 ## Set your working directory ----
-working.dir<-dirname(rstudioapi::getActiveDocumentContext()$path) # to directory of current file - or type your own
+working.dir<-getwd()
 
 ## Save these directory names to use later----
-staging.dir<-paste(working.dir,"Staging",sep="/") 
-download.dir<-paste(working.dir,"EM Export",sep="/")
-tidy.dir<-paste(working.dir,"Tidy data",sep="/")
+staging.dir<-paste(working.dir,"data/raw/Staging",sep="/") 
+download.dir<-paste(working.dir,"data/raw/EM Export",sep="/")
+tidy.dir<-paste(working.dir,"data/Tidy",sep="/")
 
 setwd(working.dir)
 
-## Create EM Export, Staging and Tidy data folders ----
-dir.create(file.path(working.dir, "EM Export"))
-dir.create(file.path(working.dir, "Staging"))
-dir.create(file.path(working.dir, "Tidy data"))
-
-# BEFORE CONTINUING ----
-# You should now copy your database tables into the EM Export folder 
-
-# Combine all data----
-# The below code will find all files that have the same ending (e.g. "_Metadata.csv") and bind them together.
-# The end product is three data frames; metadata, maxn and length.
-
 # Metadata ----
-# You will need a metadata file. This can either be a .csv file or a google sheet 
-# If using a .csv the file name MUST end in "_Metadata.csv"
-# Both csv and googlesheet will need to match the global archive format
-# See the user manual: https://globalarchivemanual.github.io/ for the correct format
-# In this example we will use a csv file (you will need to create a csv file to upload to GlobalArchive anyway but can use this script to save the file to upload to globalarchive)
-
-# For google sheet ----
-metadata<-gs_title("Paste title of labsheet here")%>%
-  gs_read_csv(ws = "paste sheet name here")%>%
-  ga.clean.names()
-
-# For csv file ----
 metadata <-ga.list.files("_Metadata.csv")%>% # list all files ending in "_Metadata.csv"
   purrr::map_df(~ga.read.files_em.csv(.))%>% # combine into dataframe
   dplyr::select(campaignid,sample,latitude,longitude,date,time,location,status,site,depth,observer,successful.count,successful.length,comment)%>% # This line ONLY keep the 15 columns listed. Remove or turn this line off to keep all columns (Turn off with a # at the front).
@@ -86,8 +45,10 @@ write.csv(metadata,paste(study,"metadata.csv",sep="_"),row.names = FALSE)
 
 ## Combine Points and Count files into maxn ----
 maxn<-ga.create.em.maxn()%>%
+  dplyr::select(-c(sample, filename)) %>%
+  dplyr::rename(sample=period)%>%
   dplyr::inner_join(metadata)%>%
-  dplyr::filter(successful.count=="Yes")%>%
+  dplyr::filter(successful.count=="Y")%>%
   dplyr::filter(maxn>0)
 
 # Save MaxN file ----
@@ -97,8 +58,10 @@ write.csv(maxn,paste(study,"maxn.csv",sep="_"),row.names = FALSE)
 ## Combine Length, Lengths and 3D point files into length3dpoints----
 length3dpoints<-ga.create.em.length3dpoints()%>%
   dplyr::select(-c(time,comment))%>% # take time out as there is also a time column in the metadata
+  dplyr::select(-c(sample)) %>%
+  dplyr::rename(sample=period)%>%
   dplyr::inner_join(metadata)%>%
-  dplyr::filter(successful.length=="Yes")%>%
+  dplyr::filter(successful.length=="Y")%>%
   glimpse()
 
 ## Save length files ----
