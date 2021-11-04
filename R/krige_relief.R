@@ -9,6 +9,8 @@
 library(INLA)
 library(sp)
 library(ggnewscale)
+library(ggplot2)
+library(viridis)
 
 habi   <- readRDS("data/tidy/merged_habitat.rds")                               # merged data from 'R/1_mergedata.R'
 preds  <- readRDS("data/spatial/spatial_covariates.rds")                        # spatial covs from 'R/1_mergedata.R'
@@ -49,7 +51,9 @@ relief_stack   <- inla.stack(data = list(y = habi$relief),
 modform        <- y ~ depth + rough + dtren + f(sp, model = spde)
 
 # fit model
-m1 <- inla(modform, data = inla.stack.data(relief_stack),
+m1 <- inla(modform, 
+           # family = "poisson",
+           data = inla.stack.data(relief_stack),
            control.predictor = list(A = inla.stack.A(relief_stack)))
 
 summary(m1)

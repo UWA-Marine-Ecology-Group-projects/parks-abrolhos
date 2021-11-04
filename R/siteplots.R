@@ -178,27 +178,26 @@ snmpa_cols <- scale_fill_manual(values = c("National Park Zone" = "#7bbc63",
                                            "Multiple Use Zone" = "#b9e6fb"
 ))
 
-ssitebathy <- sitebathy[sitebathy$Depth > -600, ]                               # trim to reduce legend
+ssitebathy <- sitebathy[sitebathy$Depth > -200, ]                               # trim to reduce legend
 
 p4 <- ggplot() +
   geom_raster(data = ssitebathy, aes(x, y, fill = Depth), alpha = 4/5) +
   scale_fill_gradient(low = "black", high = "grey70") +
   geom_contour(data = ssitebathy, aes(x = x, y = y, z = Depth), 
-               binwidth = 50, colour = "white", alpha = 3/5, size = 0.1) +
+               binwidth = 10, colour = "white", alpha = 4/5, size = 0.1) +
   new_scale_fill() +
-  geom_sf(data = ab_nmp, aes(fill = ZoneName), alpha = 2/5, colour = NA) +
+  geom_sf(data = ab_nmp, aes(fill = ZoneName), alpha = 1/5, colour = NA) +
   snmpa_cols + labs(x = NULL, y = NULL, fill = "Commonwealth") +
   geom_point(data = bruvd, aes(Longitude, Latitude, colour = "BRUV"), 
              alpha = 3/5, shape = 10) +
   geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"), 
              alpha = 3/5, shape = 10) +
   scale_colour_manual(values = c("BRUV" = "indianred4",
-                                 "Drop Camera" = "seagreen4")) +
-  coord_sf(xlim = c(112.95, 113.4), ylim = c(-27.2, -27)) +
+                                 "Drop Camera" = "navyblue")) +
+  coord_sf(xlim = c(113.02, 113.28), ylim = c(-27.2, -27.05)) +
   labs(colour = "Sample", x = NULL, y = NULL) +
   theme_minimal()
 p4
-
 ggsave("figures/nthsite.png", dpi = 200, width = 10, height = 8)
 
 snmpa_cols <- scale_fill_manual(values = c("National Park Zone" = "#7bbc63",
@@ -206,23 +205,24 @@ snmpa_cols <- scale_fill_manual(values = c("National Park Zone" = "#7bbc63",
                                            "Special Purpose Zone" = "#6daff4"
 ))
 
+ssitebathy <- sitebathy[sitebathy$Depth > -400, ]                               # trim to reduce legend
+
 p5 <- ggplot() +
   geom_raster(data = ssitebathy, aes(x, y, fill = Depth), alpha = 4/5) +
   scale_fill_gradient(low = "black", high = "grey70") +
   geom_contour(data = ssitebathy, aes(x = x, y = y, z = Depth), 
-               binwidth = 50, colour = "white", alpha = 3/5, size = 0.1) +
+               binwidth = 10, colour = "white", alpha = 4/5, size = 0.1) +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = cwatr, colour = "firebrick", alpha = 4/5, size = 0.1) +
   new_scale_fill() +
-  geom_sf(data = ab_nmp, aes(fill = ZoneName), alpha = 2/5, colour = NA) +
+  geom_sf(data = ab_nmp, aes(fill = ZoneName), alpha = 1/5, colour = NA) +
   snmpa_cols + labs(x = NULL, y = NULL, fill = "Commonwealth") +
   geom_point(data = bruvd, aes(Longitude, Latitude, colour = "BRUV"), 
              alpha = 3/5, shape = 10) +
   geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"), 
              alpha = 3/5, shape = 10) +
   scale_colour_manual(values = c("BRUV" = "indianred4",
-                                 "Drop Camera" = "seagreen4")) +
-  coord_sf(xlim = c(113.2, 113.7), ylim = c(-28.2, -27.9)) +
+                                 "Drop Camera" = "navyblue")) +
+  coord_sf(xlim = c(113.24, 113.58), ylim = c(-28.13, -28.02)) +
   labs(colour = "Sample", x = NULL, y = NULL) +
   theme_minimal()
 p5
