@@ -35,7 +35,7 @@ setwd(working.dir)
 # Metadata ----
 metadata <-ga.list.files("_Metadata.csv")%>% # list all files ending in "_Metadata.csv"
   purrr::map_df(~ga.read.files_em.csv(.))%>% # combine into dataframe
-  dplyr::select(campaignid,sample,latitude,longitude,date,time,location,status,site,depth,observer,successful.count,successful.length,comment)%>% # This line ONLY keep the 15 columns listed. Remove or turn this line off to keep all columns (Turn off with a # at the front).
+  dplyr::select(campaignid,sample,latitude,longitude,date,time,location,status,site,depth,observer,successful.count,successful.length)%>% # This line ONLY keep the 15 columns listed. Remove or turn this line off to keep all columns (Turn off with a # at the front).
   glimpse()
 
 unique(metadata$campaignid) # check the number of campaigns in metadata, and the campaign name
@@ -44,12 +44,35 @@ setwd(staging.dir)
 write.csv(metadata,paste(study,"metadata.csv",sep="_"),row.names = FALSE)
 
 ## Combine Points and Count files into maxn ----
-maxn<-ga.create.em.maxn()%>%
-  dplyr::select(-c(sample, filename)) %>%
-  dplyr::rename(sample=period)%>%
+points.files <-ga.list.files("_Points.txt") # list all files ending in "Lengths.txt"
+points.files$lines<-sapply(points.files,countLines) # Count lines in files (to avoid empty files breaking the script)
+points<-as.data.frame(points.files)%>%
+  dplyr::mutate(campaign=row.names(.))%>%
+  filter(lines>1)%>% # filter out all empty text files
+  dplyr::select(campaign)%>%
+  as_vector(.)%>% # remove all empty files
+  purrr::map_df(~ga.read.files_em.txt(.))#%>%
+#select(-c(project))
+
+maxn<-points%>%
+  dplyr::select(-c(sample)) %>%
+  dplyr::rename(sample = period) %>%
+  dplyr::group_by(campaignid,sample,filename,periodtime,frame,family,genus,species)%>%
+  dplyr::mutate(number=as.numeric(number))%>%
+  dplyr::summarise(maxn=sum(number))%>%
+  dplyr::group_by(campaignid,sample,family,genus,species)%>%
+  dplyr::slice(which.max(maxn))%>%
+  dplyr::ungroup()%>%
+  dplyr::filter(!is.na(maxn))%>%
+  dplyr::select(-frame)%>%
+  tidyr::replace_na(list(maxn=0))%>%
+  dplyr::mutate(maxn=as.numeric(maxn))%>%
+  dplyr::filter(maxn>0)%>%
   dplyr::inner_join(metadata)%>%
   dplyr::filter(successful.count=="Y")%>%
   dplyr::filter(maxn>0)
+
+
 
 # Save MaxN file ----
 setwd(staging.dir)

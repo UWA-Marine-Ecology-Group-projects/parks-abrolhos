@@ -1,23 +1,3 @@
-
-### Error checks of MaxN and Length files created from EventMeasure or generic stereo-video annotations via GlobalArchive
-
-## This script is designed to be used interatively to suggest species name and length corrections that should be made to original EventMeasure (.EMObs) or generic annotation files AND for subsequent data analysis.
-
-# NOTE: ERRORS SHOULD BE FIXED IN THE .EMObs AND RE-UPLOADED TO GLOBAL ARCHIVE!
-
-
-### OBJECTIVES ###
-# 1. Import data and run BASIC error reports
-# 2. Limit length data by range and precision rules
-# 3. run SERIOUS error reports against a master species list
-# 4. Visualise what MaxN are missing in the stereoMaxN
-# 5. Write data for analysis that passes checks
-
-### Please forward any updates and improvements to tim.langlois@uwa.edu.au & brooke.gibbons@uwa.edu.au or raise an issue in the "globalarchive-query" GitHub repository
-
-# Please email tim.langlois@uwa.edu.au & brooke.gibbons@uwa.edu.au if you would like the life.history or synonyms googlesheets shared with you or to have your local species information added.
-
-
 # Clear memory ----
 rm(list=ls())
 
@@ -35,37 +15,24 @@ library(plyr)
 library(dplyr)
 library(readr)
 library(ggplot2)
+library(stringr)
 
 ## Set Study Name ----
 # Change this to suit your study name. This will also be the prefix on your final saved files.
-study<-"project.example"
-
-## Folder Structure ----
-# This script uses one main folder ('working directory')
-
-# Three subfolders will already be created within the 'working directory'. They are 'Downloads','Data to be checked' and 'Tidy data' (Script 1)
-
-# In addition, this script will make new folders for:
-#'Plots' to save initial checking plots
-#'Errors to check' to save all the error files e.g. lists of taxa that are not in the life history sheet
+study<-"2021-05_Abrolhos_BOSS" 
 
 ## Set your working directory ----
-working.dir<-dirname(rstudioapi::getActiveDocumentContext()$path) # sets working directory to that of this script - or type your own
+working.dir<-getwd()
 
 ## Save these directory names to use later----
-to.be.checked.dir<-paste(working.dir,"Data to be checked",sep="/") 
-download.dir<-paste(working.dir,"Downloads",sep="/")
-tidy.dir<-paste(working.dir,"Tidy data",sep="/")
-plots.dir=paste(working.dir,"Plots",sep="/")
-error.dir=paste(working.dir,"Errors to check",sep="/")
-
-## Create a folder for Plots and Errors ----
-# The two lines below will create the 'Plots' and 'Errors to check' subfolders within the working directory
-dir.create(file.path(working.dir, "Plots"))
-dir.create(file.path(working.dir, "Errors to check"))
+staging.dir<-paste(working.dir,"data/raw/Staging",sep="/") 
+download.dir<-paste(working.dir,"data/raw/EM Export",sep="/")
+tidy.dir<-paste(working.dir,"data/Tidy",sep="/")
+plots.dir=paste(working.dir,"plots/format",sep="/")
+error.dir=paste(working.dir,"data/raw/errors to check",sep="/")
 
 # Import unchecked data from staging folder----
-setwd(to.be.checked.dir)
+setwd(staging.dir)
 
 # Import metadata ---
 metadata<-read.csv(paste(study,"metadata.csv",sep="_"))
@@ -86,13 +53,12 @@ length<-read_csv(file=paste(study,"length3dpoints.csv",sep = "_"),na = c("", " "
   select(campaignid,sample,family,genus,species,length,number,range)%>%
   filter(!is.na(number)) %>% # find and remove sync points that are not fish
   replace_na(list(family="Unknown",genus="Unknown",species="spp"))%>% # remove any NAs in taxa name
+  mutate(species=tolower(species))%>%
   mutate(genus=str_replace_all(.$genus,c("NA"="Unknown")))%>%
   glimpse()
 
 # BASIC checks----
 # Check if we have 3d points (Number) in addition to length----
-# Use this check to identify any 3D points in your data. 3D points are often added if a length measurement couldn't be made.
-# Should you have 3D points? 
 
 three.d.points<-length%>%
   filter(is.na(length))%>%
@@ -100,8 +66,6 @@ three.d.points<-length%>%
   glimpse() # Do we have 3d points? 
 
 # Check if we have more than one fish associated with single length measurement----
-# For large schools (e.g. 100+) a length measurement can be assigned to multiple individuals (by changing the 'Number' in EventMeasure). For example in a school of 500 if you measure 50 fish, and put '10' for each measurement in EM, you would have 500 fish but only 50 measurements
-# Use this check to see if you have these types of measurements (e.g. to fix a mistaken number against multiple lengths).
 
 schools<-length%>%
   filter(number>1)%>%
@@ -155,34 +119,11 @@ out.of.range<-filter(length,range>10000)%>% # 10 m = 10000 mm
 
 # SERIOUS data checks using the life.history googlesheet ----
 # Checks on fish length vs their max.length in the life.history sheet will be done below
+url <- "https://docs.google.com/spreadsheets/d/1SMLvR9t8_F-gXapR2EemQMEPSw_bUbPLcXd3lJ5g5Bo/edit?ts=5e6f36e2#gid=825736197"
 
-# life.history checks will:
-# 1. Check for species occurence vs their known distribution
-# 2. Check for any species that may have changed names and suggest synonyms
-# 3. Check measured length vs max.length for that species
-
-# Make sure to select the correct Country and Marine Region that matches your data (see the two filter lines below)
-# Follow this link to see a map of the marine regions used in the life history sheet
-#  https://soe.environment.gov.au/theme/marine-environment/topic/2016/marine-regions
-
-# These Marine Region abbreviations are:
-# 'SW' - South-west
-# 'NW' - North-west
-# 'N' - North
-# 'CS' - Coral Sea
-# 'TE' - Temperate East
-# 'SE' - South-east
-# 'Christmas.Island' - Christmas Island
-# 'Cocos.Keeling' - Cocos (Keeling) Island
-# 'Lord.Howe.Island' - Lord Howe Island
-
-# Use the abbreviation in the code below
-# currently set for the Pilbara, Australia example data set ('NW' for North-west)
-
-master<-gs_title("Australia.life.history")%>%
-  gs_read_csv(ws = "australia.life.history")%>%ga.clean.names()%>%
+master<-googlesheets4::read_sheet(url)%>%ga.clean.names()%>%
   filter(grepl('Australia', global.region))%>% # Change country here
-  filter(grepl('NW', marine.region))%>% # Select marine region (currently this is only for Australia)
+  filter(grepl('SW', marine.region))%>% # Select marine region (currently this is only for Australia)
   dplyr::mutate(all=as.numeric(all))%>%
   dplyr::mutate(bll=as.numeric(bll))%>%
   dplyr::mutate(a=as.numeric(a))%>%
@@ -191,8 +132,9 @@ master<-gs_title("Australia.life.history")%>%
   distinct()%>%
   glimpse()
 
-synonyms <- gs_title("Synonyms_Australia")%>%
-  gs_read_csv(ws = "Synonyms_Australia")%>%
+synonymsurl <- "https://docs.google.com/spreadsheets/d/1R0uU9Q0VkUDQFgGTK3VnIGxmc101jxhlny926ztWoiQ/edit?ts=5e6f37a2#gid=567803926"
+
+synonyms<- googlesheets4::read_sheet(synonymsurl)%>%
   distinct()%>%
   ga.clean.names()%>%
   select(-comment)
