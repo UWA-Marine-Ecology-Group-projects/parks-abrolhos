@@ -12,16 +12,23 @@ library(ggnewscale)
 library(ggplot2)
 library(viridis)
 
-habi   <- readRDS("data/tidy/merged_habitat.rds")                               # merged data from 'R/1_mergedata.R'
-preds  <- readRDS("data/spatial/spatial_covariates.rds")                        # spatial covs from 'R/1_mergedata.R'
+habi  <- readRDS("data/tidy/merged_habitat.rds")                                # merged data from 'R/1_mergedata.R'
+preds <- readRDS("data/spatial/spatial_covariates.rds")                         # spatial covs from 'R/1_mergedata.R'
 colnames(habi)
 # trim predictor data cols and subset to npz6 area
 habi      <- habi[ , c(1, 2, 7, 39:49)]
 habi$npz6 <- c(0)
 habi$npz6[grep("npz6", habi$Sample)] <- 1
 habi$npz6[grep("out6", habi$Sample)] <- 1
-# habi      <- habi[habi$npz6 == 1, ]
+# habi     <- habi[habi$npz6 == 1, ]
 head(habi)
+
+# Build with all data, or set aside test/train data
+# alldat <- testdat
+# OR set aside train/test data
+# set.seed(42)
+# testdat <- totdat[sample(nrow(totdat), nrow(totdat)/2), ]
+# alldat  <- totdat[!totdat$FileName %in% testdat$FileName , ]
 
 # build inla mesh from spatial layout of sites - the constants need some tuning
 habisp         <- SpatialPointsDataFrame(coords = habi[4:5], data = habi)
