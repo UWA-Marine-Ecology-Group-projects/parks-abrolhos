@@ -1,0 +1,11 @@
+,modname,AICc,BIC,r2.vals,r2.vals.unique,edf,edf.less.1,delta.AICc,delta.BIC,wi.AICc,wi.BIC,depth,broad.consolidated,broad.unconsolidated,mean.relief,sd.relief,reef,status,location,cumsum.wi
+targeted.abundance,broad.consolidated+reef+sd.relief,164.714438,182.782087,0.29403,NA,6.84,0,0,0,0.996,0.996,0,1,0,0,1,1,0,0,0.996
+Labridae Coris auricularis.depth,depth,180.6363949,189.3349188,0.25209,NA,2,0,0,0,0.325,0.701,1,0,0,0,0,0,0,0,0.325
+Labridae Coris auricularis.depth+location,depth+location,181.7919875,192.5098629,0.29248,NA,3,0,1.156,3.175,0.182,0.143,1,0,0,0,0,0,0,1,0.507
+Labridae Coris auricularis.depth.by.location+location,depth.by.location+location,182.1761438,196.649667,0.07835,NA,4.8,0,1.54,7.315,0.15,0.018,1,0,0,0,0,0,0,1,0.657
+Lethrinidae Lethrinus miniatus,broad.consolidated+reef+sd.relief,76.80879754,94.88503052,0.16892,NA,6.87,0,0,0,1,1,0,1,0,0,1,1,0,0,1
+total.abundance.broad.consolidated+mean.relief,broad.consolidated+mean.relief,471.2111153,483.8554519,0.22456,NA,3.88,0,0,1.813,0.336,0.245,0,1,0,1,0,0,0,0,0.336
+total.abundance.mean.relief,mean.relief,471.331012,482.0425609,0.19774,NA,2.94,0,0.12,0,0.316,0.606,0,0,0,1,0,0,0,0,0.652
+total.abundance.location+mean.relief,location+mean.relief,472.7805671,485.4449815,0.20003,NA,3.95,0,1.569,3.402,0.153,0.111,0,0,0,1,0,0,0,1,0.805
+species.richness.location+mean.relief,location+mean.relief,202.616957,215.2827211,0.50447,NA,3.96,0,0,0,0.437,0.447,0,0,0,1,0,0,0,1,0.437
+species.richness.broad.consolidated+location+mean.relief,broad.consolidated+location+mean.relief,204.0449204,218.5868756,0.51608,NA,4.93,0,1.428,3.304,0.214,0.086,0,1,0,1,0,0,0,1,0.651
