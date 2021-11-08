@@ -1,0 +1,3 @@
+"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","broad.consolidated","broad.unconsolidated","mean.relief","sd.relief","reef","status","location","cumsum.wi"
+"greater than legal size","broad.consolidated+reef+sd.relief",90.1784167601355,108.238727250649,0.19875,NA,6.81,0,0,0,0.987,0.967,0,1,0,0,1,1,0,0,0.987
+"legal size red throat","broad.consolidated+reef+sd.relief",72.4203938597855,90.4870469322502,0.15622,NA,6.82,0,0,0,0.995,0.99,0,1,0,0,1,1,0,0,0.995

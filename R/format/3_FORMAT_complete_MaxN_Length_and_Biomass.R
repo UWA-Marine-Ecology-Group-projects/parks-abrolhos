@@ -1,25 +1,3 @@
-
-### Make complete.maxn and complete.length.number.mass data from Checked.maxn and Checked.length data created from EventMeasure or generic stereo-video annotations via GlobalArchive ###
-### Written by Tim Langlois, adpated and edited by Brooke Gibbons
-
-
-### OBJECTIVES ###
-# 1. Import checked data
-# 2. Make factors
-# 3. Make complete.maxn long.format data with zeros filled in:
-      ## PeriodTime will represent the first PeriodTime of MaxN if PeriodTime has been set to zero at Time on Seabed in EM.
-      ## complete.maxn data is useful for species and abundance metrics - that do not account for body size or range/sample unit size
-# 4. Make complete.length.number.mass data with zeros filled in:
-      ## useful for calculating abundance/mass based on length rules (e.g. greater than legal)
-      ## useful for controling for range/sample unit size
-      ## useful for length analyses (e.g. mean length, KDE, histograms) - after expansion by number of lengths per sample per species - see example below
-# 5. Make mass estimates from Length using a and b from life.history
-# 6. Write complete data sets for further analysis
-
-
-### Please forward any updates and improvements to tim.langlois@uwa.edu.au & brooke.gibbons@uwa.edu.au or raise an issue in the "globalarchive-query" GitHub repository
-
-
 # Clear memory ----
 rm(list=ls())
 
@@ -41,15 +19,15 @@ library(ggplot2)
 library(fst)
 
 # Study name---
-study<-"project.example" ## change for your project
+study<-"2021-05_Abrolhos_BOSS" 
 
 ## Set your working directory ----
-working.dir<-dirname(rstudioapi::getActiveDocumentContext()$path) # to directory of current file - or type your own
+working.dir<-getwd()
 
 ## Save these directory names to use later---- 
-tidy.dir<-paste(working.dir,"Tidy data",sep="/")
-plots.dir=paste(working.dir,"Plots",sep="/")
-error.dir=paste(working.dir,"Errors to check",sep="/")
+tidy.dir<-paste(working.dir,"data/Tidy",sep="/")
+plots.dir=paste(working.dir,"plots/format",sep="/")
+error.dir=paste(working.dir,"data/raw/errors to check",sep="/")
 
 # Read in the data----
 setwd(tidy.dir)
@@ -63,6 +41,7 @@ metadata<-read_csv(file=paste(study,"checked.metadata.csv",sep = "."),na = c("",
 # Make complete.maxn: fill in 0s and join in factors----
 dat<-read_csv(file=paste(study,"checked.maxn.csv",sep = "."),na = c("", " "))%>%
   dplyr::mutate(id=paste(campaignid,sample,sep="."))%>%
+  full_join(metadata)%>%
   dplyr::select(c(id,campaignid,sample,family,genus,species,maxn))%>%
   tidyr::complete(nesting(id,campaignid,sample),nesting(family,genus,species)) %>%
   replace_na(list(maxn = 0))%>%
@@ -86,8 +65,11 @@ maxn.families<-read_csv(file=paste(study,"checked.maxn.csv",sep = "."),na = c(""
 complete.maxn<-dat%>%
   gather(key=scientific, value = maxn,-sample)%>%
   inner_join(maxn.families,by=c("scientific"))%>%
-  inner_join(metadata)%>% # Joining metadata will use a lot of memory - # out if you need too
+  full_join(metadata)%>% # Joining metadata will use a lot of memory - # out if you need too
   glimpse()
+
+unique(dat$sample)
+unique(complete.maxn$sample)
 
 # Make complete.length.number.mass: fill in 0s and join in factors----
 length.families<-read_csv(file=paste(study,"checked.length.csv",sep = "."),na = c("", " "))%>%
@@ -135,10 +117,11 @@ ggplot(data=expanded.length, aes(y=as.numeric(length))) +
 # Make mass data from complete.length.number----
 # There are 6 steps
 # 1. use life.history---
-master<-gs_title("Australia.life.history")%>%
-  gs_read_csv(ws = "australia.life.history")%>%ga.clean.names()%>%
-  filter(grepl('Australia', global.region))%>%
-  filter(grepl('NW', marine.region))%>%
+url <- "https://docs.google.com/spreadsheets/d/1SMLvR9t8_F-gXapR2EemQMEPSw_bUbPLcXd3lJ5g5Bo/edit?ts=5e6f36e2#gid=825736197"
+
+master<-googlesheets4::read_sheet(url)%>%ga.clean.names()%>%
+  filter(grepl('Australia', global.region))%>% # Change country here
+  #filter(grepl('SW', marine.region))%>% # Select marine region (currently this is only for Australia)
   dplyr::mutate(all=as.numeric(all))%>%
   dplyr::mutate(bll=as.numeric(bll))%>%
   dplyr::mutate(a=as.numeric(a))%>%

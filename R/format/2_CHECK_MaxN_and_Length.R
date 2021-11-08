@@ -262,21 +262,6 @@ length<-length%>%
   filter(range<10000)%>%
   glimpse()
 
-# CAUTION Remove taxa that don't match from the final data ----
-maxn<-anti_join(maxn,maxn.taxa.not.match.life.history)
-length<-anti_join(length,length.taxa.not.match)
-
-# CAUTION Drop wrong lengths ----
-drop.length<-wrong.length.taxa%>% # TO REMOVE LENGTHS OUTSIDE THE MIN/MAX OF MASTER LIST
-  distinct(family,genus,species,length)%>%
-  dplyr::select(family,genus,species,length)%>%
-  dplyr::mutate(key = paste(family,genus,species,length, sep = '_'))
-
-length<-length%>%
-  dplyr::mutate(key = paste(family,genus,species,length, sep = '_'))%>%
-  anti_join(drop.length,by="key")%>% # for dropping wrong.lengths
-  dplyr::select(-c(key))%>%
-  glimpse()
 
 # WRITE FINAL checked data----
 setwd(tidy.dir)

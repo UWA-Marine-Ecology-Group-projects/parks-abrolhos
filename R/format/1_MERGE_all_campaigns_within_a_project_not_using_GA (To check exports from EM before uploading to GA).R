@@ -72,11 +72,12 @@ maxn<-points%>%
   dplyr::filter(successful.count=="Y")%>%
   dplyr::filter(maxn>0)
 
-
-
 # Save MaxN file ----
 setwd(staging.dir)
 write.csv(maxn,paste(study,"maxn.csv",sep="_"),row.names = FALSE)
+
+unique(maxn$sample)
+
 
 ## Combine Length, Lengths and 3D point files into length3dpoints----
 length3dpoints<-ga.create.em.length3dpoints()%>%

@@ -11,6 +11,8 @@
 "2021-05_Abrolhos_BOSS","npz6.26","Labridae","Coris","auricularis",53.8883,60,340,400,"too small",6.1117,13.472075
 "2021-05_Abrolhos_BOSS","npz6.26","Labridae","Coris","auricularis",59.98839,60,340,400,"too small",0.0116099999999975,14.9970975
 "2021-05_Abrolhos_BOSS","npz6.26","Labridae","Coris","auricularis",59.44749,60,340,400,"too small",0.552509999999998,14.8618725
+"2021-05_Abrolhos_BOSS","npz6.26","Labridae","Suezichthys","cyanolaemus",96.96949,14.55,82.45,97,"too big",14.51949,99.9685463917526
+"2021-05_Abrolhos_BOSS","npz6.26","Labridae","Suezichthys","cyanolaemus",82.82281,14.55,82.45,97,"too big",0.372810000000001,85.3843402061856
 "2021-05_Abrolhos_BOSS","npz6.20","Pomacentridae","Chromis","westaustralis",89.29059,12.75,72.25,85,"too big",17.04059,105.047752941176
 "2021-05_Abrolhos_BOSS","npz6.20","Pomacentridae","Chromis","westaustralis",78.83918,12.75,72.25,85,"too big",6.58918,92.7519764705882
 "2021-05_Abrolhos_BOSS","npz6.20","Pomacentridae","Chromis","westaustralis",81.70759,12.75,72.25,85,"too big",9.45759,96.1265764705882
@@ -57,7 +59,7 @@
 "2021-05_Abrolhos_BOSS","npz6.43","Labridae","Suezichthys","cyanolaemus",97.77514,14.55,82.45,97,"too big",15.32514,100.799113402062
 "2021-05_Abrolhos_BOSS","npz6.43","Labridae","Suezichthys","cyanolaemus",83.87743,14.55,82.45,97,"too big",1.42743,86.4715773195876
 "2021-05_Abrolhos_BOSS","npz6.2","Scorpididae","Neatypus","obliquus",199.26652,33,187,220,"too big",12.26652,90.5756909090909
-"2021-05_Abrolhos_BOSS","npz9.43","Monacanthidae","Eubalichthys","caeruleoguttatus",489.38127,57,323,380,"too big",166.38127,128.784544736842
+"2021-05_Abrolhos_BOSS","npz9.43","Monacanthidae","Eubalichthys","caeruleoguttatus",433.35301,57,323,380,"too big",110.35301,114.040265789474
 "2021-05_Abrolhos_BOSS","npz9.43","Chaetodontidae","Chaetodon","assarius",137.42117,24,136,160,"too big",1.42116999999999,85.88823125
 "2021-05_Abrolhos_BOSS","npz9.43","Chaetodontidae","Chaetodon","assarius",150.40839,24,136,160,"too big",14.40839,94.00524375
 "2021-05_Abrolhos_BOSS","npz9.43","Chaetodontidae","Chaetodon","assarius",140.0558,24,136,160,"too big",4.0558,87.534875
