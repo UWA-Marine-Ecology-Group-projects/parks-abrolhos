@@ -215,8 +215,9 @@ for(i in 1:length(resp.vars)){
                                test.fit=Model1,
                                pred.vars.cont=pred.vars,
                                pred.vars.fact=factor.vars,
-                               linear.vars="depth",
-                               k=3#,
+                               smooth.smooth.interactions = c("depth","mean.relief"),
+                               factor.smooth.interactions = NA,
+                               k=5#,
                                #null.terms="s(Location,Site,bs='re')"
                                )
   out.list=fit.model.set(model.set,
@@ -228,7 +229,7 @@ for(i in 1:length(resp.vars)){
   mod.table=out.list$mod.data.out  # look at the model selection table
   mod.table=mod.table[order(mod.table$AICc),]
   mod.table$cumsum.wi=cumsum(mod.table$wi.AICc)
-  out.i=mod.table[which(mod.table$delta.AICc<=3),]
+  out.i=mod.table[which(mod.table$delta.AICc<=2),]
   out.all=c(out.all,list(out.i))
   # var.imp=c(var.imp,list(out.list$variable.importance$aic$variable.weights.raw)) #Either raw importance score
   var.imp=c(var.imp,list(out.list$variable.importance$aic$variable.weights.raw)) #Or importance score weighted by r2

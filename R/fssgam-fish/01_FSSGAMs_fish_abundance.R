@@ -212,7 +212,7 @@ for(i in 1:length(resp.vars)){
                                pred.vars.cont=pred.vars,
                                pred.vars.fact=factor.vars,
                                linear.vars="depth",
-                               k=3#,
+                               k=5#,
                                #null.terms="s(Location,Site,bs='re')"
                                )
   out.list=fit.model.set(model.set,
