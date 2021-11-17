@@ -21,7 +21,7 @@ preddf$Depth <- preddf$Z * -1
 preddf <- preddf[preddf$Depth > min(habi$Depth), ]
 preddf <- preddf[preddf$Depth < 200, ]
 spredf <- preddf[(preddf$y > 6880000 & preddf$y < 6900000 & preddf$x > 130000 & preddf$x < 165000) | 
-                   (preddf$y > 6986000 & preddf$y < 7000000 & preddf$x > 110000 & preddf$x < 125000), ]
+                   (preddf$y > 6986000 & preddf$y < 7000000 & preddf$x > 105000 & preddf$x < 130000), ]
 
 # broad macroalgae, sponge classification ----
 habi$macroalgae <- rowSums(habi[ , grep("Macroalgae", colnames(habi))])         # sum all macroalgae tags
@@ -31,7 +31,7 @@ habi$sponge     <- rowSums(habi[ , grep("Sponge", colnames(habi))])
 habi <- habi[!(habi$totalpts - habi$macroalgae < 0), ]
 
 # visualise
-covs <- c("Depth", "slope", "roughness", "tpi", "tri")
+covs <- c("Depth", "slope", "roughness", "tpi", "tri", "detrended")
 habl <- melt(habi, measure.vars = covs)
 ggplot(habl, aes(value, macroalgae/totalpts)) + 
   geom_point() + geom_smooth() + 
@@ -41,9 +41,11 @@ ggplot(habl, aes(value, sponge/totalpts)) +
   geom_point() + geom_smooth() + 
   facet_wrap(~ variable, scales = "free_x")
 
-# quick model
+# top model from '2_modelselect.R'
 m1 <- gam(cbind(macroalgae, totalpts - macroalgae) ~ 
-            s(log(Depth), bs = "cr") + s(tri, bs = "cr"), 
+            s(Depth,     k = 5, bs = "cr")  + 
+            s(detrended, k = 5, bs = "cr") + 
+            s(roughness, k = 5, bs = "cr"), 
           data = habi, method = "REML", family = binomial("logit"))
 summary(m1)
 
@@ -51,7 +53,9 @@ gam.check(m1)
 vis.gam(m1)
 
 m2 <- gam(cbind(sponge, totalpts - sponge) ~ 
-            s(log(Depth), bs = "cr") + s(slope, bs = "cr"), 
+            s(Depth,     k = 5, bs = "cr") + 
+            s(detrended, k = 5, bs = "cr") + 
+            s(tpi,       k = 5, bs = "cr"), 
           data = habi, method = "REML", family = binomial("logit"))
 summary(m2)
 gam.check(m2)
@@ -65,7 +69,8 @@ ggplot(bpreds, aes(x, y, fill = pma)) +
   geom_raster() + 
   scale_fill_viridis(option = "E") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Macroalgae (p)")
+  labs(x = NULL, y = NULL, fill = "Macroalgae (p)") + 
+  coord_equal()
 
 ggsave("figures/broad_macroalgae.png", width = 10, height = 8, dpi = 160)
 
@@ -73,7 +78,8 @@ ggplot(bpreds, aes(x, y, fill = ps)) +
   geom_raster() + 
   scale_fill_viridis(option = "E") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Sponge (p)")
+  labs(x = NULL, y = NULL, fill = "Sponge (p)") + 
+  coord_equal()
 
 # predict only to survey areas
 
@@ -86,8 +92,17 @@ ggplot(spreds, aes(x, y)) +
   geom_point(data = habi, aes(Longitude.1, Latitude.1, colour = (sponge/totalpts))) +
   scale_colour_viridis(option = "E") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Sponge (p)", colour = NULL)
+  labs(x = NULL, y = NULL, fill = "Sponge (p)", colour = NULL) +
+  coord_equal()
 
+ggplot(spreds, aes(x, y)) +
+  geom_tile(aes(fill = pma)) +
+  scale_fill_viridis(option = "E") +
+  geom_point(data = habi, aes(Longitude.1, Latitude.1, colour = (macroalgae/totalpts))) +
+  scale_colour_viridis(option = "E") +
+  theme_minimal() +
+  labs(x = NULL, y = NULL, fill = "Macroalgae (p)", colour = NULL) +
+  coord_equal()
 
 
 

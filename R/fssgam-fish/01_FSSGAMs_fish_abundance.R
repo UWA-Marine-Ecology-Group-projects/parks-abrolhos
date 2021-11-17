@@ -1,63 +1,7 @@
-###
-# Project: Parks - Abrolhos Post-Survey
-# Data:    BRUVS, BOSS Habitat data
-# Task:    Model selection 
-# author:  Kingsley Griffin from @beckyfisher/FSSgam
-# date:    Oct 2021
-##
-#    Copyright 2020 Australian Institute of Marine Science
-#
-#    Licensed under the Apache License, Version 2.0 (the "License");
-#    you may not use this file except in compliance with the License.
-#    You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#    Unless required by applicable law or agreed to in writing, software
-#    distributed under the License is distributed on an "AS IS" BASIS,
-#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#    See the License for the specific language governing permissions and
-#    limitations under the License.
-
-# A simple function for full subsets multiple regression in ecology with R
-# 
-# R. Fisher
-# S.K. Wilson
-# S.M. Sin
-# A.C. Lee
-# Dr Tim J. Langlois
-
-# Reproducible example for:
-# Case Study 2: The role of large reef-associated predators in structuring adjacent soft-sediment communities
-
-# A re-analysis of data presented in:
-#   Langlois, T. J., M. J. Anderson, and R. C. Babcock. 2005. Reef-associated predators influence adjacent soft-sediment communities. Ecology 86: 1508–1519.
-
-# note this example was updated on the 11th Oct 2018 to demonstrate useage of the replacement functions
-# generate.model.set and fit.model.set that have now superced full.subsets.gam in package FSSgam
-# Between them these functions carry out the same analysis, take the same arguments and return the same
-# outputs as full.subsets.gam with the only difference being that the model set generation and model
-# fitting procedures are separated into two steps. This was done to make the function easier to use,
-# because the model set can be interrogated, along with the correlation matrix of the predictors before model
-# fitting is even attempted.
-
-# Script information----
-
 # Part 1-FSS modeling----
-# This script is designed to work with long format data - where response variables are stacked one upon each other (see http://tidyr.tidyverse.org/)
-# There are two random factors, Site and NTR location
-# We have used a Tweedie error distribution to account for the high occurence of zero values in the dataset.
-# We have implemented the ramdom effects and Tweedie error distribution using the mgcv() package
+rm(list=ls())
 
-# Part 2 - custom plot of importance scores----
-# using ggplot2()
-
-# Part 3 - plots of the most parsimonious models----
-# here we use plots of the raw response variables and fitted relationships - to allow for the plotting of interactions between continous predictor variables and factors with levels again using ggplot2()
-
-# Part 1-FSS modeling----
-
-# librarys----
+## librarys----
 detach("package:plyr", unload=TRUE)#will error - don't worry
 library(tidyr)
 library(dplyr)
@@ -72,38 +16,136 @@ library(doParallel) #this can removed?
 library(doSNOW)
 library(gamm4)
 library(RCurl) #needed to download data from GitHub
-library(reshape2)
-
-rm(list=ls())
-
-# install fssgam package----
-# devtools::install_github("beckyfisher/FSSgam_package") #run once
 library(FSSgam)
+library(GlobalArchive)
+library(ggplot2)
 
-# Bring in and format the data----
-habi <- readRDS("data/tidy/merged_habitat.rds")                               # merged data from 'R/1_mergedata.R'
+## set study name
+study <- "2021-05_Abrolhos_BOSS" 
+name <- study
 
-habi <- habi %>%
-  mutate(macroalgae = rowSums(habi[ , grep("Macroalgae", colnames(habi))])) %>%
-  mutate(sponge = rowSums(habi[ , grep("Sponge", colnames(habi))]))
+## Set your working directory ----
+working.dir<-getwd()
 
-habi <- melt(habi, measure.vars = c(8:35, 46:47))
+## Save these directory names to use later----
+tidy.dir<-paste(working.dir,"data/Tidy",sep="/")
+
+
+## Load the data sets -
+setwd(tidy.dir)
+dir()
+
+maxn <- read.csv("2021-05_Abrolhos_BOSS.complete.maxn.csv")
+length <- read.csv("2021-05_Abrolhos_BOSS.complete.length.csv")
+habitat <- read.csv("2021-05_Abrolhos_BOSS_random-points_percent-cover_broad.habitat.csv")%>%
+  mutate(reef = broad.ascidians+broad.bryozoa+broad.hydroids+broad.invertebrate.complex+broad.macroalgae+broad.octocoral.black+broad.sponges)
+names(maxn)
+
+metadata <- maxn %>%
+  distinct(sample,latitude,longitude,date,time,location,status,site,depth,observer,successful.count,successful.length)
+
+names(habitat)
+
+# look at top species ----
+  maxn.sum<-maxn%>%
+    mutate(scientific=paste(genus,species,sep=" "))%>%
+    group_by(scientific)%>%
+    dplyr::summarise(maxn=sum(maxn))%>%
+    ungroup()
+
+  ## Total frequency of occurance
+  ggplot(maxn.sum, aes(x=reorder(scientific,maxn), y=maxn)) +   
+    geom_bar(stat="identity",position=position_dodge())+
+    coord_flip()+
+    xlab("Species")+
+    ylab(expression(Overall~abundance~(Sigma~MaxN)))+
+    #Theme1+
+    theme(axis.text.y = element_text(face="italic"))+
+    #theme_collapse+
+    scale_y_continuous(expand = expand_scale(mult = c(0, .1)))#+
+
+# Create total abundance and species richness ----
+ta.sr <- maxn %>%
+  dplyr::ungroup() %>%
+  dplyr::group_by(scientific,sample) %>%
+  dplyr::summarise(maxn = sum(maxn)) %>%
+  tidyr::spread(scientific,maxn, fill = 0) %>%
+  dplyr::mutate(total.abundance=rowSums(.[,2:(ncol(.))],na.rm = TRUE )) %>% #Add in Totals
+  dplyr::mutate(species.richness=rowSums(.[,2:(ncol(.))] > 0)) %>% # double check these
+  dplyr::select(sample,total.abundance,species.richness) %>%
+  tidyr::gather(.,"scientific","maxn",2:3) %>%
+  dplyr::glimpse()
+
+# Create abundance of all recreational fished species ----
+url <- "https://docs.google.com/spreadsheets/d/1SMLvR9t8_F-gXapR2EemQMEPSw_bUbPLcXd3lJ5g5Bo/edit?ts=5e6f36e2#gid=825736197"
+
+master<-googlesheets4::read_sheet(url)%>%
+  ga.clean.names()%>%
+  filter(grepl('Australia', global.region))%>% # Change country here
+  dplyr::select(family,genus,species,fishing.type,australian.common.name)%>%
+  distinct()%>%
+  glimpse()
+
+unique(master$fishing.type)
+
+fished.species <- maxn %>%
+  dplyr::left_join(master) %>%
+  dplyr::filter(fishing.type %in% c("B/R","B/C/R","R","C/R"))%>%
+  dplyr::filter(!family%in%c("Monacanthidae", "Scorpididae", "Mullidae")) # Brooke removed leatherjackets, sea sweeps and goat fish
+
+unique(fished.species$scientific)
+
+# Come back to maybe getting rid of some of these, but for now we continue on
+fished.maxn <- fished.species %>%
+  dplyr::ungroup() %>%
+  dplyr::group_by(scientific,sample) %>%
+  dplyr::summarise(maxn = sum(maxn)) %>%
+  spread(scientific,maxn, fill = 0) %>%
+  dplyr::mutate(targeted.abundance=rowSums(.[,2:(ncol(.))],na.rm = TRUE )) %>% #Add in Totals
+  dplyr::select(sample,targeted.abundance) %>%
+  gather(.,"scientific","maxn",2:2) %>%
+  dplyr::glimpse()
+
+# Pick top 3 species
+species.maxn <- maxn %>%
+  dplyr::filter(scientific %in% c("Pomacentridae Chromis westaustralis",
+                                  "Labridae Coris auricularis",
+                                  "Chaetodontidae Chaetodon assarius",
+                                  "Lethrinidae Lethrinus miniatus"
+  ))%>%
+  dplyr::select(sample,scientific,maxn) %>%
+  distinct()
+
+4 *75
+
+
+combined.maxn <- bind_rows(fished.maxn, species.maxn, 
+                           ta.sr)%>%
+  left_join(habitat) %>%
+  left_join(metadata) %>%
+  distinct()
+
+glimpse(combined.maxn)
 
 # Set predictor variables---
-pred.vars <- c("Depth","tri","tpi", "roughness", "slope", "aspect", "Longitude.1", "Latitude.1") 
+names(maxn)
+names(habitat)
+
+pred.vars=c("depth", "broad.ascidians","broad.bryozoa","broad.consolidated","broad.hydroids","broad.invertebrate.complex","broad.macroalgae","broad.octocoral.black","broad.sponges","broad.unconsolidated","mean.relief","sd.relief","reef") 
 
 # predictor variables Removed at first pass---
 # broad.Sponges and broad.Octocoral.Black and broad.Consolidated , "InPreds","BioTurb" are too rare
 
-# Check for correlation of predictor variables- remove anything highly correlated (>0.95)---
-round(cor(habi[,pred.vars]),2)
-# several highly correlated terrain variables here but I think we need to keep them?
+dat <- combined.maxn
 
-# Review of individual predictors for even distribution---
-# Plot of likely transformations - Anna Cresswell loop
+# Check for correalation of predictor variables- remove anything highly correlated (>0.95)---
+round(cor(dat[,pred.vars]),2)
+# nothing is highly correlated 
+
+# Plot of likely transformations - thanks to Anna Cresswell for this loop!
 par(mfrow=c(3,2))
 for (i in pred.vars) {
-  x<-habi[ ,i]
+  x<-dat[ ,i]
   x = as.numeric(unlist(x))
   hist((x))#Looks best
   plot((x),main = paste(i))
@@ -113,116 +155,117 @@ for (i in pred.vars) {
   plot(log(x+1))
 }
 
-# review and create cols for best transforms
-habi <- habi %>%
-  mutate(logdepth = log(Depth)) %>%
-  mutate(sqrttri = sqrt(tri)) %>%
-  mutate(sqrtrough = sqrt(roughness)) %>%
-  mutate(sqrtslope = sqrt(slope)) %>%
-  rename(Taxa = variable) %>%
-  rename(response = value)
+# Review of individual predictors - we have to make sure they have an even distribution---
+#If the data are squewed to low numbers try sqrt>log or if squewed to high numbers try ^2 of ^3
+# sponges very low
+# octocoral, very very low
+# macroalgae, very very low
+# invert complex very very low
+# Hydroids very very low
+# consolidated ok
+# bryzoa very very low
+# ascidians very very low
+
 
 # # Re-set the predictors for modeling----
-pred.vars <- c("logdepth","sqrttri","sqrtrough","sqrtslope",
-               "tpi", "aspect", "Longitude.1", "Latitude.1") 
+pred.vars=c("depth","broad.consolidated","broad.unconsolidated","mean.relief","sd.relief","reef") 
 
 # Check to make sure Response vector has not more than 80% zeros----
-unique.vars     <- unique(as.character(habi$Taxa))
-unique.vars.use <- character()
+unique.vars=unique(as.character(dat$scientific))
+
+unique.vars.use=character()
 for(i in 1:length(unique.vars)){
-  temp.dat <- habi[which(habi$Taxa == unique.vars[i]),]
-  if(length(which(temp.dat$response == 0)) / nrow(temp.dat) < 0.8){
-    unique.vars.use <- c(unique.vars.use, unique.vars[i])}
+  temp.dat=dat[which(dat$scientific==unique.vars[i]),]
+  if(length(which(temp.dat$maxn==0))/nrow(temp.dat)<0.8){
+    unique.vars.use=c(unique.vars.use,unique.vars[i])}
 }
-unique.vars.use     
-unique.vars.use <- unique.vars.use[13:14] # only macroalgae and sponge of interest. remove unknown, open water
-unique.vars.use     
+
+unique.vars.use   
+
+# butterfly fish and pomacentrid removed becuase of too many zeros
+
+
+#"BDS" bivalve Dosina subrosea
+#"BMS" bivalve Myadora striata
+#"CPN" crustacean Pagrus novaezelandiae
 
 # Run the full subset model selection----
-outdir    <- ("output/fssgam/") #Set wd for example outputs - will differ on your computer
-resp.vars <- unique.vars.use
-use.dat   <- habi[habi$Taxa %in% c(unique.vars.use), ]
-# factor.vars <- c("Status")# Status as a Factor with two levels
-out.all <- list()
-var.imp <- list()
-name <- "eg"
+setwd("C:/GitHub/parks-abrolhos/output/fssgam - fish")
+resp.vars=unique.vars.use
+use.dat=as.data.frame(dat)
+str(use.dat)
+
+factor.vars=c("status","location")# Status as a Factor with two levels
+out.all=list()
+var.imp=list()
 
 # Loop through the FSS function for each Taxa----
 for(i in 1:length(resp.vars)){
-  use.dat <- habi[habi$Taxa == resp.vars[i],]
-  use.dat <- use.dat[!(use.dat$totalpts - use.dat$response < 0), ] # added to fix weird point
+  use.dat=as.data.frame(dat[which(dat$scientific==resp.vars[i]),])
   
-  Model1  <- gam(cbind(response, (totalpts - response)) ~ 
-                   s(logdepth, bs = 'cr') +
-                   s(sqrttri, bs = "cr") +
-                   s(sqrtrough, bs = "cr") +
-                   s(sqrtslope, bs = "cr") +
-                   s(tpi, bs = "cr") +
-                   s(aspect, bs = "cr") +
-                   s(Latitude.1, bs = "cr") +
-                   s(Longitude.1, bs = "cr"),
-                 family = binomial("logit"),  data = use.dat)
+  Model1=gam(maxn~s(depth,k=3,bs='cr')#+ s(location,Site,bs="re")
+             ,
+             family=tw(),  data=use.dat)
   
-  model.set <- generate.model.set(use.dat = use.dat,
-                               test.fit = Model1,
-                               pred.vars.cont = pred.vars,
-                               # pred.vars.fact=factor.vars,
-                               # linear.vars="Distance",
-                               k = 3
-                               # null.terms = "s(Site, bs='re')"
+  model.set=generate.model.set(use.dat=use.dat,
+                               test.fit=Model1,
+                               pred.vars.cont=pred.vars,
+                               pred.vars.fact=factor.vars,
+                               linear.vars="depth",
+                               k=5#,
+                               #null.terms="s(Location,Site,bs='re')"
                                )
-  out.list <- fit.model.set(model.set,
-                            max.models = 600,
-                            parallel = T)
+  out.list=fit.model.set(model.set,
+                         max.models=600,
+                         parallel=T)
   names(out.list)
   
   out.list$failed.models # examine the list of failed models
-  mod.table <- out.list$mod.data.out  # look at the model selection table
-  mod.table <- mod.table[order(mod.table$AICc), ]
-  mod.table$cumsum.wi <- cumsum(mod.table$wi.AICc)
-  out.i     <- mod.table[which(mod.table$delta.AICc <= 3), ]
-  out.all   <- c(out.all, list(out.i))
+  mod.table=out.list$mod.data.out  # look at the model selection table
+  mod.table=mod.table[order(mod.table$AICc),]
+  mod.table$cumsum.wi=cumsum(mod.table$wi.AICc)
+  out.i=mod.table[which(mod.table$delta.AICc<=3),]
+  out.all=c(out.all,list(out.i))
   # var.imp=c(var.imp,list(out.list$variable.importance$aic$variable.weights.raw)) #Either raw importance score
-  var.imp   <- c(var.imp, list(out.list$variable.importance$aic$variable.weights.raw)) #Or importance score weighted by r2
+  var.imp=c(var.imp,list(out.list$variable.importance$aic$variable.weights.raw)) #Or importance score weighted by r2
   
   # plot the best models
   for(m in 1:nrow(out.i)){
-    best.model.name <- as.character(out.i$modname[m])
+    best.model.name=as.character(out.i$modname[m])
     
-    png(file = paste(outdir, m, resp.vars[i], "mod_fits.png", sep = ""))
-    if(best.model.name != "null"){
-      par(mfrow = c(3, 1), mar = c(9, 4, 3, 1))
-      best.model = out.list$success.models[[best.model.name]]
-      plot(best.model, all.terms = T, pages = 1, residuals = T, pch = 16)
-      mtext(side = 2, text = resp.vars[i], outer = F)}  
+    png(file=paste(name,m,resp.vars[i],"mod_fits.png",sep="_"))
+    if(best.model.name!="null"){
+      par(mfrow=c(3,1),mar=c(9,4,3,1))
+      best.model=out.list$success.models[[best.model.name]]
+      plot(best.model,all.terms=T,pages=1,residuals=T,pch=16)
+      mtext(side=2,text=resp.vars[i],outer=F)}  
     dev.off()
   }
 }
 
 # Model fits and importance---
-names(out.all) <- resp.vars
-names(var.imp) <- resp.vars
-all.mod.fits <- do.call("rbind", out.all)
-all.var.imp  <- do.call("rbind", var.imp)
-write.csv(all.mod.fits[ , -2], file = paste(outdir, name, "all.mod.fits.csv", sep = ""))
-write.csv(all.var.imp, file = paste(outdir, name, "all.var.imp.csv", sep = ""))
+names(out.all)=resp.vars
+names(var.imp)=resp.vars
+all.mod.fits=do.call("rbind",out.all)
+all.var.imp=do.call("rbind",var.imp)
+write.csv(all.mod.fits[,-2],file=paste(name,"all.mod.fits.csv",sep="_"))
+write.csv(all.var.imp,file=paste(name,"all.var.imp.csv",sep="_"))
 
-# Generic importance plots- - unsure why we're not getting any value for the other preds. internal m.cor exclusion?
-heatmap.2(all.var.imp, notecex = 0.4,  dendrogram = "none",
-          col = colorRampPalette(c("white", "yellow", "red"))(10),
-          trace = "none", key.title = "", keysize = 2,
-          notecol = "black", key = T,
-          sepcolor = "black", margins = c(12, 8), lhei = c(4, 15), Rowv = FALSE, Colv = FALSE)
+# Generic importance plots-
+heatmap.2(all.var.imp,notecex=0.4,  dendrogram ="none",
+          col=colorRampPalette(c("white","yellow","red"))(10),
+          trace="none",key.title = "",keysize=2,
+          notecol="black",key=T,
+          sepcolor = "black",margins=c(12,8), lhei=c(4,15),Rowv=FALSE,Colv=FALSE)
 
 
 # Part 2 - custom plot of importance scores----
 
 # Load the importance score dataset produced above
 # dat.taxa <-read.csv(text=getURL("https://raw.githubusercontent.com/beckyfisher/FSSgam/master/case_study2_model_out/clams_all.var.imp.csv"))%>% #from github
-dat.taxa <- all.var.imp %>%
-  # read.csv("clams_all.var.imp.csv") %>% #from local copy
-  rename(resp.var = X) %>%
-  gather(key = predictor, value = importance, 2:ncol(.)) %>%
+dat.taxa <-read.csv("clams_all.var.imp.csv")%>% #from local copy
+  rename(resp.var=X)%>%
+  gather(key=predictor,value=importance,2:ncol(.))%>%
   glimpse()
 
 
@@ -601,17 +644,6 @@ combine.plot<-arrangeGrob(ggmod.bds.status,ggmod.bds.distance.x.status,ggmod.bds
                           ggmod.cpn.lobster,ggmod.cpn.4mm,blank,nrow=3,ncol=3)
 
 ggsave(combine.plot,file="Langlois_gamm.plot.png", width = 30, height = 30,units = "cm")
-
-
-
-
-
-
-
-
-
-
-
 
 
 
