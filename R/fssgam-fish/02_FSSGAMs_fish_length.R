@@ -66,15 +66,15 @@ fished.species <- length %>%
 unique(fished.species$scientific)
 
 # Come back to maybe getting rid of some of these, but for now we continue on
-fished.maxn <- fished.species %>%
-  dplyr::ungroup() %>%
-  dplyr::group_by(scientific,sample) %>%
-  dplyr::summarise(maxn = sum(maxn)) %>%
-  spread(scientific,maxn, fill = 0) %>%
-  dplyr::mutate(targeted.abundance=rowSums(.[,2:(ncol(.))],na.rm = TRUE )) %>% #Add in Totals
-  dplyr::select(sample,targeted.abundance) %>%
-  gather(.,"scientific","maxn",2:2) %>%
-  dplyr::glimpse()
+# fished.maxn <- fished.species %>%
+#   dplyr::ungroup() %>%
+#   dplyr::group_by(scientific,sample) %>%
+#   dplyr::summarise(maxn = sum(maxn)) %>%
+#   spread(scientific,maxn, fill = 0) %>%
+#   dplyr::mutate(targeted.abundance=rowSums(.[,2:(ncol(.))],na.rm = TRUE )) %>% #Add in Totals
+#   dplyr::select(sample,targeted.abundance) %>%
+#   gather(.,"scientific","maxn",2:2) %>%
+#   dplyr::glimpse()
 
 without.min.length <- fished.species %>%
   filter(is.na(minlegal.wa))%>%
@@ -187,12 +187,10 @@ unique.vars.use
 # butterfly fish and pomacentrid removed becuase of too many zeros
 
 
-#"BDS" bivalve Dosina subrosea
-#"BMS" bivalve Myadora striata
-#"CPN" crustacean Pagrus novaezelandiae
-
 # Run the full subset model selection----
-setwd("C:/GitHub/parks-abrolhos/output/fssgam - fish")
+#setwd("C:/GitHub/parks-abrolhos/output/fssgam - fish") #Brooke directory
+setwd("H:/GitHub/parks-abrolhos/output/fssgam - fish") #Claude directory
+
 resp.vars=unique.vars.use
 use.dat=as.data.frame(dat)
 str(use.dat)
