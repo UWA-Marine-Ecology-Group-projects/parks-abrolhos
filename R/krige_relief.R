@@ -14,24 +14,24 @@ library(viridis)
 
 habi  <- readRDS("data/tidy/merged_habitat.rds")                                # merged data from 'R/1_mergedata.R'
 preds <- readRDS("data/spatial/spatial_covariates.rds")                         # spatial covs from 'R/1_mergedata.R'
-colnames(habi)
-# trim predictor data cols and subset to npz6 area
-habi      <- habi[ , c(1, 2, 7, 39:49)]
+# colnames(habi)
+# trim predictor data cols and subset to npz6 area (if you want)
+habi      <- habi[ , c(1, 2, 7, 40:50)]
 habi$npz6 <- c(0)
 habi$npz6[grep("npz6", habi$Sample)] <- 1
 habi$npz6[grep("out6", habi$Sample)] <- 1
-# habi     <- habi[habi$npz6 == 1, ]
-head(habi)
+# habi     <- habi[habi$npz6 == 0, ]
+# head(habi)
 
 # Build with all data, or set aside test/train data
 # alldat <- testdat
 # OR set aside train/test data
-# set.seed(42)
-# testdat <- totdat[sample(nrow(totdat), nrow(totdat)/2), ]
-# alldat  <- totdat[!totdat$FileName %in% testdat$FileName , ]
+set.seed(42)
+testd  <- habi[sample(nrow(habi), nrow(habi)/5), ]
+traind <- habi[!habi$Sample %in% testdat$Sample , ]
 
 # build inla mesh from spatial layout of sites - the constants need some tuning
-habisp         <- SpatialPointsDataFrame(coords = habi[4:5], data = habi)
+habisp         <- SpatialPointsDataFrame(coords = traind[4:5], data = traind)
 sitecoords     <- coordinates(habisp)
 sitelocs       <- as.matrix(sitecoords)
 max.edgelength <- c(500, 2500)
@@ -44,9 +44,9 @@ plot(habisp, add = T, col = "red")
 meshadata      <- inla.spde.make.A(mesha, sitelocs)
 spde           <- inla.spde2.matern(mesha, alpha = 2)
 datn           <- nrow(habisp)
-preddf         <- habi[, colnames(habi) %in% c("Z", "roughness", "tpi", "detrended")]
+preddf         <- traind[, colnames(traind) %in% c("Z", "roughness", "tpi", "detrended")]
 
-relief_stack   <- inla.stack(data = list(y = habi$relief),
+relief_stack   <- inla.stack(data = list(y = traind$relief),
                              A = list(meshadata, 1),
                              effects = list(c(sp = list(1:mesha$n)),
                                             list(depth = preddf$Z,
@@ -55,7 +55,7 @@ relief_stack   <- inla.stack(data = list(y = habi$relief),
                                                  dtren = preddf$detrended)),
                              remove.unused = TRUE)
 
-modform        <- y ~ depth + rough + dtren + f(sp, model = spde)
+modform        <- y ~ 1 + depth + rough + dtren + f(sp, model = spde)
 
 # fit model
 m1 <- inla(modform, 
@@ -117,6 +117,7 @@ plot(habisp, add = TRUE, col = "red")
 
 # predict relief score across mesh using model formula
 modout  <- m1$summary.fixed
+hypout  <- m1$summary.hyperpar
 pmask   <- predrast / predrast
 pcells  <- preds[[c(1, 4, 7)]] * pmask
 pcells  <- stack(pcells, predrast)
@@ -125,18 +126,55 @@ pcelldf <- as.data.frame(pcells, na.rm = TRUE, xy = TRUE)
 head(pcelldf)
 
 # recall formula: y ~ depth + rough + dtren + f(sp, model = spde)
-pcelldf$prelief <- modout$mean[1] + pcelldf$depth * modout$mean[2] + 
-  pcelldf$rough * modout$mean[3] + pcelldf$dtren * modout$mean[4] + 
+pcelldf$prelief <- 1 + modout$mean[1] + 
+  (pcelldf$depth * modout$mean[2]) + 
+  (pcelldf$rough * modout$mean[3]) + 
+  (pcelldf$dtren * modout$mean[4]) + 
   pcelldf$p_sp
 
 ggplot(pcelldf, aes(x, y)) +
   geom_tile(aes(fill = prelief)) +
   scale_fill_viridis() +
-  geom_point(data = habi, aes(Longitude.1, Latitude.1, colour = relief)) +
+  geom_point(data = habi, aes(Longitude.1, Latitude.1, colour = relief), 
+             alpha = 4/5, size = 1) +
   scale_colour_viridis() +
-  coord_equal()
+  coord_equal() +
+  labs(x= NULL, y = NULL, 
+       fill = "p. relief (map)", 
+       colour = "obs. relief (points)") +
+  theme_minimal()
 
 prelief <- rasterFromXYZ(cbind(pcelldf[c(1:2, 7)]))
-
 plot(prelief)
+
+# perform quick cross-validation (single fold with 20% of data)
+testsp <- SpatialPointsDataFrame(coords = testd[4:5], data = testd)
+testd$predicted <- extract(prelief, testsp)
+testd$pdiff     <- testd$predicted - testd$relief
+testsp$pdiff    <- testd$pdiff
+testd <- na.omit(testd) # there is an NA - there are some gaps in the rasters, that may be why
+
+# calculate r2 as per Gelman et al 2017 and plot prediction accuracy 
+# variance of predicted values divided by variances of predicted values plus variance of the errors
+
+r2    <- var(testd$predicted) / (var(testd$predicted) + var(testd$pdiff))
+r2lab <- paste("r^2 == ", round(r2, 3))
+
+ggplot(testd, aes(relief, predicted)) + 
+  geom_abline(intercept = 0, lty = 3) +
+  geom_point(alpha = 4/5, size = 1) + 
+  geom_smooth(method = "gam", colour = "grey60", size = 0.2, fill = "grey80") +
+  annotate("text", x = 0.3, y = 2.4, label = r2lab, parse = TRUE) + 
+  coord_equal() +
+  theme_minimal() + 
+  labs(x = "observed")
+
+# plot difference across sites? i.e. way to view spatial prediction success?
+
+ggplot(pcelldf, aes(x, y)) +
+  geom_tile(aes(fill = prelief)) +
+  scale_fill_viridis() +
+  geom_point(data = testsp@data, aes(Longitude.1, Latitude.1, colour = pdiff/relief)) +
+  scale_colour_viridis(direction = -1) +
+  coord_equal()
 

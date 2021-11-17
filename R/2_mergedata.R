@@ -38,6 +38,7 @@ bosrel$relief    <- substr(bosrel$relief, start = 1, stop = 3)                  
 bosrel$relief    <- as.numeric(gsub("\\.", "", bosrel$relief))                  # isolate number
 bosrel$Sample    <- gsub(".jpg", "", bosrel$Sample)                             # extract sample id
 bosrel <- as.data.frame(summarise(group_by(bosrel, Sample), 
+                                  sdrel  = sd(relief, na.rm = TRUE),
                                   relief = mean(relief, na.rm = TRUE)))         # calc sample mean relief
 head(bosrel)
 summary(boshab)
@@ -73,6 +74,7 @@ bbrrel$Sample    <- gsub(".jpg", "", bbrrel$Sample, ignore.case = TRUE)
 # merge and calc sample mean relief
 buvrel <- rbind(fbrrel, bbrrel)
 buvrel <- as.data.frame(summarise(group_by(buvrel, Sample), 
+                                  sdrel  = sd(relief, na.rm = TRUE),
                                   relief = mean(relief, na.rm = TRUE)))
 head(buvrel)
 
@@ -105,10 +107,11 @@ head(allbuv)
 allhab <- rbind(allbos, allbuv)
 
 # long to wide and summarise
-allhabw <- reshape2::dcast(allhab, Sample + method + Site + Latitude + Longitude + Depth + relief ~ Broad + Morphology, 
+allhabw <- reshape2::dcast(allhab, Sample + method + Site + Latitude + Longitude + Depth + relief + sdrel ~ Broad + Morphology, 
                            value.var = "pa", fun.aggregate = sum, drop = TRUE)
-allhabw$totalpts <- rowSums(allhabw[, 8:36]) - allhabw$Unknown_
+allhabw$totalpts <- rowSums(allhabw[, 10:38]) - c(allhabw$Unknown_ + allhabw$`Open Water_`)
 head(allhabw)
+allhabw[(allhabw$totalpts - allhabw$Unconsolidated_Sand) < 0, ]
 
 # data checks (Brooke)
 # check for habitat data that is missing metadata
@@ -117,7 +120,7 @@ t1 <- dplyr::anti_join(allhabw, bosmet) # none
 # check for samples in metadata missing habitat
 t2 <- dplyr::anti_join(bosmet, allhabw) # none
 
-unique(allhabw$Site)
+unique(allhabw$Site) # not sure what the go is with the NA site name
 
 ## extract bathy derivatives for modelling
 # spatial setup
@@ -129,10 +132,13 @@ preds  <- readRDS("data/spatial/spatial_covariates.rds")
 allhab_sp <- SpatialPointsDataFrame(coords = allhabw[5:4], data = allhabw, 
                                     proj4string = wgscrs)
 allhab_t  <- spTransform(allhab_sp, CRS = utmcrs)
-habt_df   <- as.data.frame(allhab_t, xy = T)
 plot(preds[[1]])
 plot(allhab_t, add=T)
-habi      <- cbind(habt_df, extract(preds, allhab_t))
-saveRDS(habi, "data/tidy/merged_habitat.rds")
+habt_df   <- as.data.frame(allhab_t, xy = T)
+habi_df   <- cbind(habt_df, raster::extract(preds, allhab_t))
+habi_df[(habi_df$totalpts - habi_df$Consolidated_Rock) < 0,]
+habi_df[(habi_df$totalpts - habi_df$Unconsolidated_Sand) < 0,]
+
+saveRDS(habi_df, "data/tidy/merged_habitat.rds")
 
 

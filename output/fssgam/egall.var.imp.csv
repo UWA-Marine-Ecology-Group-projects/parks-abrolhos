@@ -1,3 +1,7 @@
 "","Depth","roughness","aspect","tpi","detrended"
+"kelps",0.999,0.944,0.056,0.961,0.034
 "macroalgae",1,1,0,0,1
 "sponge",1,0,0,1,1
+"sand",1,1,0,1,0
+"rock",1,0,1,1,0
+"biog",1,1,0,1,0

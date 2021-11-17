@@ -83,11 +83,20 @@ library(FSSgam)
 # Bring in and format the data----
 habi <- readRDS("data/tidy/merged_habitat.rds")                                 # merged data from 'R/1_mergedata.R'
 
+brfexcl <- c(1:10, 30, 38:ncol(habi), 
+             grep("Unconsolidated", colnames(habi)),
+             grep("Consolidated", colnames(habi)))  # collect biogenic reef colnames
+brfc <- colnames(habi[ , -brfexcl])
+
 habi <- habi %>%
+  mutate(kelps = habi$Macroalgae_Large.canopy.forming) %>%
   mutate(macroalgae = rowSums(habi[ , grep("Macroalgae", colnames(habi))])) %>%
-  mutate(sponge = rowSums(habi[ , grep("Sponge", colnames(habi))]))             # collapse detailed classes into broad
+  mutate(sponge = rowSums(habi[ , grep("Sponge", colnames(habi))])) %>%
+  mutate(sand = rowSums(habi[ , grep("Unconsolidated", colnames(habi))])) %>%
+  mutate(rock = rowSums(habi[ , grep("Consolidated", colnames(habi))])) %>%
+  mutate(biog = rowSums(habi[ , colnames(habi) %in% brfc]))                      # collapse detailed classes into broad
 colnames(habi)
-habi <- melt(habi, measure.vars = c(9:36, 50, 51))                               # collect all taxa tags for univariate stats
+habi <- melt(habi, measure.vars = c(51:56))                               # collect all taxa tags for univariate stats
 head(habi)
 # Set predictor variables---
 pred.vars <- c("Depth","tri", "tpi", "roughness", "slope", "aspect", "detrended") 
@@ -124,15 +133,16 @@ pred.vars <- c("Depth","roughness", "aspect", "tpi", "detrended")
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars     <- unique(as.character(habi$Taxa))
-unique.vars.use <- character()
-for(i in 1:length(unique.vars)){
-  temp.dat <- habi[which(habi$Taxa == unique.vars[i]),]
-  if(length(which(temp.dat$response == 0)) / nrow(temp.dat) < 0.8){
-    unique.vars.use <- c(unique.vars.use, unique.vars[i])}
-}
-unique.vars.use     
-unique.vars.use <- unique.vars.use[11:12] # only macroalgae and sponge of interest. remove unknown, open water
-unique.vars.use     
+# unique.vars.use <- character()
+# for(i in 1:length(unique.vars)){
+#   temp.dat <- habi[which(habi$Taxa == unique.vars[i]),]
+#   if(length(which(temp.dat$response == 0)) / nrow(temp.dat) < 0.8){
+#     unique.vars.use <- c(unique.vars.use, unique.vars[i])}
+# }
+# unique.vars.use     
+unique.vars.use <- unique.vars
+# unique.vars.use <- unique.vars.use[11:12] # only macroalgae and sponge of interest. remove unknown, open water
+# unique.vars.use     
 
 # Run the full subset model selection----
 outdir    <- ("output/fssgam/") #Set wd for example outputs - will differ on your computer
@@ -196,7 +206,7 @@ all.mod.fits <- do.call("rbind", out.all)
 all.var.imp  <- do.call("rbind", var.imp)
 write.csv(all.mod.fits[ , -2], file = paste(outdir, name, "all.mod.fits.csv", sep = ""))
 write.csv(all.var.imp,         file = paste(outdir, name, "all.var.imp.csv", sep = ""))
-
+out.all
  # Generic importance plots- - unsure why we're not getting any value for the other preds. internal m.cor exclusion?
 heatmap.2(all.var.imp, notecex = 0.4,  dendrogram = "none",
           col = colorRampPalette(c("white", "yellow", "red"))(10),
