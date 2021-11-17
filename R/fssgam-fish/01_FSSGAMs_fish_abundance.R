@@ -37,14 +37,34 @@ dir()
 
 maxn <- read.csv("2021-05_Abrolhos_BOSS.complete.maxn.csv")
 length <- read.csv("2021-05_Abrolhos_BOSS.complete.length.csv")
-habitat <- read.csv("2021-05_Abrolhos_BOSS_random-points_percent-cover_broad.habitat.csv")%>%
-  mutate(reef = broad.ascidians+broad.bryozoa+broad.hydroids+broad.invertebrate.complex+broad.macroalgae+broad.octocoral.black+broad.sponges)
+allhab <- readRDS("merged_habitat.rds")
+allhab <- allhab %>%
+  mutate(kelps = Macroalgae_Large.canopy.forming) %>%
+  mutate(macroalgae = rowSums(allhab[ , grep("Macroalgae", colnames(allhab))])) %>%
+  mutate(sponge = rowSums(allhab[ , c(grep("Sponge", colnames(allhab)),
+                                      grep("Invertebrate", colnames(allhab)),
+                                      grep("coral", colnames(allhab)),
+                                      10, 11, 15)])) %>%
+  mutate(sand = rowSums(allhab[ , grep("Unconsolidated", colnames(allhab))])) %>%
+  mutate(rock = rowSums(allhab[ , grep("Consolidated", colnames(allhab))]))
+brfc <- colnames(allhab[ , - c(1:10, 30, 38:ncol(allhab), 
+                               grep("Unconsolidated", colnames(allhab)),
+                               grep("Consolidated", colnames(allhab)))])
+allhab <- allhab %>% 
+  mutate(biog = rowSums(allhab[ , colnames(allhab) %in% brfc])) %>%
+  mutate(sample = Sample)
+allhab <- allhab[ , !colnames(allhab) %in% colnames(allhab)[9:38]]
+
+# habitat <- read.csv("2021-05_Abrolhos_BOSS_random-points_percent-cover_broad.habitat.csv")%>%
+#   mutate(reef = broad.ascidians+broad.bryozoa+broad.hydroids+
+#            broad.invertebrate.complex+broad.macroalgae+
+#            broad.octocoral.black+broad.sponges)
 names(maxn)
 
 metadata <- maxn %>%
   distinct(sample,latitude,longitude,date,time,location,status,site,depth,observer,successful.count,successful.length)
 
-names(habitat)
+# names(habitat)
 
 # look at top species ----
   maxn.sum<-maxn%>%
@@ -121,7 +141,7 @@ species.maxn <- maxn %>%
 
 combined.maxn <- bind_rows(fished.maxn, species.maxn, 
                            ta.sr)%>%
-  left_join(habitat) %>%
+  left_join(allhab) %>%
   left_join(metadata) %>%
   distinct()
 
@@ -131,7 +151,8 @@ glimpse(combined.maxn)
 names(maxn)
 names(habitat)
 
-pred.vars=c("depth", "broad.ascidians","broad.bryozoa","broad.consolidated","broad.hydroids","broad.invertebrate.complex","broad.macroalgae","broad.octocoral.black","broad.sponges","broad.unconsolidated","mean.relief","sd.relief","reef") 
+pred.vars=c("depth", "kelps", "macroalgae", "sponge", "sand", 
+            "rock", "biog", "relief","sdrel") 
 
 # predictor variables Removed at first pass---
 # broad.Sponges and broad.Octocoral.Black and broad.Consolidated , "InPreds","BioTurb" are too rare

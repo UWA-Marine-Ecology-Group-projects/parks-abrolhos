@@ -91,7 +91,10 @@ brfc <- colnames(habi[ , -brfexcl])
 habi <- habi %>%
   mutate(kelps = habi$Macroalgae_Large.canopy.forming) %>%
   mutate(macroalgae = rowSums(habi[ , grep("Macroalgae", colnames(habi))])) %>%
-  mutate(sponge = rowSums(habi[ , grep("Sponge", colnames(habi))])) %>%
+  mutate(sponge = rowSums(habi[ , c(grep("Sponge", colnames(habi)),
+                                      grep("Invertebrate", colnames(habi)),
+                                      grep("coral", colnames(habi)),
+                                      10, 11, 15)]))
   mutate(sand = rowSums(habi[ , grep("Unconsolidated", colnames(habi))])) %>%
   mutate(rock = rowSums(habi[ , grep("Consolidated", colnames(habi))])) %>%
   mutate(biog = rowSums(habi[ , colnames(habi) %in% brfc]))                      # collapse detailed classes into broad
