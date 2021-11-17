@@ -1,11 +1,28 @@
-,modname,AICc,BIC,r2.vals,r2.vals.unique,edf,edf.less.1,delta.AICc,delta.BIC,wi.AICc,wi.BIC,depth,broad.consolidated,broad.unconsolidated,mean.relief,sd.relief,reef,status,location,cumsum.wi
-targeted.abundance,broad.consolidated+reef+sd.relief,164.714438,182.782087,0.29403,NA,6.84,0,0,0,0.996,0.996,0,1,0,0,1,1,0,0,0.996
-Labridae Coris auricularis.depth,depth,180.6363949,189.3349188,0.25209,NA,2,0,0,0,0.325,0.701,1,0,0,0,0,0,0,0,0.325
-Labridae Coris auricularis.depth+location,depth+location,181.7919875,192.5098629,0.29248,NA,3,0,1.156,3.175,0.182,0.143,1,0,0,0,0,0,0,1,0.507
-Labridae Coris auricularis.depth.by.location+location,depth.by.location+location,182.1761438,196.649667,0.07835,NA,4.8,0,1.54,7.315,0.15,0.018,1,0,0,0,0,0,0,1,0.657
-Lethrinidae Lethrinus miniatus,broad.consolidated+reef+sd.relief,76.80879754,94.88503052,0.16892,NA,6.87,0,0,0,1,1,0,1,0,0,1,1,0,0,1
-total.abundance.broad.consolidated+mean.relief,broad.consolidated+mean.relief,471.2111153,483.8554519,0.22456,NA,3.88,0,0,1.813,0.336,0.245,0,1,0,1,0,0,0,0,0.336
-total.abundance.mean.relief,mean.relief,471.331012,482.0425609,0.19774,NA,2.94,0,0.12,0,0.316,0.606,0,0,0,1,0,0,0,0,0.652
-total.abundance.location+mean.relief,location+mean.relief,472.7805671,485.4449815,0.20003,NA,3.95,0,1.569,3.402,0.153,0.111,0,0,0,1,0,0,0,1,0.805
-species.richness.location+mean.relief,location+mean.relief,202.616957,215.2827211,0.50447,NA,3.96,0,0,0,0.437,0.447,0,0,0,1,0,0,0,1,0.437
-species.richness.broad.consolidated+location+mean.relief,broad.consolidated+location+mean.relief,204.0449204,218.5868756,0.51608,NA,4.93,0,1.428,3.304,0.214,0.086,0,1,0,1,0,0,0,1,0.651
+"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","kelps","macroalgae","sponge","sand","rock","biog","relief","sdrel","tpi","slope","detrended","status","location","cumsum.wi"
+"targeted.abundance","depth.by.location+location+tpi",253.282740475716,280.959029280183,0.01516,NA,8.53,0,0,1.758,0.651,0.14,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0.651
+"Labridae Coris auricularis.depth","depth",263.575618627161,274.07578233664,0.25008,NA,2,0,0,0,0.1,0.54,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0.1
+"Labridae Coris auricularis.depth+location","depth+location",263.99322461766,277.019681238286,0.29973,NA,3,0,0.418,2.944,0.082,0.124,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0.182
+"Labridae Coris auricularis.depth+sponge","depth+sponge",265.070748816016,282.636917500474,0.24691,NA,4.37,0,1.495,8.561,0.048,0.007,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0.23
+"Labridae Coris auricularis.depth+sdrel","depth+sdrel",265.124300138322,285.210537846488,0.25563,NA,5.57,0,1.549,11.135,0.046,0.002,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0.276
+"Labridae Coris auricularis.depth+kelps","depth+kelps",265.26038019102,278.288206209261,0.25819,NA,3,0,1.685,4.212,0.043,0.066,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0.319
+"Labridae Coris auricularis.depth+kelps+location","depth+kelps+location",265.645957166323,281.157784261455,0.30919,NA,4,0,2.07,7.082,0.036,0.016,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0.355
+"Labridae Coris auricularis.depth+kelps.by.location+location","depth+kelps.by.location+location",265.687452818587,281.199263614918,0.30915,NA,5,1,2.112,7.123,0.035,0.015,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0.39
+"Labridae Coris auricularis.depth.t.location+location","depth.t.location+location",265.733514641736,281.244507869507,0.18579,NA,4,0,2.158,7.169,0.034,0.015,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0.424
+"Labridae Coris auricularis.depth+location+sponge","depth+location+sponge",265.840314735875,285.859931452771,0.28793,NA,5.4,0,2.265,11.784,0.032,0.001,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0.456
+"Labridae Coris auricularis.depth+rock","depth+rock",265.862519015882,278.88962085648,0.2514,NA,3,0,2.287,4.814,0.032,0.049,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0.488
+"Labridae Coris auricularis.depth+detrended","depth+detrended",265.875744892383,278.902776386283,0.25127,NA,3,0,2.3,4.827,0.032,0.048,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0.52
+"Labridae Coris auricularis.depth+tpi","depth+tpi",265.878401286924,278.905277070617,0.25129,NA,3,0,2.303,4.829,0.032,0.048,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0.552
+"Labridae Coris auricularis.depth.by.location+location","depth.by.location+location",266.06227445883,284.775610157154,0.17517,NA,5,0,2.487,10.7,0.029,0.003,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0.581
+"Labridae Coris auricularis.depth+location+rock","depth+location+rock",266.132923588694,281.645063016089,0.30646,NA,4,0,2.557,7.569,0.028,0.012,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0.609
+"Labridae Coris auricularis.depth+location+tpi","depth+location+tpi",266.269221061669,281.780796894359,0.30236,NA,4,0,2.694,7.705,0.026,0.011,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0.635
+"Labridae Coris auricularis.depth+location+sdrel","depth+location+sdrel",266.540266598997,288.869704536904,0.30233,NA,6.48,0,2.965,14.794,0.023,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0.658
+"Lethrinidae Lethrinus miniatus.depth+location+sdrel","depth+location+sdrel",208.84378418048,229.152780867714,0.07609,NA,5.46,0,0,1.949,0.443,0.214,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0.443
+"Lethrinidae Lethrinus miniatus.depth.by.location+location","depth.by.location+location",209.910058972811,232.280500800243,0.01034,NA,6.44,0,1.066,5.077,0.26,0.045,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0.703
+"total.abundance.depth.by.location+location+sponge.by.location","depth.by.location+location+sponge.by.location",695.836253482723,727.232025094784,0.03124,NA,10.24,0,0,12.74,0.54,0.001,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0.54
+"total.abundance.depth.by.location+location+sponge","depth.by.location+location+sponge",698.032319614471,722.902097735288,0.03418,NA,7.72,0,2.196,8.41,0.18,0.012,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0.72
+"species.richness.location+relief","location+relief",443.877430444254,461.291796642138,0.36671,NA,4.31,0,0,0.411,0.211,0.187,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0.211
+"species.richness.relief+rock","relief+rock",445.33198266326,461.917724254141,0.35409,NA,3.89,0,1.455,1.037,0.102,0.137,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0.313
+"species.richness.location+relief+tpi","location+relief+tpi",446.079368993769,465.908841066463,0.36974,NA,5.33,0,2.202,5.028,0.07,0.019,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0.383
+"species.richness.location+relief.by.location","location+relief.by.location",446.10456204283,465.990678211607,0.37821,NA,5.35,0,2.227,5.11,0.069,0.018,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0.452
+"species.richness.relief","relief",446.175597053853,460.880870202492,0.32899,NA,3.2,0,2.298,0,0.067,0.229,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0.519
+"species.richness.location+relief+rock","location+relief+rock",446.721587623861,467.241381785017,0.38126,NA,5.35,0,2.844,6.361,0.051,0.01,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0.57

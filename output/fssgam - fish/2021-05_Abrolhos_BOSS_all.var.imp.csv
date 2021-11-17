@@ -1,6 +1,6 @@
-"","depth","broad.consolidated","broad.unconsolidated","mean.relief","sd.relief","reef","status","location"
-"targeted.abundance",0,0.996,0,0.003,0.996,0.996,0,0.003
-"Labridae Coris auricularis",0.325,0,0,0,0.117,0,0,0.182
-"Lethrinidae Lethrinus miniatus",0,1,0,0,1,1,0,0
-"total.abundance",0,0.336,0,0.336,0,0,0,0.153
-"species.richness",0,0.214,0,0.437,0,0,0,0.437
+"","depth","kelps","macroalgae","sponge","sand","rock","biog","relief","sdrel","tpi","slope","detrended","status","location"
+"targeted.abundance",0.988,0.101,0,0.007,0,0.002,0,0,0.081,0.712,0,0.001,0,0.988
+"Labridae Coris auricularis",0.609,0.241,0,0.165,0,0.161,0,0,0.148,0.134,0,0.091,0,0.389
+"Lethrinidae Lethrinus miniatus",0.93,0.052,0,0.05,0,0.019,0,0,0.534,0.039,0,0,0,0.93
+"total.abundance",0.995,0.068,0,0.913,0,0.031,0,0,0.042,0.018,0,0.113,0,0.814
+"species.richness",0,0.001,0.031,0.031,0.006,0.408,0.114,0.784,0.022,0.208,0.006,0.023,0.13,0.526

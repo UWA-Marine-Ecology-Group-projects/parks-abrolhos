@@ -149,10 +149,10 @@ glimpse(combined.maxn)
 
 # Set predictor variables---
 names(maxn)
-names(habitat)
+names(allhab)
 
 pred.vars=c("depth", "kelps", "macroalgae", "sponge", "sand", 
-            "rock", "biog", "relief","sdrel") 
+            "rock", "biog", "relief","sdrel","tpi","slope","detrended") 
 
 # predictor variables Removed at first pass---
 # broad.Sponges and broad.Octocoral.Black and broad.Consolidated , "InPreds","BioTurb" are too rare
@@ -189,7 +189,8 @@ for (i in pred.vars) {
 
 
 # # Re-set the predictors for modeling----
-pred.vars=c("depth","broad.consolidated","broad.unconsolidated","mean.relief","sd.relief","reef") 
+pred.vars=c("depth", "kelps", "macroalgae", "sponge", "sand", 
+            "rock", "biog", "relief","sdrel","tpi","slope","detrended") 
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars=unique(as.character(dat$scientific))
@@ -274,7 +275,7 @@ heatmap.2(all.var.imp,notecex=0.4,  dendrogram ="none",
           col=colorRampPalette(c("white","yellow","red"))(10),
           trace="none",key.title = "",keysize=2,
           notecol="black",key=T,
-          sepcolor = "black",margins=c(12,8), lhei=c(4,15),Rowv=FALSE,Colv=FALSE)
+          sepcolor = "black",margins=c(12,14), lhei=c(4,15),Rowv=FALSE,Colv=FALSE)
 
 
 # Part 2 - custom plot of importance scores----
