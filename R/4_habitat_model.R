@@ -121,7 +121,7 @@ ggplot(bpreds, aes(x, y, fill = pkelps)) +
   labs(x = NULL, y = NULL, fill = "Kelps (p)") + 
   coord_equal()
 
-ggsave("figures/broad_kelp.png", width = 10, height = 8, dpi = 160)
+ggsave("plots/broad_kelp.png", width = 10, height = 8, dpi = 160)
 
 ggplot(bpreds, aes(x, y, fill = pmacroalg)) +
   geom_raster() + 
@@ -130,7 +130,7 @@ ggplot(bpreds, aes(x, y, fill = pmacroalg)) +
   labs(x = NULL, y = NULL, fill = "Macroalgae (p)") + 
   coord_equal()
 
-ggsave("figures/broad_macroalgae.png", width = 10, height = 8, dpi = 160)
+ggsave("plots/broad_macroalgae.png", width = 10, height = 8, dpi = 160)
 
 ggplot(bpreds, aes(x, y, fill = psponge)) +
   geom_raster() + 
@@ -139,7 +139,7 @@ ggplot(bpreds, aes(x, y, fill = psponge)) +
   labs(x = NULL, y = NULL, fill = "Sponge (p)") + 
   coord_equal()
 
-ggsave("figures/broad_sponge.png", width = 10, height = 8, dpi = 160)
+ggsave("plots/broad_sponge.png", width = 10, height = 8, dpi = 160)
 
 ggplot(bpreds, aes(x, y, fill = psand)) +
   geom_raster() + 
@@ -148,7 +148,7 @@ ggplot(bpreds, aes(x, y, fill = psand)) +
   labs(x = NULL, y = NULL, fill = "Sand (p)") + 
   coord_equal()
 
-ggsave("figures/broad_sand.png", width = 10, height = 8, dpi = 160)
+ggsave("plots/broad_sand.png", width = 10, height = 8, dpi = 160)
 
 
 ggplot(bpreds, aes(x, y, fill = prock)) +
@@ -158,7 +158,7 @@ ggplot(bpreds, aes(x, y, fill = prock)) +
   labs(x = NULL, y = NULL, fill = "Rock (p)") + 
   coord_equal()
 
-ggsave("figures/broad_rock.png", width = 10, height = 8, dpi = 160)
+ggsave("plots/broad_rock.png", width = 10, height = 8, dpi = 160)
 
 ggplot(bpreds, aes(x, y, fill = pbiogenic)) +
   geom_raster() + 
@@ -167,7 +167,7 @@ ggplot(bpreds, aes(x, y, fill = pbiogenic)) +
   labs(x = NULL, y = NULL, fill = "Biogenic Reef (p)") + 
   coord_equal()
 
-ggsave("figures/broad_biogenicreef.png", width = 10, height = 8, dpi = 160)
+ggsave("plots/broad_biogenicreef.png", width = 10, height = 8, dpi = 160)
 
 # or, predict only to survey areas
 
@@ -210,7 +210,7 @@ ggplot(bpreds, aes(x, y, fill = dom_tag)) +
   labs(x = NULL, y = NULL, fill = "Dominant Habitat Type") + 
   coord_equal()
 
-ggsave("figures/broad_dominant_habitat.png", width = 10, height = 8, dpi = 160)
+ggsave("plots/broad_dominant_habitat.png", width = 10, height = 8, dpi = 160)
 
 
 # rasterise predictions and stack (mainly for predicting for fish modelling)
