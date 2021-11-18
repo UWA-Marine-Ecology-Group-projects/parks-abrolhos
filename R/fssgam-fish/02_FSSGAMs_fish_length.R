@@ -25,7 +25,8 @@ study <- "2021-05_Abrolhos_BOSS"
 name <- study
 
 ## Set your working directory ----
-working.dir<-getwd()
+#working.dir<-getwd()
+working.dir <- 'H:/GitHub/parks-abrolhos'
 
 ## Save these directory names to use later----
 tidy.dir<-paste(working.dir,"data/Tidy",sep="/")
@@ -37,14 +38,28 @@ dir()
 length <- read.csv("2021-05_Abrolhos_BOSS.complete.length.csv")%>%
   mutate(scientific=paste(family,genus,species))
 
-habitat <- read.csv("2021-05_Abrolhos_BOSS_random-points_percent-cover_broad.habitat.csv")%>%
-  mutate(reef = broad.ascidians+broad.bryozoa+broad.hydroids+broad.invertebrate.complex+broad.macroalgae+broad.octocoral.black+broad.sponges)
-names(maxn)
+allhab <- readRDS("merged_habitat.rds")
+allhab <- allhab %>%
+  mutate(kelps = Macroalgae_Large.canopy.forming) %>%
+  mutate(macroalgae = rowSums(allhab[ , grep("Macroalgae", colnames(allhab))])) %>%
+  mutate(sponge = rowSums(allhab[ , c(grep("Sponge", colnames(allhab)),
+                                      grep("Invertebrate", colnames(allhab)),
+                                      grep("coral", colnames(allhab)),
+                                      10, 11, 15)])) %>%
+  mutate(sand = rowSums(allhab[ , grep("Unconsolidated", colnames(allhab))])) %>%
+  mutate(rock = rowSums(allhab[ , grep("Consolidated", colnames(allhab))]))
+brfc <- colnames(allhab[ , - c(1:10, 30, 38:ncol(allhab), 
+                               grep("Unconsolidated", colnames(allhab)),
+                               grep("Consolidated", colnames(allhab)))])
+allhab <- allhab %>% 
+  mutate(biog = rowSums(allhab[ , colnames(allhab) %in% brfc])) %>%
+  mutate(sample = Sample)
+allhab <- allhab[ , !colnames(allhab) %in% colnames(allhab)[9:38]]
 
 metadata <- length %>%
   distinct(sample,latitude,longitude,date,time,location,status,site,depth,observer,successful.count,successful.length)
 
-names(habitat)
+names(allhab)
 
 # Create abundance of all recreational fished species ----
 url <- "https://docs.google.com/spreadsheets/d/1SMLvR9t8_F-gXapR2EemQMEPSw_bUbPLcXd3lJ5g5Bo/edit?ts=5e6f36e2#gid=825736197"
@@ -60,6 +75,9 @@ unique(master$fishing.type)
 
 fished.species <- length %>%
   dplyr::left_join(master) %>%
+  dplyr::mutate(fishing.type = ifelse(scientific %in%c("Serranidae Plectropomus spp")
+                                      ,"R",fishing.type))%>%
+  dplyr::mutate(minlegal.wa = ifelse(scientific %in% c("Serranidae Plectropomus spp"), "450", minlegal.wa))%>%
   dplyr::filter(fishing.type %in% c("B/R","B/C/R","R","C/R"))%>%
   dplyr::filter(!family%in%c("Monacanthidae", "Scorpididae", "Mullidae")) # Brooke removed leatherjackets, sea sweeps and goat fish
 
@@ -79,6 +97,7 @@ unique(fished.species$scientific)
 without.min.length <- fished.species %>%
   filter(is.na(minlegal.wa))%>%
   distinct(scientific) # only charlies don't have one
+unique(without.min.length$scientific)
 
 legal <- fished.species %>%
   tidyr::replace_na(list(minlegal.wa=0)) %>%
@@ -124,16 +143,26 @@ complete.length <- combined.length %>%
   dplyr::ungroup()%>%
   dplyr::filter(!is.na(scientific)) %>% # this should not do anything
   dplyr::left_join(.,metadata) %>%
-  dplyr::left_join(.,habitat) %>%
+  dplyr::left_join(.,allhab) %>%
   dplyr::filter(successful.length%in%c("Y")) %>%
   dplyr::mutate(scientific=as.character(scientific)) %>%
   dplyr::glimpse()
 
 # Set predictor variables---
 names(complete.length)
-names(habitat)
+names(allhab)
 
-pred.vars=c("depth", "broad.ascidians","broad.bryozoa","broad.consolidated","broad.hydroids","broad.invertebrate.complex","broad.macroalgae","broad.octocoral.black","broad.sponges","broad.unconsolidated","mean.relief","sd.relief","reef") 
+pred.vars=c("depth", 
+            "kelps", 
+            "macroalgae", 
+            "sponge", 
+            "sand", 
+            "rock", 
+            "biog", 
+            "relief",
+            "tpi",
+            "slope",
+            "detrended") 
 
 # predictor variables Removed at first pass---
 # broad.Sponges and broad.Octocoral.Black and broad.Consolidated , "InPreds","BioTurb" are too rare
@@ -170,7 +199,17 @@ for (i in pred.vars) {
 
 
 # # Re-set the predictors for modeling----
-pred.vars=c("depth","broad.consolidated","broad.unconsolidated","mean.relief","sd.relief","reef") 
+pred.vars=c("depth", 
+            "kelps", 
+            "macroalgae", 
+            "sponge", 
+            "sand", 
+            "rock", 
+            "biog", 
+            "relief",
+            "tpi",
+            "slope",
+            "detrended")
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars=unique(as.character(dat$scientific))
@@ -178,13 +217,13 @@ unique.vars=unique(as.character(dat$scientific))
 unique.vars.use=character()
 for(i in 1:length(unique.vars)){
   temp.dat=dat[which(dat$scientific==unique.vars[i]),]
-  if(length(which(temp.dat$number==0))/nrow(temp.dat)<0.8){
+  if(length(which(temp.dat$number==0))/nrow(temp.dat)<0.9){
     unique.vars.use=c(unique.vars.use,unique.vars[i])}
 }
 
 unique.vars.use   
 
-# butterfly fish and pomacentrid removed becuase of too many zeros
+# changed to 90% - smaller than legal size included
 
 
 # Run the full subset model selection----
@@ -213,9 +252,9 @@ for(i in 1:length(resp.vars)){
                                test.fit=Model1,
                                pred.vars.cont=pred.vars,
                                pred.vars.fact=factor.vars,
-                               smooth.smooth.interactions = c("depth","mean.relief"),
                                factor.smooth.interactions = NA,
-                               k=5#,
+                               smooth.smooth.interactions = c("depth", "biog"),
+                               k=3#,
                                #null.terms="s(Location,Site,bs='re')"
                                )
   out.list=fit.model.set(model.set,
@@ -259,7 +298,7 @@ heatmap.2(all.var.imp,notecex=0.4,  dendrogram ="none",
           col=colorRampPalette(c("white","yellow","red"))(10),
           trace="none",key.title = "",keysize=2,
           notecol="black",key=T,
-          sepcolor = "black",margins=c(12,8), lhei=c(4,15),Rowv=FALSE,Colv=FALSE)
+          sepcolor = "black",margins=c(12,16), lhei=c(4,15),Rowv=FALSE,Colv=FALSE)
 
 
 # Part 2 - custom plot of importance scores----

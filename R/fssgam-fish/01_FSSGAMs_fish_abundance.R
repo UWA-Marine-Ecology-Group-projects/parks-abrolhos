@@ -25,7 +25,8 @@ study <- "2021-05_Abrolhos_BOSS"
 name <- study
 
 ## Set your working directory ----
-working.dir<-getwd()
+#working.dir<-getwd()   #stopped working not sure why
+working.dir <- 'H:/GitHub/parks-abrolhos'
 
 ## Save these directory names to use later----
 tidy.dir<-paste(working.dir,"data/Tidy",sep="/")
@@ -110,6 +111,8 @@ unique(master$fishing.type)
 
 fished.species <- maxn %>%
   dplyr::left_join(master) %>%
+  dplyr::mutate(fishing.type = ifelse(scientific %in%c("Serranidae Plectropomus spp")
+                                      ,"R",fishing.type))%>%
   dplyr::filter(fishing.type %in% c("B/R","B/C/R","R","C/R"))%>%
   dplyr::filter(!family%in%c("Monacanthidae", "Scorpididae", "Mullidae")) # Brooke removed leatherjackets, sea sweeps and goat fish
 
@@ -136,7 +139,7 @@ species.maxn <- maxn %>%
   dplyr::select(sample,scientific,maxn) %>%
   distinct()
 
-4 *75
+#4 *75
 
 
 combined.maxn <- bind_rows(fished.maxn, species.maxn, 
@@ -151,8 +154,17 @@ glimpse(combined.maxn)
 names(maxn)
 names(allhab)
 
-pred.vars=c("depth", "kelps", "macroalgae", "sponge", "sand", 
-            "rock", "biog", "relief","sdrel","tpi","slope","detrended") 
+pred.vars=c("depth", 
+            "kelps", 
+            "macroalgae", 
+            "sponge", 
+            "sand", 
+            "rock", 
+            "biog", 
+            "relief",
+            "tpi",
+            "slope",
+            "detrended") 
 
 # predictor variables Removed at first pass---
 # broad.Sponges and broad.Octocoral.Black and broad.Consolidated , "InPreds","BioTurb" are too rare
@@ -190,7 +202,7 @@ for (i in pred.vars) {
 
 # # Re-set the predictors for modeling----
 pred.vars=c("depth", "kelps", "macroalgae", "sponge", "sand", 
-            "rock", "biog", "relief","sdrel","tpi","slope","detrended") 
+            "rock", "biog", "relief","tpi","slope","detrended") 
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars=unique(as.character(dat$scientific))
@@ -198,13 +210,13 @@ unique.vars=unique(as.character(dat$scientific))
 unique.vars.use=character()
 for(i in 1:length(unique.vars)){
   temp.dat=dat[which(dat$scientific==unique.vars[i]),]
-  if(length(which(temp.dat$maxn==0))/nrow(temp.dat)<0.8){
+  if(length(which(temp.dat$maxn==0))/nrow(temp.dat)<0.9){
     unique.vars.use=c(unique.vars.use,unique.vars[i])}
 }
 
 unique.vars.use   
 
-# butterfly fish and pomacentrid removed becuase of too many zeros
+# butterfly fish removed becuase of too many zeros - I changed cutoff to 90%
 
 # Run the full subset model selection----
 #setwd("C:/GitHub/parks-abrolhos/output/fssgam - fish") #Brooke directory
@@ -231,7 +243,8 @@ for(i in 1:length(resp.vars)){
                                pred.vars.cont=pred.vars,
                                pred.vars.fact=factor.vars,
                                linear.vars="depth",
-                               k=5#,
+                               k=3,
+                               smooth.smooth.interactions = c("depth","biog")#,
                                #null.terms="s(Location,Site,bs='re')"
                                )
   out.list=fit.model.set(model.set,
@@ -243,7 +256,7 @@ for(i in 1:length(resp.vars)){
   mod.table=out.list$mod.data.out  # look at the model selection table
   mod.table=mod.table[order(mod.table$AICc),]
   mod.table$cumsum.wi=cumsum(mod.table$wi.AICc)
-  out.i=mod.table[which(mod.table$delta.AICc<=3),]
+  out.i=mod.table[which(mod.table$delta.AICc<=10),]
   out.all=c(out.all,list(out.i))
   # var.imp=c(var.imp,list(out.list$variable.importance$aic$variable.weights.raw)) #Either raw importance score
   var.imp=c(var.imp,list(out.list$variable.importance$aic$variable.weights.raw)) #Or importance score weighted by r2
@@ -275,7 +288,7 @@ heatmap.2(all.var.imp,notecex=0.4,  dendrogram ="none",
           col=colorRampPalette(c("white","yellow","red"))(10),
           trace="none",key.title = "",keysize=2,
           notecol="black",key=T,
-          sepcolor = "black",margins=c(12,14), lhei=c(4,15),Rowv=FALSE,Colv=FALSE)
+          sepcolor = "black",margins=c(12,16), lhei=c(4,15),Rowv=FALSE,Colv=FALSE)
 
 
 # Part 2 - custom plot of importance scores----
