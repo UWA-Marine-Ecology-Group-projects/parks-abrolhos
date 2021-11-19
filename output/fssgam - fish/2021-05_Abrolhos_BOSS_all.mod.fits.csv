@@ -1,52 +1,6 @@
 "","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","kelps","macroalgae","sponge","sand","rock","biog","relief","tpi","slope","detrended","status","location","cumsum.wi"
-"targeted.abundance.depth.by.location+location+tpi","depth.by.location+location+tpi",257.149888714962,279.779129895127,0.02711,NA,6.75,0,0,0,0.546,0.262,1,0,0,0,0,0,0,0,1,0,0,0,1,0.546
-"targeted.abundance.depth.by.location+location+tpi.by.location","depth.by.location+location+tpi.by.location",260.526343523245,287.484073681183,0.02829,NA,8.42,0,3.376,7.705,0.101,0.006,1,0,0,0,0,0,0,0,1,0,0,0,1,0.647
-"targeted.abundance.depth.t.location+location+tpi","depth.t.location+location+tpi",261.917294439538,282.241102309635,0.1489,NA,5.9,0,4.767,2.462,0.05,0.076,1,0,0,0,0,0,0,0,1,0,0,0,1,0.697
-"targeted.abundance.depth.by.location+location+sponge","depth.by.location+location+sponge",261.983503885233,285.532199461427,0.02685,NA,6.9,0,4.834,5.753,0.049,0.015,1,0,0,1,0,0,0,0,0,0,0,0,1,0.746
-"targeted.abundance.depth.by.location+location","depth.by.location+location",261.991293524768,280.080884183371,0.02568,NA,4.89,0,4.841,0.302,0.049,0.225,1,0,0,0,0,0,0,0,0,0,0,0,1,0.795
-"targeted.abundance.depth.t.location+location+tpi.by.location","depth.t.location+location+tpi.by.location",262.591587583676,287.478189168098,0.14831,NA,7.69,0,5.442,7.699,0.036,0.006,1,0,0,0,0,0,0,0,1,0,0,0,1,0.831
-"targeted.abundance.depth.by.location+location+rock","depth.by.location+location+rock",263.277943588297,285.898103706994,0.02663,NA,6.65,0,6.128,6.119,0.025,0.012,1,0,0,0,0,1,0,0,0,0,0,0,1,0.856
-"targeted.abundance.depth.by.location+kelps+location","depth.by.location+kelps+location",263.319827436719,285.361671531095,0.0258,NA,6.34,0,6.17,5.583,0.025,0.016,1,1,0,0,0,0,0,0,0,0,0,0,1,0.881
-"targeted.abundance.depth.by.location+kelps.by.location+location","depth.by.location+kelps.by.location+location",263.492448928039,285.515962353855,0.02579,NA,7.33,1,6.343,5.737,0.023,0.015,1,1,0,0,0,0,0,0,0,0,0,0,1,0.904
-"targeted.abundance.depth.by.location+location+sponge.by.location","depth.by.location+location+sponge.by.location",264.14301857277,289.701624266132,0.02689,NA,7.79,0,6.993,9.922,0.017,0.002,1,0,0,1,0,0,0,0,0,0,0,0,1,0.921
-"targeted.abundance.depth+location+tpi","depth+location+tpi",264.241023098337,282.169375637237,0.12039,NA,4.9,0,7.091,2.39,0.016,0.079,1,0,0,0,0,0,0,0,1,0,0,0,1,0.937
-"targeted.abundance.depth+location+tpi.by.location","depth+location+tpi.by.location",264.508598611699,287.105334010596,0.13167,NA,6.71,0,7.359,7.326,0.014,0.007,1,0,0,0,0,0,0,0,1,0,0,0,1,0.951
-"targeted.abundance.depth+location+sponge","depth+location+sponge",264.979786182501,282.892164418898,0.10353,NA,4.87,0,7.83,3.113,0.011,0.055,1,0,0,1,0,0,0,0,0,0,0,0,1,0.962
-"targeted.abundance.depth.by.location+location+rock.by.location","depth.by.location+location+rock.by.location",266.068848826426,290.897630865937,0.02705,NA,7.61,0,8.919,11.119,0.006,0.001,1,0,0,0,0,1,0,0,0,0,0,0,1,0.968
-"targeted.abundance.depth.t.location+location+sponge","depth.t.location+location+sponge",266.374302539449,286.644597334252,0.1246,NA,5.82,0,9.224,6.865,0.005,0.008,1,0,0,1,0,0,0,0,0,0,0,0,1,0.973
-"targeted.abundance.depth.t.location+location","depth.t.location+location",266.469634611441,281.980627839211,0.12403,NA,4,0,9.32,2.201,0.005,0.087,1,0,0,0,0,0,0,0,0,0,0,0,1,0.978
-"targeted.abundance.depth+location+sponge.by.location","depth+location+sponge.by.location",266.6095019357,286.922911325806,0.11327,NA,5.87,0,9.46,7.144,0.005,0.007,1,0,0,1,0,0,0,0,0,0,0,0,1,0.983
-"Labridae Coris auricularis.depth+kelps.by.location+location","depth+kelps.by.location+location",258.04254820973,264.670832969689,0.30915,NA,5,1,0,0,0.576,0.982,1,1,0,0,0,0,0,0,0,0,0,0,1,0.576
-"Labridae Coris auricularis.depth+sponge","depth+sponge",263.547437162518,278.996469640787,0.24563,NA,3.84,0,5.505,14.326,0.037,0.001,1,0,0,1,0,0,0,0,0,0,0,0,0,0.613
-"Labridae Coris auricularis.depth","depth",263.575618627161,274.07578233664,0.25008,NA,2,0,5.533,9.405,0.036,0.009,1,0,0,0,0,0,0,0,0,0,0,0,0,0.649
-"Labridae Coris auricularis.depth.by.location+kelps.by.location+location","depth.by.location+kelps.by.location+location",263.872822174192,281.077347985239,0.07861,NA,6.8,1,5.83,16.407,0.031,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0.68
-"Labridae Coris auricularis.depth+location","depth+location",263.99322461766,277.019681238286,0.29973,NA,3,0,5.951,12.349,0.029,0.002,1,0,0,0,0,0,0,0,0,0,0,0,1,0.709
-"Labridae Coris auricularis.depth+location+sponge","depth+location+sponge",264.545734048642,282.429838142932,0.28655,NA,4.83,0,6.503,17.759,0.022,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0.731
-"Labridae Coris auricularis.depth+detrended+sponge","depth+detrended+sponge",264.617793458389,282.528067593584,0.24701,NA,4.87,0,6.575,17.857,0.022,0,1,0,0,1,0,0,0,0,0,0,1,0,0,0.753
-"Labridae Coris auricularis.depth.by.location+location","depth.by.location+location",264.891383161077,282.753815683108,0.07403,NA,4.81,0,6.849,18.083,0.019,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0.772
-"Labridae Coris auricularis.depth+kelps","depth+kelps",265.260640489116,278.288826810963,0.25819,NA,3,0,7.218,13.618,0.016,0.001,1,1,0,0,0,0,0,0,0,0,0,0,0,0.788
-"Labridae Coris auricularis.depth.t.location+kelps.by.location+location","depth.t.location+kelps.by.location+location",265.500845342628,281.357998564879,0.187,NA,6,1,7.458,16.687,0.014,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0.802
-"Labridae Coris auricularis.depth+kelps+location","depth+kelps+location",265.646211219617,281.158357700748,0.30919,NA,4,0,7.604,16.488,0.013,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0.815
-"Labridae Coris auricularis.depth.t.location+location","depth.t.location+location",265.733514641736,281.244507869507,0.18579,NA,4,0,7.691,16.574,0.012,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0.827
-"Labridae Coris auricularis.depth+rock","depth+rock",265.862499120054,278.889584620849,0.2514,NA,3,0,7.82,14.219,0.012,0.001,1,0,0,0,0,1,0,0,0,0,0,0,0,0.839
-"Labridae Coris auricularis.depth+rock+sponge","depth+rock+sponge",265.864535702338,283.756636477591,0.24735,NA,4.84,0,7.822,19.086,0.012,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0.851
-"Labridae Coris auricularis.depth+detrended","depth+detrended",265.87595635747,278.903200431519,0.25127,NA,3,0,7.833,14.232,0.011,0.001,1,0,0,0,0,0,0,0,0,0,1,0,0,0.862
-"Labridae Coris auricularis.depth+tpi","depth+tpi",265.87830456082,278.905046009413,0.25129,NA,3,0,7.836,14.234,0.011,0.001,1,0,0,0,0,0,0,0,1,0,0,0,0,0.873
-"Labridae Coris auricularis.depth+sponge+tpi","depth+sponge+tpi",265.879832301001,283.772986134959,0.24691,NA,4.84,0,7.837,19.102,0.011,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0.884
-"Labridae Coris auricularis.depth+kelps+sponge","depth+kelps+sponge",266.013610487995,283.891812679422,0.24779,NA,4.82,0,7.971,19.221,0.011,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0.895
-"Labridae Coris auricularis.depth+location+rock","depth+location+rock",266.132589256529,281.644314407324,0.30646,NA,4,0,8.09,16.973,0.01,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0.905
-"Labridae Coris auricularis.depth+location+tpi","depth+location+tpi",266.269018682683,281.780345161353,0.30236,NA,4,0,8.226,17.11,0.009,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0.914
-"Labridae Coris auricularis.depth.t.location+location+sponge","depth.t.location+location+sponge",266.566398445919,286.843535415882,0.21064,NA,5.82,0,8.524,22.173,0.008,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0.922
-"Labridae Coris auricularis.depth.by.location+location+rock","depth.by.location+location+rock",266.647843942517,286.914326939365,0.0705,NA,5.81,0,8.605,22.243,0.008,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0.93
-"Labridae Coris auricularis.depth.by.location+kelps+location","depth.by.location+kelps+location",266.782774503402,287.043834279591,0.07851,NA,5.81,0,8.74,22.373,0.007,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0.937
-"Labridae Coris auricularis.depth.by.location+location+sponge","depth.by.location+location+sponge",266.899502071567,289.35739021721,0.08738,NA,6.54,0,8.857,24.687,0.007,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0.944
-"Labridae Coris auricularis.depth.by.location+location+tpi","depth.by.location+location+tpi",266.991905480649,287.25543880119,0.07007,NA,5.81,0,8.949,22.585,0.007,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0.951
-"Labridae Coris auricularis.depth.t.location+kelps+location","depth.t.location+kelps+location",267.422811142723,285.376409950111,0.18705,NA,5,0,9.38,20.706,0.005,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0.956
-"Labridae Coris auricularis.depth+detrended+kelps","depth+detrended+kelps",267.500365964407,283.012656423802,0.26182,NA,4,0,9.458,18.342,0.005,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0.961
-"Labridae Coris auricularis.depth+kelps+tpi","depth+kelps+tpi",267.592982191653,283.104767970393,0.25975,NA,4,0,9.55,18.434,0.005,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0.966
-"Labridae Coris auricularis.depth+kelps+rock","depth+kelps+rock",267.641329495012,283.15405725394,0.2583,NA,4,0,9.599,18.483,0.005,0,1,1,0,0,0,1,0,0,0,0,0,0,0,0.971
-"Labridae Coris auricularis.depth+location+rock.by.location","depth+location+rock.by.location",267.827025231436,285.780371033162,0.29943,NA,5,0,9.784,21.11,0.004,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0.975
-"Labridae Coris auricularis.depth.t.location+location+rock","depth.t.location+location+rock",267.878003054064,285.831565475798,0.18591,NA,5,0,9.835,21.161,0.004,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0.979
+"targeted.abundance","depth.by.location+location+tpi",257.149888714962,279.779129895127,0.02711,NA,6.75,0,0,0,0.546,0.262,1,0,0,0,0,0,0,0,1,0,0,0,1,0.546
+"Labridae Coris auricularis","depth+kelps.by.location+location",258.04254820973,264.670832969689,0.30915,NA,5,1,0,0,0.576,0.982,1,1,0,0,0,0,0,0,0,0,0,0,1,0.576
 "Lethrinidae Lethrinus miniatus.depth.by.location+location","depth.by.location+location",212.761657715396,230.655199415954,0.02354,NA,4.84,0,0,3.451,0.123,0.101,1,0,0,0,0,0,0,0,0,0,0,0,1,0.123
 "Lethrinidae Lethrinus miniatus.depth.by.location+location+sponge","depth.by.location+location+sponge",213.069549030267,235.635423783069,0.02673,NA,6.66,0,0.308,8.431,0.106,0.008,1,0,0,1,0,0,0,0,0,0,0,0,1,0.229
 "Lethrinidae Lethrinus miniatus.depth+location+sponge","depth+location+sponge",213.144161491193,231.050462298762,0.06992,NA,4.86,0,0.383,3.846,0.102,0.083,1,0,0,1,0,0,0,0,0,0,0,0,1,0.331
@@ -55,25 +9,6 @@
 "Lethrinidae Lethrinus miniatus.depth.by.location+location+tpi","depth.by.location+location+tpi",214.292279004848,236.844958142308,0.02431,NA,6.64,0,1.531,9.641,0.057,0.005,1,0,0,0,0,0,0,0,1,0,0,0,1,0.531
 "Lethrinidae Lethrinus miniatus.depth.by.location+kelps+location","depth.by.location+kelps+location",214.422328112795,236.561809135347,0.02364,NA,6.38,0,1.661,9.358,0.054,0.005,1,1,0,0,0,0,0,0,0,0,0,0,1,0.585
 "Lethrinidae Lethrinus miniatus.depth.by.location+kelps.by.location+location","depth.by.location+kelps.by.location+location",214.681140268497,236.79984909869,0.02364,NA,7.37,1,1.919,9.596,0.047,0.005,1,1,0,0,0,0,0,0,0,0,0,0,1,0.632
-"Lethrinidae Lethrinus miniatus.depth+location+rock","depth+location+rock",215.073529530764,232.943950288726,0.07405,NA,4.82,0,2.312,5.74,0.039,0.032,1,0,0,0,0,1,0,0,0,0,0,0,1,0.671
-"Lethrinidae Lethrinus miniatus.depth+location+tpi.by.location","depth+location+tpi.by.location",215.53956196956,238.057834406063,0.07831,NA,6.6,0,2.778,10.854,0.031,0.003,1,0,0,0,0,0,0,0,1,0,0,0,1,0.702
-"Lethrinidae Lethrinus miniatus.depth+location+sponge.by.location","depth+location+sponge.by.location",215.570399189049,235.864390080759,0.07182,NA,5.85,0,2.809,8.66,0.03,0.008,1,0,0,1,0,0,0,0,0,0,0,0,1,0.732
-"Lethrinidae Lethrinus miniatus.depth.by.location+location+sponge.by.location","depth.by.location+location+sponge.by.location",215.626898804155,240.47862170582,0.0262,NA,7.64,0,2.865,13.275,0.029,0.001,1,0,0,1,0,0,0,0,0,0,0,0,1,0.761
-"Lethrinidae Lethrinus miniatus.depth+location+tpi","depth+location+tpi",215.714221604969,233.555484678403,0.07191,NA,4.79,0,2.953,6.352,0.028,0.024,1,0,0,0,0,0,0,0,1,0,0,0,1,0.789
-"Lethrinidae Lethrinus miniatus.depth+kelps+location","depth+kelps+location",215.844549181794,232.879260580096,0.06971,NA,4.39,0,3.083,5.675,0.026,0.033,1,1,0,0,0,0,0,0,0,0,0,0,1,0.815
-"Lethrinidae Lethrinus miniatus.depth.t.location+location","depth.t.location+location",216.06635495231,231.577348180081,0.07968,NA,4,0,3.305,4.373,0.024,0.064,1,0,0,0,0,0,0,0,0,0,0,0,1,0.839
-"Lethrinidae Lethrinus miniatus.depth+kelps.by.location+location","depth+kelps.by.location+location",216.140645683656,233.138296551865,0.06969,NA,5.37,1,3.379,5.934,0.023,0.029,1,1,0,0,0,0,0,0,0,0,0,0,1,0.862
-"Lethrinidae Lethrinus miniatus.depth.by.location+location+rock.by.location","depth.by.location+location+rock.by.location",216.222520122826,241.096957988206,0.02541,NA,7.66,0,3.461,13.893,0.022,0.001,1,0,0,0,0,1,0,0,0,0,0,0,1,0.884
-"Lethrinidae Lethrinus miniatus.depth.t.location+location+sponge","depth.t.location+location+sponge",216.288296611956,236.564917909639,0.07567,NA,5.82,0,3.527,9.361,0.021,0.005,1,0,0,1,0,0,0,0,0,0,0,0,1,0.905
-"Lethrinidae Lethrinus miniatus.depth+location+rock.by.location","depth+location+rock.by.location",216.745916968058,237.017744127789,0.07921,NA,5.82,0,3.984,9.814,0.017,0.004,1,0,0,0,0,1,0,0,0,0,0,0,1,0.922
-"Lethrinidae Lethrinus miniatus.depth.by.location+location+tpi.by.location","depth.by.location+location+tpi.by.location",216.865249746629,243.777391705256,0.02664,NA,8.33,0,4.104,16.573,0.016,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0.938
-"Lethrinidae Lethrinus miniatus.depth.t.location+location+tpi.by.location","depth.t.location+location+tpi.by.location",217.484782221824,242.307927210945,0.09533,NA,7.6,0,4.723,15.104,0.012,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0.95
-"Lethrinidae Lethrinus miniatus.depth.t.location+kelps+location","depth.t.location+kelps+location",217.757377948452,237.492565013976,0.08525,NA,5.49,0,4.996,10.289,0.01,0.003,1,1,0,0,0,0,0,0,0,0,0,0,1,0.96
-"Lethrinidae Lethrinus miniatus.depth.t.location+location+tpi","depth.t.location+location+tpi",217.778569982626,237.999643431498,0.08663,NA,5.77,0,5.017,10.796,0.01,0.003,1,0,0,0,0,0,0,0,1,0,0,0,1,0.97
-"Lethrinidae Lethrinus miniatus.depth.t.location+location+rock","depth.t.location+location+rock",217.894792388935,238.14020879709,0.08515,NA,5.79,0,5.133,10.936,0.009,0.002,1,0,0,0,0,1,0,0,0,0,0,0,1,0.979
-"Lethrinidae Lethrinus miniatus.depth.t.location+kelps.by.location+location","depth.t.location+kelps.by.location+location",218.046717877207,237.756698568055,0.08534,NA,6.48,1,5.285,10.553,0.009,0.003,1,1,0,0,0,0,0,0,0,0,0,0,1,0.988
-"Lethrinidae Lethrinus miniatus.depth.t.location+location+sponge.by.location","depth.t.location+location+sponge.by.location",218.794017457028,241.403321161861,0.07758,NA,6.8,0,6.032,14.199,0.006,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0.994
-"Lethrinidae Lethrinus miniatus.depth.t.location+location+rock.by.location","depth.t.location+location+rock.by.location",219.145946279288,241.774005932758,0.09353,NA,6.82,0,6.384,14.57,0.005,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0.999
 "Pomacentridae Chromis westaustralis.depth.t.location+location","depth.t.location+location",278.607383497498,294.118376725269,0.04929,NA,4,0,0,2.68,0.08,0.065,1,0,0,0,0,0,0,0,0,0,0,0,1,0.08
 "Pomacentridae Chromis westaustralis.depth.t.location+location+tpi.by.location","depth.t.location+location+tpi.by.location",279.188662958083,301.344488160706,0.0089,NA,6.68,0,0.581,9.906,0.059,0.002,1,0,0,0,0,0,0,0,1,0,0,0,1,0.139
 "Pomacentridae Chromis westaustralis.depth.t.location+location+rock","depth.t.location+location+rock",279.332940103747,297.286041721428,0.05447,NA,5,0,0.726,5.848,0.055,0.013,1,0,0,0,0,1,0,0,0,0,0,0,1,0.194
@@ -82,115 +17,5 @@
 "Pomacentridae Chromis westaustralis.depth.by.location+location+tpi.by.location","depth.by.location+location+tpi.by.location",279.974694278854,304.688604240479,0.01132,NA,7.51,0,1.367,13.251,0.04,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0.332
 "Pomacentridae Chromis westaustralis.depth.t.location+location+sponge","depth.t.location+location+sponge",280.060125750387,298.013135833062,0.05081,NA,5,0,1.453,6.575,0.038,0.009,1,0,0,1,0,0,0,0,0,0,0,0,1,0.37
 "Pomacentridae Chromis westaustralis.depth+detrended+sponge","depth+detrended+sponge",280.466716667195,295.978364422342,0.11817,NA,4,0,1.859,4.54,0.031,0.026,1,0,0,1,0,0,0,0,0,0,1,0,0,0.401
-"Pomacentridae Chromis westaustralis.depth.by.location+location+rock","depth.by.location+location+rock",280.627173680866,300.855039627689,0.05564,NA,5.77,0,2.02,9.417,0.029,0.002,1,0,0,0,0,1,0,0,0,0,0,0,1,0.43
-"Pomacentridae Chromis westaustralis.depth.t.location+location+tpi","depth.t.location+location+tpi",280.63270070128,298.585716480936,0.04914,NA,5,0,2.025,7.148,0.029,0.007,1,0,0,0,0,0,0,0,1,0,0,0,1,0.459
-"Pomacentridae Chromis westaustralis.depth+rock+sponge","depth+rock+sponge",280.696645694492,296.208272137876,0.10913,NA,4,0,2.089,4.77,0.028,0.023,1,0,0,1,0,1,0,0,0,0,0,0,0,0.487
-"Pomacentridae Chromis westaustralis.depth","depth",280.937892674706,291.438056384185,0.11082,NA,2,0,2.331,0,0.025,0.247,1,0,0,0,0,0,0,0,0,0,0,0,0,0.512
-"Pomacentridae Chromis westaustralis.depth.by.location+location+sponge","depth.by.location+location+sponge",280.984913235543,301.247641431699,0.05533,NA,5.81,0,2.378,9.81,0.024,0.002,1,0,0,1,0,0,0,0,0,0,0,0,1,0.536
-"Pomacentridae Chromis westaustralis.depth.t.location+location+rock.by.location","depth.t.location+location+rock.by.location",281.119720904115,301.470227730505,0.05289,NA,6,0,2.512,10.032,0.023,0.002,1,0,0,0,0,1,0,0,0,0,0,0,1,0.559
-"Pomacentridae Chromis westaustralis.depth+location+rock","depth+location+rock",281.154689954359,296.665784043921,0.07962,NA,4,0,2.547,5.228,0.022,0.018,1,0,0,0,0,1,0,0,0,0,0,0,1,0.581
-"Pomacentridae Chromis westaustralis.depth+location+sponge","depth+location+sponge",281.171421347639,296.683330933843,0.09241,NA,4,0,2.564,5.245,0.022,0.018,1,0,0,1,0,0,0,0,0,0,0,0,1,0.603
-"Pomacentridae Chromis westaustralis.depth.by.location+location+tpi","depth.by.location+location+tpi",281.247344348647,301.506437231644,0.04868,NA,5.8,0,2.64,10.068,0.021,0.002,1,0,0,0,0,0,0,0,1,0,0,0,1,0.624
-"Pomacentridae Chromis westaustralis.depth.t.location+kelps.by.location+location","depth.t.location+kelps.by.location+location",281.263695374607,299.720757299246,0.04969,NA,6.11,1,2.656,8.283,0.021,0.004,1,1,0,0,0,0,0,0,0,0,0,0,1,0.645
-"Pomacentridae Chromis westaustralis.depth+sponge+tpi","depth+sponge+tpi",281.379769908574,296.891200865157,0.11288,NA,4,0,2.772,5.453,0.02,0.016,1,0,0,1,0,0,0,0,1,0,0,0,0,0.665
-"Pomacentridae Chromis westaustralis.depth.t.location+kelps+location","depth.t.location+kelps+location",281.387122152493,299.94226030674,0.04968,NA,5.13,0,2.78,8.504,0.02,0.004,1,1,0,0,0,0,0,0,0,0,0,0,1,0.685
-"Pomacentridae Chromis westaustralis.depth+detrended+rock","depth+detrended+rock",281.390603100852,296.902530252572,0.13078,NA,4,0,2.783,5.464,0.02,0.016,1,0,0,0,0,1,0,0,0,0,1,0,0,0.705
-"Pomacentridae Chromis westaustralis.depth+location","depth+location",281.540342914767,294.566799535393,0.08061,NA,3,0,2.933,3.129,0.018,0.052,1,0,0,0,0,0,0,0,0,0,0,0,1,0.723
-"Pomacentridae Chromis westaustralis.depth+detrended","depth+detrended",281.589865912418,294.616940293117,0.12696,NA,3,0,2.982,3.179,0.018,0.05,1,0,0,0,0,0,0,0,0,0,1,0,0,0.741
-"Pomacentridae Chromis westaustralis.depth.by.location+kelps.by.location+location","depth.by.location+kelps.by.location+location",281.712644779315,301.969989244611,0.05115,NA,6.8,1,3.105,10.532,0.017,0.001,1,1,0,0,0,0,0,0,0,0,0,0,1,0.758
-"Pomacentridae Chromis westaustralis.depth.by.location+kelps+location","depth.by.location+kelps+location",281.776822295702,302.037332817936,0.051,NA,5.8,0,3.169,10.599,0.016,0.001,1,1,0,0,0,0,0,0,0,0,0,0,1,0.774
-"Pomacentridae Chromis westaustralis.depth+kelps+sponge","depth+kelps+sponge",281.940025326607,297.451783373242,0.10554,NA,4,0,3.333,6.014,0.015,0.012,1,1,0,1,0,0,0,0,0,0,0,0,0,0.789
-"Pomacentridae Chromis westaustralis.depth+rock","depth+rock",282.106305462012,295.509679851311,0.11338,NA,3.08,0,3.499,4.072,0.014,0.032,1,0,0,0,0,1,0,0,0,0,0,0,0,0.803
-"Pomacentridae Chromis westaustralis.depth+location+tpi.by.location","depth+location+tpi.by.location",282.212955583464,302.528782769955,0.00569,NA,5.88,0,3.606,11.091,0.013,0.001,1,0,0,0,0,0,0,0,1,0,0,0,1,0.816
-"Pomacentridae Chromis westaustralis.depth+location+rock.by.location","depth+location+rock.by.location",282.324559281167,300.277511900775,0.09712,NA,5,0,3.717,8.839,0.012,0.003,1,0,0,0,0,1,0,0,0,0,0,0,1,0.828
-"Pomacentridae Chromis westaustralis.depth.by.location+location+rock.by.location","depth.by.location+location+rock.by.location",282.389050137556,304.976776537601,0.05831,NA,6.78,0,3.782,13.539,0.012,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0.84
-"Pomacentridae Chromis westaustralis.depth.by.location+location+sponge.by.location","depth.by.location+location+sponge.by.location",282.481162865343,307.363427688182,0.06881,NA,7.67,0,3.874,15.925,0.011,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0.851
-"Pomacentridae Chromis westaustralis.depth+tpi","depth+tpi",282.948912083508,295.976282798213,0.11727,NA,3,0,4.342,4.538,0.009,0.026,1,0,0,0,0,0,0,0,1,0,0,0,0,0.86
-"Pomacentridae Chromis westaustralis.depth.t.location+location+sponge.by.location","depth.t.location+location+sponge.by.location",282.953941793748,307.36285586969,0.04787,NA,7.36,0,4.347,15.925,0.009,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0.869
-"Pomacentridae Chromis westaustralis.depth+location+sponge.by.location","depth+location+sponge.by.location",283.11471815243,305.191537131223,0.12735,NA,6.37,0,4.507,13.753,0.008,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0.877
-"Pomacentridae Chromis westaustralis.depth+kelps","depth+kelps",283.152389193848,296.180091602888,0.10958,NA,3,0,4.545,4.742,0.008,0.023,1,1,0,0,0,0,0,0,0,0,0,0,0,0.885
-"Pomacentridae Chromis westaustralis.detrended+sand","detrended+sand",283.433889242909,296.460839472274,0.11459,NA,3,0,4.827,5.023,0.007,0.02,0,0,0,0,1,0,0,0,0,0,1,0,0,0.892
-"Pomacentridae Chromis westaustralis.depth+rock+tpi","depth+rock+tpi",283.510139079901,299.127512599207,0.12348,NA,4.02,0,4.903,7.689,0.007,0.005,1,0,0,0,0,1,0,0,1,0,0,0,0,0.899
-"Pomacentridae Chromis westaustralis.sand+status","sand+status",283.601965911625,296.628921665385,0.12844,NA,3,0,4.995,5.191,0.007,0.018,0,0,0,0,1,0,0,0,0,0,0,1,0,0.906
-"Pomacentridae Chromis westaustralis.depth+location+tpi","depth+location+tpi",283.70821993739,299.220110956643,0.08343,NA,4,0,5.101,7.782,0.006,0.005,1,0,0,0,0,0,0,0,1,0,0,0,1,0.912
-"Pomacentridae Chromis westaustralis.sand","sand",284.145404976038,294.646086175042,0.08911,NA,2,0,5.538,3.208,0.005,0.05,0,0,0,0,1,0,0,0,0,0,0,0,0,0.917
-"Pomacentridae Chromis westaustralis.detrended+sand+status","detrended+sand+status",284.249016459755,299.760654814958,0.1407,NA,4,0,5.642,8.323,0.005,0.004,0,0,0,0,1,0,0,0,0,0,1,1,0,0.922
-"Pomacentridae Chromis westaustralis.depth+kelps+rock","depth+kelps+rock",284.279347103099,299.918831388397,0.11309,NA,4.03,0,5.672,8.481,0.005,0.004,1,1,0,0,0,1,0,0,0,0,0,0,0,0.927
-"Pomacentridae Chromis westaustralis.depth+kelps.by.location+location","depth+kelps.by.location+location",284.381093674588,300.818308083064,0.07974,NA,5.21,1,5.774,9.38,0.004,0.002,1,1,0,0,0,0,0,0,0,0,0,0,1,0.931
-"Pomacentridae Chromis westaustralis.depth+kelps+location","depth+kelps+location",284.442790004434,300.936772084267,0.07973,NA,4.23,0,5.835,9.499,0.004,0.002,1,1,0,0,0,0,0,0,0,0,0,0,1,0.935
-"Pomacentridae Chromis westaustralis.depth+detrended+kelps","depth+detrended+kelps",284.632745124179,301.232786072171,0.1272,NA,4.25,0,6.025,9.795,0.004,0.002,1,1,0,0,0,0,0,0,0,0,1,0,0,0.939
-"Pomacentridae Chromis westaustralis.relief+rock","relief+rock",285.211225183455,298.23836222105,0.14375,NA,3,0,6.604,6.8,0.003,0.008,0,0,0,0,0,1,0,1,0,0,0,0,0,0.942
-"Pomacentridae Chromis westaustralis.depth+kelps+tpi","depth+kelps+tpi",285.242708842294,300.755769142195,0.11582,NA,4,0,6.635,9.318,0.003,0.002,1,1,0,0,0,0,0,0,1,0,0,0,0,0.945
-"Pomacentridae Chromis westaustralis.relief+rock+tpi","relief+rock+tpi",285.406305673896,300.917623049831,0.15681,NA,4,0,6.799,9.48,0.003,0.002,0,0,0,0,0,1,0,1,1,0,0,0,0,0.948
-"Pomacentridae Chromis westaustralis.sand+tpi","sand+tpi",285.63785994897,298.664691688465,0.10002,NA,3,0,7.03,7.227,0.002,0.007,0,0,0,0,1,0,0,0,1,0,0,0,0,0.95
-"Pomacentridae Chromis westaustralis.sand+status+tpi","sand+status+tpi",285.722033410556,301.233838771883,0.13324,NA,4,0,7.115,9.796,0.002,0.002,0,0,0,0,1,0,0,0,1,0,0,1,0,0.952
-"Pomacentridae Chromis westaustralis.detrended+kelps+sand","detrended+kelps+sand",285.754145656908,301.266359928729,0.11461,NA,4,0,7.147,9.828,0.002,0.002,0,1,0,0,1,0,0,0,0,0,1,0,0,0.954
-"Pomacentridae Chromis westaustralis.kelps+sand+status","kelps+sand+status",285.875418901838,301.469278219928,0.12883,NA,4.02,0,7.268,10.031,0.002,0.002,0,1,0,0,1,0,0,0,0,0,0,1,0,0.956
-"Pomacentridae Chromis westaustralis.relief","relief",285.938245330562,298.628525721623,0.10303,NA,2.63,0,7.331,7.19,0.002,0.007,0,0,0,0,0,0,0,1,0,0,0,0,0,0.958
-"Pomacentridae Chromis westaustralis.sand.by.status+status","sand.by.status+status",285.988096898457,301.499967711383,0.13046,NA,4,0,7.381,10.062,0.002,0.002,0,0,0,0,1,0,0,0,0,0,0,1,0,0.96
-"Pomacentridae Chromis westaustralis.relief+rock+status","relief+rock+status",286.047813560071,301.559483006003,0.1818,NA,4,0,7.44,10.121,0.002,0.002,0,0,0,0,0,1,0,1,0,0,0,1,0,0.962
-"Pomacentridae Chromis westaustralis.kelps+sand","kelps+sand",286.361991069646,299.388872602932,0.08933,NA,3,0,7.755,7.951,0.002,0.005,0,1,0,0,1,0,0,0,0,0,0,0,0,0.964
-"Pomacentridae Chromis westaustralis.location+relief+rock","location+relief+rock",286.455664135953,301.967611964765,0.15266,NA,4,0,7.848,10.53,0.002,0.001,0,0,0,0,0,1,0,1,0,0,0,0,1,0.966
-"Pomacentridae Chromis westaustralis.relief+status","relief+status",286.516530680202,301.782292463477,0.12811,NA,3.68,0,7.909,10.344,0.002,0.001,0,0,0,0,0,0,0,1,0,0,0,1,0,0.968
-"Pomacentridae Chromis westaustralis.detrended.by.status+sand+status","detrended.by.status+sand+status",286.584158927384,306.824638298701,0.14226,NA,5.78,0,7.977,15.387,0.001,0,0,0,0,0,1,0,0,0,0,0,1,1,0,0.969
-"Pomacentridae Chromis westaustralis.kelps.by.status+sand+status","kelps.by.status+sand+status",286.675666419981,305.04015305518,0.15477,NA,5.09,0,8.068,13.602,0.001,0,0,1,0,0,1,0,0,0,0,0,0,1,0,0.97
-"Pomacentridae Chromis westaustralis.detrended+sand.by.status+status","detrended+sand.by.status+status",286.68493555717,304.638285408742,0.13873,NA,5,0,8.078,13.2,0.001,0,0,0,0,0,1,0,0,0,0,0,1,1,0,0.971
-"Pomacentridae Chromis westaustralis.location+relief","location+relief",286.880298984866,302.190939043594,0.11673,NA,3.71,0,8.273,10.753,0.001,0.001,0,0,0,0,0,0,0,1,0,0,0,0,1,0.972
-"Pomacentridae Chromis westaustralis.relief+tpi","relief+tpi",287.034515090169,302.34525139145,0.10268,NA,3.71,0,8.427,10.907,0.001,0.001,0,0,0,0,0,0,0,1,1,0,0,0,0,0.973
-"Pomacentridae Chromis westaustralis.biog+rock+tpi","biog+rock+tpi",287.711656226413,303.223444531572,0.15878,NA,4,0,9.104,11.785,0.001,0.001,0,0,0,0,0,1,1,0,1,0,0,0,0,0.974
-"Pomacentridae Chromis westaustralis.relief.by.status+status","relief.by.status+status",287.745297914833,305.599593761231,0.1186,NA,4.8,0,9.138,14.162,0.001,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0.975
-"Pomacentridae Chromis westaustralis.kelps+sand+tpi","kelps+sand+tpi",287.937795751784,303.449236564036,0.10008,NA,4,0,9.33,12.011,0.001,0.001,0,1,0,0,1,0,0,0,1,0,0,0,0,0.976
-"Pomacentridae Chromis westaustralis.sand+status+tpi.by.status","sand+status+tpi.by.status",288.073663470584,306.026558899187,0.13652,NA,5,0,9.466,14.589,0.001,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0.977
-"Pomacentridae Chromis westaustralis.relief+status+tpi","relief+status+tpi",288.091638155785,305.874956164526,0.12153,NA,4.74,0,9.484,14.437,0.001,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0.978
-"Pomacentridae Chromis westaustralis.biog+rock","biog+rock",288.116326691041,301.143527897338,0.13841,NA,3,0,9.509,9.705,0.001,0.002,0,0,0,0,0,1,1,0,0,0,0,0,0,0.979
-"Pomacentridae Chromis westaustralis.relief.by.status+rock+status","relief.by.status+rock+status",288.175148333951,308.072106754756,0.19045,NA,5.56,0,9.568,16.634,0.001,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0.98
-"Pomacentridae Chromis westaustralis.sand.by.status+status+tpi","sand.by.status+status+tpi",288.18693053625,306.140285128538,0.1338,NA,5,0,9.58,14.702,0.001,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0.981
-"Pomacentridae Chromis westaustralis.location+relief+tpi","location+relief+tpi",288.281805917521,306.094355398141,0.11693,NA,4.76,0,9.674,14.656,0.001,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0.982
-"Pomacentridae Chromis westaustralis.biog+detrended+rock","biog+detrended+rock",288.304077324676,303.815700344687,0.14102,NA,4,0,9.697,12.378,0.001,0.001,0,0,0,0,0,1,1,0,0,0,1,0,0,0.983
-"Pomacentridae Chromis westaustralis.relief.by.status+rock.by.status+status","relief.by.status+rock.by.status+status",288.338802277629,310.805164427713,0.06422,NA,6.68,0,9.731,19.367,0.001,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0.984
-"Pomacentridae Chromis westaustralis.location+relief+rock.by.location","location+relief+rock.by.location",288.356060955528,306.676449457269,0.14124,NA,5.08,0,9.749,15.238,0.001,0,0,0,0,0,0,1,0,1,0,0,0,0,1,0.985
-"Pomacentridae Chromis westaustralis.macroalgae+rock","macroalgae+rock",288.401623505562,301.428713853108,0.15819,NA,3,0,9.794,9.991,0.001,0.002,0,0,1,0,0,1,0,0,0,0,0,0,0,0.986
-"Pomacentridae Chromis westaustralis.detrended+macroalgae+rock","detrended+macroalgae+rock",288.542760379583,304.05473014984,0.14795,NA,4,0,9.935,12.617,0.001,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0.987
-"Pomacentridae Chromis westaustralis.kelps+sand.by.status+status","kelps+sand.by.status+status",288.565066009073,307.024737190523,0.1327,NA,5.11,0,9.958,15.587,0.001,0,0,1,0,0,1,0,0,0,0,0,0,1,0,0.988
-"total.abundance.depth+detrended+sponge","depth+detrended+sponge",698.980286621611,714.493653390719,0.18724,NA,4,0,0,0,0.847,0.833,1,0,0,1,0,0,0,0,0,0,1,0,0,0.847
-"total.abundance.depth+sponge","depth+sponge",705.553855292366,718.582586633203,0.16886,NA,3,0,6.574,4.089,0.032,0.108,1,0,0,1,0,0,0,0,0,0,0,0,0,0.879
-"total.abundance.depth+location+sponge.by.location","depth+location+sponge.by.location",706.287849276356,725.591235560061,0.17825,NA,5.34,0,7.308,11.098,0.022,0.003,1,0,0,1,0,0,0,0,0,0,0,0,1,0.901
-"total.abundance.depth+rock+sponge","depth+rock+sponge",706.411462489466,723.344388762563,0.16991,NA,4.35,0,7.431,8.851,0.021,0.01,1,0,0,1,0,1,0,0,0,0,0,0,0,0.922
-"total.abundance.depth+location+sponge","depth+location+sponge",706.782402675479,722.293912369316,0.16017,NA,4,0,7.802,7.8,0.017,0.017,1,0,0,1,0,0,0,0,0,0,0,0,1,0.939
-"total.abundance.depth+sponge+tpi","depth+sponge+tpi",706.914737929933,722.427189806992,0.17409,NA,4,0,7.934,7.934,0.016,0.016,1,0,0,1,0,0,0,0,1,0,0,0,0,0.955
-"total.abundance.depth.by.location+location+sponge.by.location","depth.by.location+location+sponge.by.location",707.330655656132,731.802150898568,0.12293,NA,7.4,0,8.35,17.308,0.013,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0.968
-"total.abundance.depth+kelps+sponge","depth+kelps+sponge",707.742329169128,723.254964223363,0.16955,NA,4,0,8.762,8.761,0.011,0.01,1,1,0,1,0,0,0,0,0,0,0,0,0,0.979
-"total.abundance.depth.t.location+location+sponge","depth.t.location+location+sponge",708.397689456497,726.387640746695,0.16252,NA,5.01,0,9.417,11.894,0.008,0.002,1,0,0,1,0,0,0,0,0,0,0,0,1,0.987
-"total.abundance.depth.by.location+location+sponge","depth.by.location+location+sponge",708.605292373308,730.08977492203,0.12178,NA,6.12,0,9.625,15.596,0.007,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0.994
-"total.abundance.depth.t.location+location+sponge.by.location","depth.t.location+location+sponge.by.location",708.609566269478,730.263956208782,0.17813,NA,6.33,0,9.629,15.77,0.007,0,1,0,0,1,0,0,0,0,0,0,0,0,1,1.001
-"species.richness.location+relief","location+relief",442.029954980374,457.500838024072,0.36161,NA,3.87,0,0,0.046,0.25,0.311,0,0,0,0,0,0,0,1,0,0,0,0,1,0.25
-"species.richness.location+relief.by.location","location+relief.by.location",444.196044796469,462.113098853026,0.37774,NA,4.88,0,2.166,4.659,0.085,0.031,0,0,0,0,0,0,0,1,0,0,0,0,1,0.335
-"species.richness.location+relief+tpi","location+relief+tpi",444.213320055034,462.130254961871,0.36392,NA,4.88,0,2.183,4.676,0.084,0.031,0,0,0,0,0,0,0,1,1,0,0,0,1,0.419
-"species.richness.relief+rock","relief+rock",444.256438791999,460.036149573338,0.34684,NA,3.79,0,2.226,2.582,0.082,0.088,0,0,0,0,0,1,0,1,0,0,0,0,0,0.501
-"species.richness.relief","relief",444.492275803937,457.454403890518,0.31824,NA,2.84,0,2.462,0,0.073,0.318,0,0,0,0,0,0,0,1,0,0,0,0,0,0.574
-"species.richness.location+relief+rock","location+relief+rock",445.136837174938,464.030278545945,0.37602,NA,5.02,0,3.107,6.576,0.053,0.012,0,0,0,0,0,1,0,1,0,0,0,0,1,0.627
-"species.richness.relief+status","relief+status",445.685059425534,461.132424243961,0.32468,NA,3.84,0,3.655,3.678,0.04,0.051,0,0,0,0,0,0,0,1,0,0,0,1,0,0.667
-"species.richness.relief+rock+tpi","relief+rock+tpi",445.992054177372,464.350726006657,0.35051,NA,4.82,0,3.962,6.896,0.034,0.01,0,0,0,0,0,1,0,1,1,0,0,0,0,0.701
-"species.richness.relief+rock+status","relief+rock+status",446.010546285729,464.160767291168,0.35026,NA,4.78,0,3.981,6.706,0.034,0.011,0,0,0,0,0,1,0,1,0,0,0,1,0,0.735
-"species.richness.relief+tpi","relief+tpi",446.240698664017,461.69362732738,0.31895,NA,3.84,0,4.211,4.239,0.03,0.038,0,0,0,0,0,0,0,1,1,0,0,0,0,0.765
-"species.richness.location+relief+tpi.by.location","location+relief+tpi.by.location",446.573906341971,466.891255544153,0.36884,NA,5.88,0,4.544,9.437,0.026,0.003,0,0,0,0,0,0,0,1,1,0,0,0,1,0.791
-"species.richness.location+relief.by.location+tpi","location+relief.by.location+tpi",446.630025717023,466.948011791065,0.38144,NA,5.88,0,4.6,9.494,0.025,0.003,0,0,0,0,0,0,0,1,1,0,0,0,1,0.816
-"species.richness.location+relief+rock.by.location","location+relief+rock.by.location",446.728966264341,466.99166108046,0.38027,NA,5.81,0,4.699,9.537,0.024,0.003,0,0,0,0,0,1,0,1,0,0,0,0,1,0.84
-"species.richness.location+relief.by.location+rock","location+relief.by.location+rock",447.133007581842,467.992419619791,0.38318,NA,5.94,0,5.103,10.538,0.019,0.002,0,0,0,0,0,1,0,1,0,0,0,0,1,0.859
-"species.richness.relief+status+tpi","relief+status+tpi",447.577116422534,465.471679730006,0.32513,NA,4.84,0,5.547,8.017,0.016,0.006,0,0,0,0,0,0,0,1,1,0,0,1,0,0.875
-"species.richness.relief.by.status+status","relief.by.status+status",448.142684674971,466.025727020132,0.32265,NA,4.83,0,6.113,8.571,0.012,0.004,0,0,0,0,0,0,0,1,0,0,0,1,0,0.887
-"species.richness.macroalgae+rock+sponge","macroalgae+rock+sponge",448.186206847289,465.828520476235,0.42545,NA,4.64,0,6.156,8.374,0.012,0.005,0,0,1,1,0,1,0,0,0,0,0,0,0,0.899
-"species.richness.relief.by.status+rock+status","relief.by.status+rock+status",448.487572014476,469.491666280634,0.35172,NA,5.89,0,6.458,12.037,0.01,0.001,0,0,0,0,0,1,0,1,0,0,0,1,0,0.909
-"species.richness.biog+rock+tpi","biog+rock+tpi",448.518074264734,465.724953354583,0.41283,NA,4.45,0,6.488,8.271,0.01,0.005,0,0,0,0,0,1,1,0,1,0,0,0,0,0.919
-"species.richness.biog+location+rock","biog+location+rock",448.717642645114,465.48891329169,0.40675,NA,4.3,0,6.688,8.035,0.009,0.006,0,0,0,0,0,1,1,0,0,0,0,0,1,0.928
-"species.richness.relief+rock.by.status+status","relief+rock.by.status+status",448.738167625297,470.42090588203,0.35954,NA,6.09,0,6.708,12.967,0.009,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0.937
-"species.richness.biog+detrended+rock","biog+detrended+rock",448.84040406164,464.746604277131,0.40582,NA,4.08,0,6.81,7.292,0.008,0.008,0,0,0,0,0,1,1,0,0,0,1,0,0,0.945
-"species.richness.biog+rock","biog+rock",449.301026186022,463.388383105936,0.40034,NA,3.24,0,7.271,5.934,0.007,0.016,0,0,0,0,0,1,1,0,0,0,0,0,0,0.952
-"species.richness.location+relief.by.location+tpi.by.location","location+relief.by.location+tpi.by.location",449.314900927938,471.986467726044,0.38681,NA,6.88,0,7.285,14.532,0.007,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0.959
-"species.richness.relief+status+tpi.by.status","relief+status+tpi.by.status",449.827528738791,470.120795390099,0.32551,NA,5.84,0,7.798,12.666,0.005,0.001,0,0,0,0,0,0,0,1,1,0,0,1,0,0.964
-"species.richness.location+relief.by.location+rock.by.location","location+relief.by.location+rock.by.location",449.891985024501,472.535472663924,0.39127,NA,6.84,0,7.862,15.081,0.005,0,0,0,0,0,0,1,0,1,0,0,0,0,1,0.969
-"species.richness.relief.by.status+status+tpi","relief.by.status+status+tpi",450.127394943115,470.412097821563,0.32314,NA,5.83,0,8.097,12.958,0.004,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0.973
-"species.richness.biog.by.location+location+rock","biog.by.location+location+rock",450.52207371131,470.236356021995,0.41456,NA,5.48,0,8.492,12.782,0.004,0.001,0,0,0,0,0,1,1,0,0,0,0,0,1,0.977
-"species.richness.biog+location+rock.by.location","biog+location+rock.by.location",450.636598119012,469.446813944879,0.40202,NA,5.2,0,8.607,11.992,0.003,0.001,0,0,0,0,0,1,1,0,0,0,0,0,1,0.98
-"species.richness.relief.by.status+rock.by.status+status","relief.by.status+rock.by.status+status",450.903378255206,474.917494583585,0.35941,NA,7.1,0,8.873,17.463,0.003,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0.983
-"species.richness.biog+rock+slope","biog+rock+slope",451.032844194541,467.991645828894,0.39948,NA,4.36,0,9.003,10.537,0.003,0.002,0,0,0,0,0,1,1,0,0,1,0,0,0,0.986
+"total.abundance","depth+detrended+sponge",698.980286621611,714.493653390719,0.18724,NA,4,0,0,0,0.847,0.833,1,0,0,1,0,0,0,0,0,0,1,0,0,0.847
+"species.richness","location+relief",442.029954980374,457.500838024072,0.36161,NA,3.87,0,0,0.046,0.25,0.311,0,0,0,0,0,0,0,1,0,0,0,0,1,0.25
