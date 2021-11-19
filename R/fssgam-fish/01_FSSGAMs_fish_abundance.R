@@ -56,6 +56,15 @@ allhab <- allhab %>%
   mutate(sample = Sample)
 allhab <- allhab[ , !colnames(allhab) %in% colnames(allhab)[9:38]]
 
+allhab <- allhab %>%
+  transform(kelps = kelps/totalpts)%>%
+  transform(macroalgae = macroalgae/totalpts)%>%
+  transform(sponge = sponge/totalpts)%>%
+  transform(sand = sand/totalpts)%>%
+  transform(rock = rock/totalpts)%>%
+  transform(biog = biog/totalpts)%>%
+  glimpse()
+
 # habitat <- read.csv("2021-05_Abrolhos_BOSS_random-points_percent-cover_broad.habitat.csv")%>%
 #   mutate(reef = broad.ascidians+broad.bryozoa+broad.hydroids+
 #            broad.invertebrate.complex+broad.macroalgae+

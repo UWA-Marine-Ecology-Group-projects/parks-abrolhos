@@ -1,8 +1,4 @@
 "","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","kelps","macroalgae","sponge","sand","rock","biog","relief","tpi","slope","detrended","status","location","cumsum.wi"
-"greater than legal size.depth+location+tpi","depth+location+tpi",218.820844781196,236.725379610913,0.0856,NA,4.86,0,0,2.743,0.395,0.161,1,0,0,0,0,0,0,0,1,0,0,0,1,0.395
-"greater than legal size.depth+location+sponge","depth+location+sponge",219.312091975163,237.194385542797,0.07612,NA,4.83,0,0.491,3.212,0.309,0.127,1,0,0,1,0,0,0,0,0,0,0,0,1,0.704
-"legal size red throat.depth+location+sponge","depth+location+sponge",193.691903413883,211.571998945637,0.07023,NA,4.83,0,0,1.398,0.454,0.301,1,0,0,1,0,0,0,0,0,0,0,0,1,0.454
-"legal size red throat.depth+location","depth+location",194.860095609875,210.17437762463,0.04609,NA,3.72,0,1.168,0,0.253,0.606,1,0,0,0,0,0,0,0,0,0,0,0,1,0.707
-"smaller than legal size.depth","depth",144.68620970356,155.186423076852,0.15602,NA,2,0,0,0,0.161,0.512,1,0,0,0,0,0,0,0,0,0,0,0,0,0.161
-"smaller than legal size.depth+kelps","depth+kelps",145.878142894642,158.904717443686,0.18366,NA,3,0,1.192,3.718,0.089,0.08,1,1,0,0,0,0,0,0,0,0,0,0,0,0.25
-"smaller than legal size.depth+location","depth+location",146.110026526555,159.136494321918,0.09869,NA,3,0,1.424,3.95,0.079,0.071,1,0,0,0,0,0,0,0,0,0,0,0,1,0.329
+"greater than legal size","depth+location+sponge",213.471129055846,228.982594009228,0.07703,NA,4,0,0,0,0.89,0.895,1,0,0,1,0,0,0,0,0,0,0,0,1,0.89
+"legal size red throat","depth+location+sponge",190.176741237111,205.688740570047,0.07051,NA,4,0,0,0,0.825,0.893,1,0,0,1,0,0,0,0,0,0,0,0,1,0.825
+"smaller than legal size","depth+kelps+sponge",137.737067962302,157.970524136585,0.18173,NA,5.7,0,0,2.784,0.863,0.126,1,1,0,1,0,0,0,0,0,0,0,0,0,0.863

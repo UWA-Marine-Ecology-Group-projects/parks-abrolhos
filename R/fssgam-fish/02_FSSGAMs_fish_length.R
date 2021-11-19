@@ -55,6 +55,14 @@ allhab <- allhab %>%
   mutate(biog = rowSums(allhab[ , colnames(allhab) %in% brfc])) %>%
   mutate(sample = Sample)
 allhab <- allhab[ , !colnames(allhab) %in% colnames(allhab)[9:38]]
+allhab <- allhab %>%
+  transform(kelps = kelps/totalpts)%>%
+  transform(macroalgae = macroalgae/totalpts)%>%
+  transform(sponge = sponge/totalpts)%>%
+  transform(sand = sand/totalpts)%>%
+  transform(rock = rock/totalpts)%>%
+  transform(biog = biog/totalpts)%>%
+  glimpse()
 
 metadata <- length %>%
   distinct(sample,latitude,longitude,date,time,location,status,site,depth,observer,successful.count,successful.length)
