@@ -94,7 +94,7 @@ habi <- habi %>%
   mutate(sponge = rowSums(habi[ , c(grep("Sponge", colnames(habi)),
                                       grep("Invertebrate", colnames(habi)),
                                       grep("coral", colnames(habi)),
-                                      10, 11, 15)]))
+                                      10, 11, 15)])) %>%
   mutate(sand = rowSums(habi[ , grep("Unconsolidated", colnames(habi))])) %>%
   mutate(rock = rowSums(habi[ , grep("Consolidated", colnames(habi))])) %>%
   mutate(biog = rowSums(habi[ , colnames(habi) %in% brfc]))                      # collapse detailed classes into broad
@@ -108,20 +108,20 @@ pred.vars <- c("Depth","tri", "tpi", "roughness", "slope", "aspect", "detrended"
 round(cor(habi[ , pred.vars]), 2)
 # several highly correlated terrain variables here but I think we need to keep them?
 
-# Review of individual predictors for even distribution---
-# Plot of likely transformations - Anna Cresswell loop
-par(mfrow = c(3, 2))
-for (i in pred.vars) {
-  x<-habi[ , i]
-  x = as.numeric(unlist(x))
-  hist((x))#Looks best
-  plot((x), main = paste(i))
-  hist(sqrt(x))
-  plot(sqrt(x))
-  hist(log(x + 1))
-  plot(log(x + 1))
-}
-
+# # Review of individual predictors for even distribution---
+# # Plot of likely transformations - Anna Cresswell loop
+# par(mfrow = c(3, 2))
+# for (i in pred.vars) {
+#   x<-habi[ , i]
+#   x = as.numeric(unlist(x))
+#   hist((x))#Looks best
+#   plot((x), main = paste(i))
+#   hist(sqrt(x))
+#   plot(sqrt(x))
+#   hist(log(x + 1))
+#   plot(log(x + 1))
+# }
+# 
 # review and create cols for best transforms
 habi <- habi %>%
   mutate(logdepth = log(Depth)) %>%
@@ -132,7 +132,7 @@ habi <- habi %>%
   rename(response = value)
 
 # # Re-set the predictors for modeling----
-pred.vars <- c("Depth","roughness", "aspect", "tpi", "detrended") 
+pred.vars <- c("Depth","roughness", "tpi", "detrended") 
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars     <- unique(as.character(habi$Taxa))

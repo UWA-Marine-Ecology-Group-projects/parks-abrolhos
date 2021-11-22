@@ -30,24 +30,29 @@ brfexcl <- c(1:10, 30, 38:ncol(habi),
              grep("Consolidated", colnames(habi)))  # collect biogenic reef colnames
 brfc <- colnames(habi[ , -brfexcl])
 
-habi$biog   <- rowSums(habi[ , colnames(habi) %in% brfc])
-habi$macroalgae <- rowSums(habi[ , grep("Macroalgae", colnames(habi))])         # sum all tags with macroalgae in col name
-habi$kelps      <- habi$Macroalgae_Large.canopy.forming
-habi$sponge     <- rowSums(habi[ , grep("Sponge", colnames(habi))])
-habi$sand       <- rowSums(habi[ , grep("Unconsolidated", colnames(habi))])
-habi$rock       <- rowSums(habi[ , grep("Consolidated", colnames(habi))])
+habi <- habi %>%
+  mutate(kelps = habi$Macroalgae_Large.canopy.forming) %>%
+  mutate(macroalgae = rowSums(habi[ , grep("Macroalgae", colnames(habi))])) %>%
+  mutate(sponge = rowSums(habi[ , c(grep("Sponge", colnames(habi)),
+                                    grep("Invertebrate", colnames(habi)),
+                                    grep("coral", colnames(habi)),
+                                    10, 11, 15)])) %>%
+  mutate(sand = rowSums(habi[ , grep("Unconsolidated", colnames(habi))])) %>%
+  mutate(rock = rowSums(habi[ , grep("Consolidated", colnames(habi))])) %>%
+  mutate(biog = rowSums(habi[ , colnames(habi) %in% brfc]))                      # collapse detailed classes into broad
+colnames(habi)
 
-# visualise patterns
-covs <- c("Depth", "slope", "roughness", "tpi", "tri", "detrended")             # all covariates
-habs <- c("kelps", "macroalgae", "sponge", "sand", "rock", "biogenic")          # all habitats
-habl <- habi[, colnames(habi) %in% c(covs, habs, "totalpts")]
-habl <- melt(habl, measure.vars = covs)
-habl <- melt(habl, measure.vars = habs)
-head(habl)
-colnames(habl) <- c("totalpts", "covariate", "value", "habitat", "count")
-ggplot(habl, aes(value, (count/totalpts) * 100)) + 
-  geom_point() + geom_smooth() + 
-  facet_grid(habitat ~ covariate, scales = "free")
+# # visualise patterns
+# covs <- c("Depth", "slope", "roughness", "tpi", "tri", "detrended")             # all covariates
+# habs <- c("kelps", "macroalgae", "sponge", "sand", "rock", "biogenic")          # all habitats
+# habl <- habi[, colnames(habi) %in% c(covs, habs, "totalpts")]
+# habl <- melt(habl, measure.vars = covs)
+# habl <- melt(habl, measure.vars = habs)
+# head(habl)
+# colnames(habl) <- c("totalpts", "covariate", "value", "habitat", "count")
+# ggplot(habl, aes(value, (count/totalpts) * 100)) + 
+#   geom_point() + geom_smooth() + 
+#   facet_grid(habitat ~ covariate, scales = "free")
 
 # use formula from top model from '2_modelselect.R'
 m_kelps <- gam(cbind(kelps, totalpts - kelps) ~ 
@@ -88,9 +93,9 @@ vis.gam(m_sand)
 
 
 m_rock <- gam(cbind(sand, totalpts - sand) ~ 
-                s(aspect,  k = 5, bs = "cr") + 
                 s(Depth, k = 5, bs = "cr") + 
-                s(tpi,    k = 5, bs = "cr"), 
+                s(detrended,  k = 5, bs = "cr") + 
+                s(roughness,    k = 5, bs = "cr"), 
               data = habi, method = "REML", family = binomial("logit"))
 summary(m_rock)
 gam.check(m_rock)
@@ -198,12 +203,12 @@ ggplot(spreds, aes(x, y)) +
   coord_equal()
 
 # categorise by dominant tag
-bpreds$dom_tag <- apply(bpreds[12:16], 1,
+spreds$dom_tag <- apply(spreds[12:16], 1,
                         FUN = function(x){names(which.max(x))})
-bpreds$dom_tag <- sub('.', '', bpreds$dom_tag)
-head(bpreds)
+spreds$dom_tag <- sub('.', '', spreds$dom_tag)
+head(spreds)
 
-ggplot(bpreds, aes(x, y, fill = dom_tag)) +
+ggplot(spreds, aes(x, y, fill = dom_tag)) +
   geom_raster() + 
   scale_fill_viridis(discrete = TRUE) +
   theme_minimal() +

@@ -27,7 +27,7 @@ habi$npz6[grep("out6", habi$Sample)] <- 1
 # alldat <- testdat
 # OR set aside train/test data
 set.seed(42)
-testd  <- habi[sample(nrow(habi), nrow(habi)/5), ]
+testdat  <- habi[sample(nrow(habi), nrow(habi)/5), ]
 traind <- habi[!habi$Sample %in% testdat$Sample , ]
 
 # build inla mesh from spatial layout of sites - the constants need some tuning
