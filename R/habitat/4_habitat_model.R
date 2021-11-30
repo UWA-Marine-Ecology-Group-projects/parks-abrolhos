@@ -21,26 +21,9 @@ preddf$Depth <- preddf$Z * -1
 # reduce predictor space to fit survey area
 preddf <- preddf[preddf$Depth > min(habi$Depth), ]
 preddf <- preddf[preddf$Depth < 200, ]
-habisp <- SpatialPointsDataFrame(coords = cbind(habi$Longitude.1, habi$Latitude.1), data = habi)
+habisp <- SpatialPointsDataFrame(coords = cbind(habi$Longitude.1, 
+                                                habi$Latitude.1), data = habi)
 sbuff  <- buffer(habisp, 10000)
-
-# summarise classes ----
-brfexcl <- c(1:10, 30, 38:ncol(habi), 
-             grep("Unconsolidated", colnames(habi)),
-             grep("Consolidated", colnames(habi)))  # collect biogenic reef colnames
-brfc <- colnames(habi[ , -brfexcl])
-
-habi <- habi %>%
-  mutate(kelps = habi$Macroalgae_Large.canopy.forming) %>%
-  mutate(macroalgae = rowSums(habi[ , grep("Macroalgae", colnames(habi))])) %>%
-  mutate(sponge = rowSums(habi[ , c(grep("Sponge", colnames(habi)),
-                                    grep("Invertebrate", colnames(habi)),
-                                    grep("coral", colnames(habi)),
-                                    10, 11, 15)])) %>%
-  mutate(sand = rowSums(habi[ , grep("Unconsolidated", colnames(habi))])) %>%
-  mutate(rock = rowSums(habi[ , grep("Consolidated", colnames(habi))])) %>%
-  mutate(biog = rowSums(habi[ , colnames(habi) %in% brfc]))                      # collapse detailed classes into broad
-colnames(habi)
 
 # # visualise patterns
 # covs <- c("Depth", "slope", "roughness", "tpi", "tri", "detrended")             # all covariates
@@ -91,7 +74,6 @@ summary(m_sand)
 gam.check(m_sand)
 vis.gam(m_sand)
 
-
 m_rock <- gam(cbind(sand, totalpts - sand) ~ 
                 s(Depth, k = 5, bs = "cr") + 
                 s(detrended,  k = 5, bs = "cr") + 
@@ -114,10 +96,10 @@ vis.gam(m_biogenic)
 preddf <- cbind(preddf, 
                 "pkelps" = predict(m_kelps, preddf, type = "response"),
                 "pmacroalg" = predict(m_macro, preddf, type = "response"),
-               "psponge" = predict(m_sponge, preddf, type = "response"),
-               "psand" = predict(m_sand, preddf, type = "response"),
-               "prock" = predict(m_rock, preddf, type = "response"),
-               "pbiogenic" = predict(m_biogenic, preddf, type = "response"))
+                "psponge" = predict(m_sponge, preddf, type = "response"),
+                "psand" = predict(m_sand, preddf, type = "response"),
+                "prock" = predict(m_rock, preddf, type = "response"),
+                "pbiogenic" = predict(m_biogenic, preddf, type = "response"))
 
 prasts <- rasterFromXYZ(preddf, res = c(247, 277))
 prasts$dom_tag <- which.max(prasts[[10:14]])
@@ -134,7 +116,7 @@ sprast <- mask(prasts, sbuff)
 plot(sprast)
 
 # tidy and output data
-spreddf <- as.data.frame(sprast, xy = TRUE, na.rm = TRUE)
+spreddf         <- as.data.frame(sprast, xy = TRUE, na.rm = TRUE)
 spreddf$dom_tag <- (names(spreddf)[12:16])[spreddf$dom_tag]
 
 saveRDS(preddf, "output/broad_habitat_predictions.rds")
@@ -149,7 +131,6 @@ saveRDS(spreddf, "output/site_habitat_predictions.rds")
 #   coord_equal()
 # 
 # ggsave("plots/broad_dominant_habitat.png", width = 10, height = 8, dpi = 160)
-# 
 # 
 # ggplot(bpreds, aes(x, y, fill = pkelps)) +
 #   geom_raster() + 

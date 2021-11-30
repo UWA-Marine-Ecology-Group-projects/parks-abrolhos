@@ -139,6 +139,23 @@ habi_df   <- cbind(habt_df, raster::extract(preds, allhab_t))
 habi_df[(habi_df$totalpts - habi_df$Consolidated_Rock) < 0,]
 habi_df[(habi_df$totalpts - habi_df$Unconsolidated_Sand) < 0,]
 
+# collate generalised habitat tags
+habi_df <- habi_df %>%
+  mutate(kelps = Macroalgae_Large.canopy.forming) %>%
+  mutate(macroalgae = rowSums(habi_df[ , grep("Macroalgae", colnames(habi_df))])) %>%
+  mutate(sponge = rowSums(habi_df[ , c(grep("Sponge", colnames(habi_df)),
+                                      grep("Invertebrate", colnames(habi_df)),
+                                      grep("coral", colnames(habi_df)),
+                                      10, 11, 15)])) %>%
+  mutate(sand = rowSums(habi_df[ , grep("Unconsolidated", colnames(habi_df))])) %>%
+  mutate(rock = rowSums(habi_df[ , grep("Consolidated", colnames(habi_df))]))
+brfc <- colnames(habi_df[ , - c(1:10, 30, 38:ncol(habi_df), 
+                               grep("Unconsolidated", colnames(habi_df)),
+                               grep("Consolidated", colnames(habi_df)))])
+habi_df <- habi_df %>% 
+  mutate(biog = rowSums(habi_df[ , colnames(habi_df) %in% brfc])) %>%
+  mutate(sample = Sample)
+
 saveRDS(habi_df, "data/tidy/merged_habitat.rds")
 
 
