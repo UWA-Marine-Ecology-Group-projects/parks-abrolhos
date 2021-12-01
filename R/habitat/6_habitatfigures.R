@@ -52,14 +52,14 @@ p1 <- ggplot(spreddf[spreddf$sitens == 1, ], aes(x, y)) +
   guides(fill = "none") +
   theme_minimal()
 
-p2 <- ggplot(spreddf[spreddf$sitens == 0, ], aes(x, y)) +
+p11 <- ggplot(spreddf[spreddf$sitens == 0, ], aes(x, y)) +
   geom_tile(aes(fill = dom_tag)) +
   hab_cols +
   labs(x = NULL, y = NULL, fill = "Habitat") +
   coord_equal() +
   theme_minimal()
 
-p1 + p2
+p1 + p11
 ggsave("plots/site_dominant_habitat.png", width = 12, height = 8, dpi = 160)
 
 # fig 2: habitat multiplot
@@ -72,7 +72,7 @@ widehabit$variable <- dplyr::recode(widehabit$variable,
                                     psand = "Sand",
                                     psponge = "Sponge")
 
-p1 <- ggplot(widehabit[widehabit$sitens == 1, ], aes(x, y)) +
+p2 <- ggplot(widehabit[widehabit$sitens == 1, ], aes(x, y)) +
   geom_tile(aes(fill = value)) +
   scale_fill_viridis(direction = -1) +
   labs(x = NULL, y = NULL) +
@@ -82,7 +82,7 @@ p1 <- ggplot(widehabit[widehabit$sitens == 1, ], aes(x, y)) +
   facet_wrap(~variable, ncol = 1) + 
   theme(axis.text = element_blank())
 
-p2 <- ggplot(widehabit[widehabit$sitens == 0, ], aes(x, y)) +
+p22 <- ggplot(widehabit[widehabit$sitens == 0, ], aes(x, y)) +
   geom_tile(aes(fill = value)) +
   scale_fill_viridis(direction = -1) +
   labs(x = NULL, y = NULL, fill = "Habitat (p)") +
@@ -91,37 +91,49 @@ p2 <- ggplot(widehabit[widehabit$sitens == 0, ], aes(x, y)) +
   facet_wrap(~variable, ncol = 1) + 
   theme(axis.text = element_blank())
 
-p1 + p2 + plot_layout(widths = c(0.48, 0.52))
+p2 + p22 + plot_layout(widths = c(0.48, 0.52))
 ggsave("plots/site_habitat_predicted.png", width = 8, height = 14, dpi = 160)
 
 # fig 3: biogenic reef
-p1 <- ggplot(spreddf[widehabit$sitens == 1, ], aes(x, y)) +
+p3 <- ggplot(spreddf[widehabit$sitens == 1, ], aes(x, y)) +
   geom_tile(aes(fill = pbiogenic)) +
-  scale_fill_viridis() +
+  scale_fill_viridis(direction = -1) +
   labs(x = NULL, y = NULL) +
   coord_equal() +
   guides(fill = "none") +
   theme_minimal()
 
-p2 <- ggplot(spreddf[widehabit$sitens == 0, ], aes(x, y)) +
+p32 <- ggplot(spreddf[widehabit$sitens == 0, ], aes(x, y)) +
   geom_tile(aes(fill = pbiogenic)) +
-  scale_fill_viridis() +
+  scale_fill_viridis(direction = -1) +
   labs(x = NULL, y = NULL, fill = "Biogenic\nReef (p)") +
   coord_equal() +
   theme_minimal()
 
-p1 + p2
+p3 + p32
 ggsave("plots/site_biogenicreef_p.png", width = 10, height = 6, dpi = 160)
 
 # fig 4: predicted relief
-pcelldf <- readRDS('output/predicted_relief_site.rds')
+pcelldf <- readRDS('output/predicted_relief.rds')
+pcelldf$sitens <- ifelse(pcelldf$y > 6940000, 1, 0)
+pcelldf$prelief[pcelldf$prelief < 0] <- 0
 
-ggplot(pcelldf, aes(x, y)) +
+p4 <- ggplot(pcelldf[pcelldf$sitens == 1, ], aes(x, y)) +
   geom_tile(aes(fill = prelief)) +
-  scale_fill_viridis() +
+  scale_fill_viridis(option = "C", direction = -1) +
   coord_equal() +
   labs(x= NULL, y = NULL, 
        fill = "p. relief") +
   theme_minimal()
+
+p42 <- ggplot(pcelldf[pcelldf$sitens == 0, ], aes(x, y)) +
+  geom_tile(aes(fill = prelief)) +
+  scale_fill_viridis(option = "C", direction = -1) +
+  coord_equal() +
+  labs(x= NULL, y = NULL, 
+       fill = "p. relief") +
+  theme_minimal()
+
+p4 + p42
 ggsave("plots/site_relief_p.png", width = 10, height = 6, dpi = 160)
 

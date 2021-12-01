@@ -29,8 +29,6 @@ head(preddf)
 colnames(fabund)
 
 # reduce predictor space to fit survey area
-preddf <- preddf[preddf$depth > min(fabund$depth), ]
-preddf <- preddf[preddf$depth < 200, ]
 fishsp <- SpatialPointsDataFrame(coords = cbind(fabund$Longitude.1, 
                                                 fabund$Latitude.1), 
                                  data = fabund)
@@ -48,6 +46,15 @@ summary(m_totabund)
 gam.check(m_totabund)
 vis.gam(m_totabund)
 
+m_targetabund <- gam(maxn ~ s(depth, k = 3, bs = "cr")  + 
+                       s(tpi, k = 3, bs = "cr") + 
+                       s(sponge, k = 3, bs = "cr"),  # not necessarily the top model
+                     data = fabund[fabund$scientific == "targeted.abundance", ], 
+                     method = "REML", family = tw())
+summary(m_targetabund)
+gam.check(m_targetabund)
+vis.gam(m_targetabund)
+
 m_richness <- gam(maxn ~ s(relief, k = 5, bs = "cr")  + 
                     s(rock, k = 5, bs = "cr"), 
                   data = fabund[fabund$scientific == "species.richness", ], 
@@ -61,13 +68,27 @@ m_cauricularis <- gam(maxn ~ s(depth, k = 5, bs = "cr"),
                       method = "REML", family = tw())
 summary(m_cauricularis)
 
+m_cwestaustralis <- gam(maxn ~ s(depth, k = 5, bs = "cr"), 
+                      data = fabund[fabund$scientific == "Pomacentridae Chromis westaustralis", ], 
+                      method = "REML", family = tw())
+summary(m_cwestaustralis)
+
+m_lminatus <- gam(maxn ~ s(depth, k = 5, bs = "cr") +
+                    s(sponge, k = 5, bs = "cr"), 
+                      data = fabund[fabund$scientific == "Lethrinidae Lethrinus miniatus", ], 
+                      method = "REML", family = tw())
+summary(m_lminatus)
+
 # predict, rasterise and plot
 preddf <- cbind(preddf, 
                 "p_totabund" = predict(m_totabund, preddf, type = "response"),
+                "p_argetabund" = predict(m_targetabund, preddf, type = "response"),
                 "p_richness" = predict(m_richness, preddf, type = "response"),
-                "p_cauricularis" = predict(m_cauricularis, preddf, type = "response"))
+                "p_cauricularis" = predict(m_cauricularis, preddf, type = "response"),
+                "p_cwestaustralis" = predict(m_cwestaustralis, preddf, type = "response"),
+                "p_lminatus" = predict(m_lminatus, preddf, type = "response"))
 
-prasts <- rasterFromXYZ(preddf[, c(1, 2, 27:29)], res = c(247, 277))
+prasts <- rasterFromXYZ(preddf[, c(1, 2, 27:32)], res = c(247, 277))
 plot(prasts)
 
 # subset to 10km from sites only
@@ -80,31 +101,4 @@ spreddf <- as.data.frame(sprast, xy = TRUE, na.rm = TRUE)
 saveRDS(preddf, "output/broad_fish_predictions.rds")
 saveRDS(spreddf, "output/site_fish_predictions.rds")
 
-# plotting broad maps
-ggplot(preddf, aes(x, y, fill = p_totabund)) +
-  geom_raster() +
-  scale_fill_viridis(direction = -1) +
-  theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Total Abundance") +
-  coord_equal()
-
-ggsave("plots/broad_total_fishabund.png", width = 10, height = 8, dpi = 160)
-
-ggplot(preddf, aes(x, y, fill = p_richness)) +
-  geom_raster() +
-  scale_fill_viridis(direction = -1) +
-  theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Richness") +
-  coord_equal()
-
-ggsave("plots/broad_total_fishrich.png", width = 10, height = 8, dpi = 160)
-
-ggplot(preddf, aes(x, y, fill = p_cauricularis)) +
-  geom_raster() +
-  scale_fill_viridis(direction = -1) +
-  theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "C.Auricularis\n(MaxN)") +
-  coord_equal()
-
-ggsave("plots/broad_maxn_cauricularis.png", width = 10, height = 8, dpi = 160)
 

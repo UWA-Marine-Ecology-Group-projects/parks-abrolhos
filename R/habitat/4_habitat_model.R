@@ -19,8 +19,8 @@ preddf <- as.data.frame(preds, xy = TRUE, na.rm = TRUE)
 preddf$Depth <- preddf$Z * -1
 
 # reduce predictor space to fit survey area
-preddf <- preddf[preddf$Depth > min(habi$Depth), ]
-preddf <- preddf[preddf$Depth < 200, ]
+# preddf <- preddf[preddf$Depth > min(habi$Depth), ]
+# preddf <- preddf[preddf$Depth < 200, ]
 habisp <- SpatialPointsDataFrame(coords = cbind(habi$Longitude.1, 
                                                 habi$Latitude.1), data = habi)
 sbuff  <- buffer(habisp, 10000)
@@ -121,67 +121,3 @@ spreddf$dom_tag <- (names(spreddf)[12:16])[spreddf$dom_tag]
 
 saveRDS(preddf, "output/broad_habitat_predictions.rds")
 saveRDS(spreddf, "output/site_habitat_predictions.rds")
-
-# # plotting broad maps
-# ggplot(preddf, aes(x, y, fill = dom_tag)) +
-#   geom_raster() + 
-#   scale_fill_viridis(discrete = TRUE) +
-#   theme_minimal() +
-#   labs(x = NULL, y = NULL, fill = "Dominant Habitat Type") + 
-#   coord_equal()
-# 
-# ggsave("plots/broad_dominant_habitat.png", width = 10, height = 8, dpi = 160)
-# 
-# ggplot(bpreds, aes(x, y, fill = pkelps)) +
-#   geom_raster() + 
-#   scale_fill_viridis(option = "E") +
-#   theme_minimal() +
-#   labs(x = NULL, y = NULL, fill = "Kelps (p)") + 
-#   coord_equal()
-# 
-# ggsave("plots/broad_kelp.png", width = 10, height = 8, dpi = 160)
-# 
-# ggplot(bpreds, aes(x, y, fill = pmacroalg)) +
-#   geom_raster() + 
-#   scale_fill_viridis(option = "E") +
-#   theme_minimal() +
-#   labs(x = NULL, y = NULL, fill = "Macroalgae (p)") + 
-#   coord_equal()
-# 
-# ggsave("plots/broad_macroalgae.png", width = 10, height = 8, dpi = 160)
-# 
-# ggplot(bpreds, aes(x, y, fill = psponge)) +
-#   geom_raster() + 
-#   scale_fill_viridis(option = "E") +
-#   theme_minimal() +
-#   labs(x = NULL, y = NULL, fill = "Sponge (p)") + 
-#   coord_equal()
-# 
-# ggsave("plots/broad_sponge.png", width = 10, height = 8, dpi = 160)
-# 
-# ggplot(bpreds, aes(x, y, fill = psand)) +
-#   geom_raster() + 
-#   scale_fill_viridis(option = "E") +
-#   theme_minimal() +
-#   labs(x = NULL, y = NULL, fill = "Sand (p)") + 
-#   coord_equal()
-# 
-# ggsave("plots/broad_sand.png", width = 10, height = 8, dpi = 160)
-# 
-# ggplot(bpreds, aes(x, y, fill = prock)) +
-#   geom_raster() + 
-#   scale_fill_viridis(option = "E") +
-#   theme_minimal() +
-#   labs(x = NULL, y = NULL, fill = "Rock (p)") + 
-#   coord_equal()
-# 
-# ggsave("plots/broad_rock.png", width = 10, height = 8, dpi = 160)
-# 
-# ggplot(bpreds, aes(x, y, fill = pbiogenic)) +
-#   geom_raster() + 
-#   scale_fill_viridis(option = "E") +
-#   theme_minimal() +
-#   labs(x = NULL, y = NULL, fill = "Biogenic Reef (p)") + 
-#   coord_equal()
-# 
-# ggsave("plots/broad_biogenicreef.png", width = 10, height = 8, dpi = 160)
