@@ -16,7 +16,7 @@ library(readr)
 library(ggplot2)
 
 # Study name ----
-study<-"2021-05_Abrolhos_BOSS" 
+study<-"2021-05_Abrolhos_BRUVs" 
 
 ## Set your working directory ----
 working.dir <- getwd() # this only works through github projects
@@ -34,7 +34,7 @@ setwd(em.export.dir)
 dir()
 
 # Read in metadata----
-metadata <- read_csv("2021-05_Abrolhos_BOSS_Metadata.csv") %>% # read in the file
+metadata <- read_csv("2021-05_Abrolhos_stereo-BRUVs_Metadata.csv") %>% # read in the file
   ga.clean.names() %>% # tidy the column names using GlobalArchive function 
   dplyr::select(sample, latitude, longitude, date, site, location, successful.count) %>% # select only these columns to keep
   mutate(sample=as.character(sample)) %>% # in this example dataset, the samples are numerical
@@ -46,47 +46,58 @@ names(metadata)
 setwd(tm.export.dir)
 dir()
 
-# read in the points annotations ----
-points <- read.delim("2021-05_Abrolhos_BOSS_Dot Point Measurements.txt",header=T,skip=4,stringsAsFactors=FALSE) %>% # read in the file
+# read in the forwards points annotations ----
+forwards.points <- read.delim("2021-05_Abrolhos_stereo-BRUVs_Forwards_Dot Point Measurements.txt",header=T,skip=4,stringsAsFactors=FALSE) %>% # read in the file
   ga.clean.names() %>% # tidy the column names using GlobalArchive function
   mutate(sample=str_replace_all(.$filename,c(".png"="",".jpg"="",".JPG"=""))) %>%
   mutate(sample=as.character(sample)) %>% 
   select(sample,image.row,image.col,broad,morphology,type,fieldofview) %>% # select only these columns to keep
   glimpse() # preview
 
-length(unique(points$sample)) # 75 samples
+length(unique(forwards.points$sample)) # 50 samples
+
+# read in the backwards points annotations ----
+backwards.points <- read.delim("2021-05_Abrolhos_stereo-BRUVs_Backwards_Dot Point Measurements.txt",header=T,skip=4,stringsAsFactors=FALSE) %>% # read in the file
+  ga.clean.names() %>% # tidy the column names using GlobalArchive function
+  mutate(sample=str_replace_all(.$filename,c(".png"="",".jpg"="",".JPG"=""))) %>%
+  mutate(sample=as.character(sample)) %>% 
+  select(sample,image.row,image.col,broad,morphology,type,fieldofview) %>% # select only these columns to keep
+  glimpse() # preview
+
+length(unique(backwards.points$sample)) # 48 samples
+
+points <- rbind(forwards.points, backwards.points)
 
 no.annotations <- points%>%
   group_by(sample)%>%
-  summarise(points.annotated=n()) # 3 have 81
+  summarise(points.annotated=n()) # all good, 2 have half the samples due to missing backwards habitat
 
 
-relief <- read.delim("2021-05_Abrolhos_BOSS_Relief_Dot Point Measurements.txt",header=T,skip=4,stringsAsFactors=FALSE) %>% # read in the file
+#Read in forwards relief
+forwards.relief <- read.delim("2021-05_Abrolhos_stereo-BRUVs_Forwards_Relief_Dot Point Measurements.txt",header=T,skip=4,stringsAsFactors=FALSE) %>% # read in the file
   ga.clean.names() %>% # tidy the column names using GlobalArchive function
   mutate(sample=str_replace_all(.$filename,c(".png"="",".jpg"="",".JPG"=""))) %>%
   mutate(sample=as.character(sample)) %>% 
   select(sample,image.row,image.col,broad,morphology,type,fieldofview,relief) %>% # select only these columns to keep
   glimpse() # preview
 
-length(unique(relief$sample)) # 75 samples
+length(unique(forwards.relief$sample)) # 50 samples
 
-no.annotations <- relief%>%
-  group_by(sample)%>%
-  summarise(relief.annotated=n()) # all have 80
-
-
-substrate <- read.delim("2021-05_Abrolhos_BOSS_Substrate-Relief_Dot Point Measurements.txt",header=T,skip=4,stringsAsFactors=FALSE) %>% # read in the file
+#Read in backwards relief
+backwards.relief <- read.delim("2021-05_Abrolhos_stereo-BRUVs_Backwards_Relief_Dot Point Measurements.txt",header=T,skip=4,stringsAsFactors=FALSE) %>% # read in the file
   ga.clean.names() %>% # tidy the column names using GlobalArchive function
   mutate(sample=str_replace_all(.$filename,c(".png"="",".jpg"="",".JPG"=""))) %>%
   mutate(sample=as.character(sample)) %>% 
-  select(sample,image.row,image.col,broad,morphology,type,fieldofview) %>% # select only these columns to keep
+  select(sample,image.row,image.col,broad,morphology,type,fieldofview,relief) %>% # select only these columns to keep
   glimpse() # preview
 
-length(unique(substrate$sample)) # 75 samples
+length(unique(backwards.relief$sample)) # 48 samples
 
-no.annotations <- substrate%>%
+relief <- rbind(forwards.relief, backwards.relief)
+
+no.annotations <- relief%>%
   group_by(sample)%>%
-  summarise(substrate.annotated=n()) # all have 80
+  summarise(relief.annotated=n()) # all good, 2 have half the samples due to missing backwards habitat
 
 habitat <- bind_rows(points, relief)
 
