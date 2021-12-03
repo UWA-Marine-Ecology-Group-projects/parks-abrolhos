@@ -1,4 +1,4 @@
-"","depth","kelps","macroalgae","sand","rock","biog","relief","tpi","slope","detrended","location"
-"greater than legal size",0.791,0.109,0.037,0.133,0.103,0.122,0.014,0.353,0,0.136,0.751
-"legal size red throat",0.946,0.378,0.018,0.027,0.072,0.142,0.002,0.092,0,0.03,0.938
-"smaller than legal size",0.007,0.539,0.019,0,0.43,0.02,0.969,0.003,0,0.018,0.969
+"","depth","macroalgae","sand","biog","relief","tpi","slope","detrended","location"
+"greater than legal size",0.346,0.627,0.012,0.867,0.001,0.075,0,0.515,0.346
+"legal size red throat",1,0,0,1,0,0,0,0,1
+"smaller than legal size",0.034,0.887,0.008,0.883,0.035,0.096,0.001,0.798,0.034

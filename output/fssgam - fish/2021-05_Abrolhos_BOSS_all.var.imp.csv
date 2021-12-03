@@ -1,7 +1,7 @@
-"","depth","kelps","macroalgae","sand","rock","biog","relief","tpi","slope","detrended","location"
-"targeted.abundance",0.659,0.117,0.036,0.111,0.061,0.105,0.012,0.581,0,0.129,0.659
-"Labridae Coris auricularis",0,1,0,0,0,0,0.445,0.555,0,0,1
-"Lethrinidae Lethrinus miniatus",0.801,0.512,0.002,0.007,0.076,0.076,0,0.093,0,0.008,0.801
-"Pomacentridae Chromis westaustralis",0,0,0,0,1,0,0,0,0,0,1
-"total.abundance",0,0.966,0,0,0.026,0,0.034,0.968,0,0,0.978
-"species.richness",0,0,0,0,0,0,1,1,0,0,1
+"","depth","macroalgae","sand","biog","relief","tpi","slope","detrended","location"
+"targeted.abundance",0.256,0.649,0.002,0.757,0,0.193,0,0.534,0.147
+"Labridae Coris auricularis",0.495,0.002,0,0.239,0.003,0.134,0,0,0.267
+"Lethrinidae Lethrinus miniatus",0.594,0.075,0.001,0.594,0,0.037,0,0.075,0.594
+"Pomacentridae Chromis westaustralis",0.076,0.026,0.241,0.054,0.438,0.157,0,0.097,0.135
+"total.abundance",0,0,0,0,0.726,0.448,0,0,0.363
+"species.richness",0,0,0,0,1,1,0,0,1

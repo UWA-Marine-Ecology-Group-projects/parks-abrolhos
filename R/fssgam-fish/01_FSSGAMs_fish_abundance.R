@@ -141,10 +141,8 @@ names(maxn)
 names(allhab)
 
 pred.vars = c("depth", 
-              "kelps", 
               "macroalgae", 
               "sand", 
-              "rock", 
               "biog", 
               "relief",
               "tpi",
@@ -185,8 +183,8 @@ for (i in pred.vars) {
 
 
 # # Re-set the predictors for modeling----
-pred.vars <- c("depth", "kelps", "macroalgae",  "sand", 
-              "rock", "biog", "relief","tpi","slope","detrended") 
+pred.vars <- c("depth", "macroalgae",  "sand", 
+               "biog", "relief","tpi","slope","detrended") 
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars <- unique(as.character(dat$scientific))
@@ -226,7 +224,7 @@ for(i in 1:length(resp.vars)){
                                   pred.vars.fact = factor.vars,
                                   linear.vars = "depth",
                                   k = 3,
-                                  smooth.smooth.interactions = c("depth","biog")#,
+                                 # smooth.smooth.interactions = c("depth","biog")#,
                                   #null.terms="s(Location,Site,bs='re')"
   )
   out.list <- fit.model.set(model.set,

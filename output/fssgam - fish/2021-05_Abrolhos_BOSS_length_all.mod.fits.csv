@@ -1,7 +1,5 @@
-"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","kelps","macroalgae","sand","rock","biog","relief","tpi","slope","detrended","location","cumsum.wi"
-"greater than legal size.depth+location+tpi","depth+location+tpi",162.019190734647,176.526883923385,0.09055,NA,4.85,0,0,3.298,0.3,0.101,1,0,0,0,0,0,0,1,0,0,1,0.3
-"greater than legal size.depth+location","depth+location",162.510323457538,173.228759811421,0.07478,NA,3,0,0.491,0,0.235,0.526,1,0,0,0,0,0,0,0,0,0,1,0.535
-"legal size red throat.depth+kelps+location","depth+kelps+location",140.275064969617,154.567773987458,0.07154,NA,4.63,0,0,1.512,0.373,0.26,1,1,0,0,0,0,0,0,0,0,1,0.373
-"legal size red throat.depth+location","depth+location",140.624268113126,153.055887609851,0.04762,NA,3.65,0,0.349,0,0.314,0.555,1,0,0,0,0,0,0,0,0,0,1,0.687
-"smaller than legal size.kelps+location+relief","kelps+location+relief",92.2761922132593,106.785714516111,0.10849,NA,4.85,0,0,0,0.538,0.508,0,1,0,0,0,0,1,0,0,0,1,0.538
-"smaller than legal size.location+relief+rock","location+relief+rock",92.7322245147616,107.239598964084,0.11162,NA,4.85,0,0.456,0.454,0.429,0.405,0,0,0,0,1,0,1,0,0,0,1,0.967
+"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","macroalgae","sand","biog","relief","tpi","slope","detrended","location","cumsum.wi"
+"greater than legal size.biog+detrended+macroalgae","biog+detrended+macroalgae",157.182341175216,171.727641276548,0.17183,NA,4.94,0,0,0,0.504,0.401,0,1,0,1,0,0,0,1,0,0.504
+"greater than legal size.biog+depth+location","biog+depth+location",158.459215164163,172.988190487521,0.08482,NA,4.89,0,1.277,1.261,0.266,0.214,1,0,0,1,0,0,0,0,1,0.77
+"legal size red throat","biog+depth+location",97.3948481579233,111.939242271017,0.0807,NA,4.94,0,0,0,1,1,1,0,0,1,0,0,0,0,1,1
+"smaller than legal size","biog+detrended+macroalgae",96.9114000980853,112.245575305002,0.32938,NA,5.16,0,0,0,0.791,0.33,0,1,0,1,0,0,0,1,0,0.791

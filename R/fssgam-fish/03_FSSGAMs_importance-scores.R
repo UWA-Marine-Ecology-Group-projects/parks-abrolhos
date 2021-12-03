@@ -13,30 +13,27 @@ dat.taxa <-read.csv("2021-05_Abrolhos_BOSS_combined_imp.scores.csv")%>% #from lo
   rename(resp.var=response)%>%
   gather(key=predictor,value=importance,2:ncol(.))%>%
   mutate(label=NA)%>%
-  mutate(label=ifelse(predictor=="depth"&resp.var=="targeted.abundance","X",label))%>%
-  mutate(label=ifelse(predictor=="location"&resp.var=="targeted.abundance","X",label))%>%
-  mutate(label=ifelse(predictor=="tpi"&resp.var=="targeted.abundance","X",label))%>%
-  mutate(label=ifelse(predictor=="kelps"&resp.var=="Labridae Coris auricularis","X",label))%>%
-  mutate(label=ifelse(predictor=="location"&resp.var=="Labridae Coris auricularis","X",label))%>%
-  mutate(label=ifelse(predictor=="tpi"&resp.var=="Labridae Coris auricularis","X",label))%>%
+  mutate(label=ifelse(predictor=="biog"&resp.var=="targeted.abundance","X",label))%>%
+  mutate(label=ifelse(predictor=="detrended"&resp.var=="targeted.abundance","X",label))%>%
+  mutate(label=ifelse(predictor=="macroalgae"&resp.var=="targeted.abundance","X",label))%>%
+  mutate(label=ifelse(predictor=="depth"&resp.var=="Labridae Coris auricularis","X",label))%>%
+  mutate(label=ifelse(predictor=="biog"&resp.var=="Lethrinidae Lethrinus miniatus","X",label))%>%
   mutate(label=ifelse(predictor=="depth"&resp.var=="Lethrinidae Lethrinus miniatus","X",label))%>%
   mutate(label=ifelse(predictor=="location"&resp.var=="Lethrinidae Lethrinus miniatus","X",label))%>%
-  mutate(label=ifelse(predictor=="depth"&resp.var=="Lethrinidae Lethrinus miniatus","X",label))%>%
-  mutate(label=ifelse(predictor=="location"&resp.var=="Pomacentridae Chromis westaustralis","X",label))%>%
-  mutate(label=ifelse(predictor=="rock"&resp.var=="Pomacentridae Chromis westaustralis","X",label))%>%
-  mutate(label=ifelse(predictor=="kelps"&resp.var== "total.abundance","X",label))%>%
-  mutate(label=ifelse(predictor=="location"&resp.var== "total.abundance","X",label))%>%
-  mutate(label=ifelse(predictor=="tpi"&resp.var== "total.abundance","X",label))%>%
+  mutate(label=ifelse(predictor=="relief"&resp.var=="Pomacentridae Chromis westaustralis","X",label))%>%
+  mutate(label=ifelse(predictor=="relief"&resp.var== "total.abundance","X",label))%>%
   mutate(label=ifelse(predictor=="location"&resp.var== "species.richness","X",label))%>%
   mutate(label=ifelse(predictor=="relief"&resp.var== "species.richness","X",label))%>%
   mutate(label=ifelse(predictor=="tpi"&resp.var== "species.richness","X",label))%>%
+  mutate(label=ifelse(predictor=="biog"&resp.var== "greater than legal size","X",label))%>%
   mutate(label=ifelse(predictor=="depth"&resp.var== "greater than legal size","X",label))%>%
   mutate(label=ifelse(predictor=="location"&resp.var== "greater than legal size","X",label))%>%
+  mutate(label=ifelse(predictor=="biog"&resp.var== "legal size red throat","X",label))%>%
   mutate(label=ifelse(predictor=="depth"&resp.var== "legal size red throat","X",label))%>%
   mutate(label=ifelse(predictor=="location"&resp.var== "legal size red throat","X",label))%>%
-  mutate(label=ifelse(predictor=="kelps"&resp.var== "smaller than legal size","X",label))%>%
-  mutate(label=ifelse(predictor=="location"&resp.var== "smaller than legal size","X",label))%>%
-  mutate(label=ifelse(predictor=="relief"&resp.var== "smaller than legal size","X",label))%>%
+  mutate(label=ifelse(predictor=="biog"&resp.var== "smaller than legal size","X",label))%>%
+  mutate(label=ifelse(predictor=="detrended"&resp.var== "smaller than legal size","X",label))%>%
+  mutate(label=ifelse(predictor=="macroalgae"&resp.var== "smaller than legal size","X",label))%>%
   glimpse()
 
 # Theme-
@@ -75,11 +72,10 @@ gg.importance.scores <- ggplot(dat.taxa, aes(x=predictor,y=resp.var,fill=importa
                          limits = c(-1, 1))+
      scale_y_discrete( labels=c("Greater than legal size","Coris auricularis abundance","Legal size Lethrinus miniatus","Lethrinus miniatus abundance",
                                 "Chromis westaustralis abundance","Smaller than legal size","Species richness","Targeted abundance","Total abundance"))+
-  scale_x_discrete(labels = c("Biog", "Depth", "Detrended", "Kelp", "Location", "Macroalgae", "Relief", "Rock", "Sand", "Slope", 'TPI'))+
+  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Location", "Macroalgae", "Relief", "Sand", "Slope", 'TPI'))+
    xlab(NULL)+
    ylab(NULL)+
    theme_classic()+
    Theme1+
    geom_text(aes(label=label))
 gg.importance.scores
-

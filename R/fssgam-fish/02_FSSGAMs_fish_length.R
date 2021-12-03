@@ -147,10 +147,8 @@ names(complete.length)
 names(allhab)
 
 pred.vars = c("depth", 
-              "kelps", 
               "macroalgae", 
               "sand", 
-              "rock", 
               "biog", 
               "relief",
               "tpi",
@@ -193,10 +191,8 @@ for (i in pred.vars) {
 
 # # Re-set the predictors for modeling----
 pred.vars = c("depth", 
-              "kelps", 
               "macroalgae", 
               "sand", 
-              "rock", 
               "biog", 
               "relief",
               "tpi",
@@ -245,7 +241,7 @@ for(i in 1:length(resp.vars)){
                                pred.vars.cont=pred.vars,
                                pred.vars.fact=factor.vars,
                                factor.smooth.interactions = NA,
-                               smooth.smooth.interactions = c("depth", "biog"),
+                              # smooth.smooth.interactions = c("depth", "biog"),
                                k=3#,
                                #null.terms="s(Location,Site,bs='re')"
                                )
