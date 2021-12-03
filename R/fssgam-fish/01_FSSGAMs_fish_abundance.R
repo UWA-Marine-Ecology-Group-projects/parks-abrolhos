@@ -270,3 +270,5 @@ heatmap.2(all.var.imp, notecex = 0.4, dendrogram = "none",
           trace = "none", key.title = "", keysize = 2,
           notecol = "black", key = T,
           sepcolor = "black", margins=c(12, 16), lhei = c(4, 15), Rowv = FALSE, Colv = FALSE)
+
+
