@@ -151,7 +151,7 @@ habi_df <- habi_df %>%
                                       grep("Ascidian", colnames(habi_df)),
                                       grep("Bryozoa", colnames(habi_df)),
                                       grep("Hydroid", colnames(habi_df)),
-                                      grep("turf", colnames(habi_df)))]
+                                      grep("Turf", colnames(habi_df)))]
                           )) %>%
   mutate(sand = rowSums(habi_df[ , grep("Unconsolidated", colnames(habi_df))])) %>%
   mutate(turf = rowSums(habi_df[ , grep("Turf", colnames(habi_df))])) %>%

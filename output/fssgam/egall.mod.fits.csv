@@ -19,10 +19,11 @@
 "macroalgae.Depth+tpi","Depth+tpi",784.347402261837,800.810886725775,0.33049,NA,6.08,0,103.221,91.57,0,0,1,0,1,0,1
 "macroalgae.Depth+roughness","Depth+roughness",795.266200711577,811.066297748908,0.34407,NA,5.82,0,114.14,101.825,0,0,1,1,0,0,1
 "macroalgae.Depth","Depth",814.872411181388,820.431615562553,0.33912,NA,2,0,133.746,111.191,0,0,1,0,0,0,1
-"biog.Depth+detrended+tpi","Depth+detrended+tpi",1981.05863510061,2013.09011021641,0.0944,NA,12.37,0,0,0,1,1,1,0,1,1,1
-"biog.Depth+roughness+tpi","Depth+roughness+tpi",2046.5383882714,2079.09761544727,0.16695,NA,12.6,0,65.48,66.008,0,0,1,1,1,0,1
-"biog.Depth+detrended+roughness","Depth+detrended+roughness",2101.36100830397,2133.38196132909,0.09942,NA,12.37,0,120.302,120.292,0,0,1,1,0,1,1
-"biog.Depth+detrended","Depth+detrended",2170.78292229041,2192.74954216168,0.09047,NA,8.23,0,189.724,179.659,0,0,1,0,0,1,1
+"biog.Depth+detrended+roughness","Depth+detrended+roughness",2955.88128234016,2988.09804412921,0.29666,NA,12.45,0,0,0,1,1,1,1,0,1,1
+"biog.Depth+detrended+tpi","Depth+detrended+tpi",2983.13522515248,3015.77773755532,0.2342,NA,12.64,0,27.254,27.68,0,0,1,0,1,1,1
+"biog.Depth+detrended","Depth+detrended",3004.12284471883,3027.22631962175,0.25425,NA,8.68,0,48.242,39.128,0,0,1,0,0,1,1
+"biog.Depth+roughness+tpi","Depth+roughness+tpi",3011.3965893277,3044.66396566137,0.35336,NA,12.9,0,55.515,56.566,0,0,1,1,1,0,1
+"biog.Depth+roughness","Depth+roughness",3102.14502755812,3125.90721526154,0.34276,NA,8.95,0,146.264,137.809,0,0,1,1,0,0,1
 "sand.Depth+roughness+tpi","Depth+roughness+tpi",2972.51098792313,3005.73217093636,0.54258,NA,12.88,0,0,0,1,1,1,1,1,0,1
 "sand.Depth+detrended+roughness","Depth+detrended+roughness",3048.73188012681,3080.95316454684,0.49805,NA,12.45,0,76.221,75.221,0,0,1,1,0,1,1
 "sand.Depth+detrended+tpi","Depth+detrended+tpi",3105.43342825955,3136.03377580386,0.33318,NA,11.77,0,132.922,130.302,0,0,1,0,1,1,1

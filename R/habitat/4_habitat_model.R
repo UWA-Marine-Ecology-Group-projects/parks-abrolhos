@@ -59,7 +59,7 @@ vis.gam(m_macro)
 m_biogenic <- gam(cbind(biog, totalpts - biog) ~ 
             s(Depth,     k = 5, bs = "cr") + 
             s(detrended, k = 5, bs = "cr") + 
-            s(tpi,       k = 5, bs = "cr"), 
+            s(roughness,       k = 5, bs = "cr"), 
           data = habi, method = "REML", family = binomial("logit"))
 summary(m_biogenic)
 gam.check(m_biogenic)

@@ -86,7 +86,7 @@ p2 <- ggplot() +
   theme(axis.text = element_blank())
 
 p22 <- ggplot() +
-  geom_tile(data = widehabit[widehabit$sitens == 2, ], aes(x, y, fill = value)) +
+  geom_tile(data = widehabit[widehabit$sitens == 0, ], aes(x, y, fill = value)) +
   scale_fill_viridis(direction = -1, limits = c(0, max(widehabit$value))) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   labs(x = NULL, y = NULL, fill = "Habitat (p)") +
@@ -94,7 +94,7 @@ p22 <- ggplot() +
   facet_wrap(~variable, ncol = 1) + 
   theme(axis.text = element_blank())
 
-p2 + p22 + plot_layout(widths = c(0.48, 0.52))
+p2 + p22 + plot_layout(widths = c(0.84, 1))
 ggsave("plots/site_habitat_predicted.png", width = 8, height = 14, dpi = 160)
 
 # fig 3: biogenic reef
