@@ -1,20 +1,12 @@
-"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","kelps","macroalgae","sponge","sand","rock","biog","relief","tpi","slope","detrended","status","location","cumsum.wi"
-"targeted.abundance","depth.by.location+location+tpi",257.149888714962,279.779129895127,0.02711,NA,6.75,0,0,78.059,0.499,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0.499
-"Labridae Coris auricularis.depth","depth",263.575618627161,274.07578233664,0.25008,NA,2,0,0,0,0.126,0.551,1,0,0,0,0,0,0,0,0,0,0,0,0,0.126
-"Labridae Coris auricularis.depth+location","depth+location",263.99322461766,277.019681238286,0.29973,NA,3,0,0.418,2.944,0.102,0.127,1,0,0,0,0,0,0,0,0,0,0,0,1,0.228
-"Labridae Coris auricularis.depth.by.location+location","depth.by.location+location",264.891383161077,282.753815683108,0.07403,NA,4.81,0,1.316,8.678,0.065,0.007,1,0,0,0,0,0,0,0,0,0,0,0,1,0.293
-"Labridae Coris auricularis.depth+sponge","depth+sponge",265.530232766657,278.556794759378,0.24235,NA,3,0,1.955,4.481,0.047,0.059,1,0,0,1,0,0,0,0,0,0,0,0,0,0.34
-"Lethrinidae Lethrinus miniatus.depth+location+sponge","depth+location+sponge",210.249118523825,225.760536031325,0.07024,NA,4,0,0,0,0.234,0.509,1,0,0,1,0,0,0,0,0,0,0,0,1,0.234
-"Lethrinidae Lethrinus miniatus.depth.by.location+location+sponge","depth.by.location+location+sponge",210.924620435273,231.197663192167,0.02892,NA,5.82,0,0.676,5.437,0.167,0.034,1,0,0,1,0,0,0,0,0,0,0,0,1,0.401
-"Pomacentridae Chromis westaustralis.depth.t.location+location+rock","depth.t.location+location+rock",278.547695544484,296.500899657007,0.05669,NA,5,0,0,5.063,0.082,0.024,1,0,0,0,0,1,0,0,0,0,0,0,1,0.082
-"Pomacentridae Chromis westaustralis.depth.by.location+location+rock","depth.by.location+location+rock",278.5478927628,296.501360193933,0.05669,NA,5,0,0,5.063,0.082,0.024,1,0,0,0,0,1,0,0,0,0,0,0,1,0.164
-"Pomacentridae Chromis westaustralis.depth.t.location+location","depth.t.location+location",278.607383497498,294.118376725269,0.04929,NA,4,0,0.06,2.68,0.08,0.08,1,0,0,0,0,0,0,0,0,0,0,0,1,0.244
-"Pomacentridae Chromis westaustralis.depth.t.location+location+tpi.by.location","depth.t.location+location+tpi.by.location",279.188662958083,301.344488160706,0.0089,NA,6.68,0,0.641,9.906,0.06,0.002,1,0,0,0,0,0,0,0,1,0,0,0,1,0.304
-"Pomacentridae Chromis westaustralis.depth.by.location+location","depth.by.location+location",279.407554049081,297.267000944669,0.05193,NA,4.8,0,0.86,5.829,0.053,0.017,1,0,0,0,0,0,0,0,0,0,0,0,1,0.357
-"Pomacentridae Chromis westaustralis.depth.by.location+location+tpi.by.location","depth.by.location+location+tpi.by.location",279.974694278854,304.688604240479,0.01132,NA,7.51,0,1.427,13.251,0.04,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0.397
-"Pomacentridae Chromis westaustralis.depth+location+rock","depth+location+rock",280.235944599553,295.747990873753,0.07883,NA,4,0,1.688,4.31,0.035,0.035,1,0,0,0,0,1,0,0,0,0,0,0,1,0.432
-"Pomacentridae Chromis westaustralis.depth.t.location+location+rock.by.location","depth.t.location+location+rock.by.location",280.464376726272,300.814760398664,0.0547,NA,6,0,1.917,9.377,0.032,0.003,1,0,0,0,0,1,0,0,0,0,0,0,1,0.464
-"Pomacentridae Chromis westaustralis.depth.by.location+location+rock.by.location","depth.by.location+location+rock.by.location",280.46540725391,300.816952411964,0.0547,NA,6,0,1.918,9.379,0.032,0.003,1,0,0,0,0,1,0,0,0,0,0,0,1,0.496
-"total.abundance","depth+detrended+sponge",710.909228536477,728.408700607761,0.17034,NA,4.57,0,0,0,0.62,0.682,1,0,0,1,0,0,0,0,0,0,1,0,0,0.62
-"species.richness.location+relief","location+relief",442.029954980374,457.500838024072,0.36161,NA,3.87,0,0,12.151,0.254,0.002,0,0,0,0,0,0,0,1,0,0,0,0,1,0.254
-"species.richness.relief+rock","relief+rock",444.019386527324,459.275996760086,0.34377,NA,3.67,0,1.989,13.926,0.094,0.001,0,0,0,0,0,1,0,1,0,0,0,0,0,0.348
+"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","kelps","macroalgae","sand","rock","biog","relief","tpi","slope","detrended","location","cumsum.wi"
+"targeted.abundance.depth.by.location+location+tpi","depth.by.location+location+tpi",193.167428828137,211.155983413411,0.0318,NA,6.68,0,0,4.113,0.203,0.032,1,0,0,0,0,0,0,1,0,0,1,0.203
+"targeted.abundance.depth.t.location+location+tpi","depth.t.location+location+tpi",193.777176865531,210.115209318809,0.15724,NA,5.89,0,0.61,3.072,0.15,0.053,1,0,0,0,0,0,0,1,0,0,1,0.353
+"targeted.abundance.depth+location+tpi","depth+location+tpi",194.423671985411,208.956480184465,0.13773,NA,4.9,0,1.256,1.913,0.108,0.095,1,0,0,0,0,0,0,1,0,0,1,0.461
+"Labridae Coris auricularis.kelps.by.location+location+tpi","kelps.by.location+location+tpi",155.478094432254,38.1324234501417,0.14414,NA,5,1,0,0,0.555,1,0,1,0,0,0,0,0,1,0,0,1,0.555
+"Labridae Coris auricularis.kelps.by.location+location+relief","kelps.by.location+location+relief",155.923393187178,88.1910452765992,0.29028,NA,5.41,1,0.445,50.059,0.445,0,0,1,0,0,0,0,1,0,0,0,1,1
+"Lethrinidae Lethrinus miniatus.depth+kelps+location","depth+kelps+location",154.756729055691,169.204132932584,0.07218,NA,4.76,0,0,3.099,0.189,0.115,1,1,0,0,0,0,0,0,0,0,1,0.189
+"Lethrinidae Lethrinus miniatus.depth+kelps.by.location+location","depth+kelps.by.location+location",155.082853849003,169.522635185838,0.07216,NA,5.75,1,0.326,3.418,0.16,0.098,1,1,0,0,0,0,0,0,0,0,1,0.349
+"Lethrinidae Lethrinus miniatus.depth+location","depth+location",155.386889909987,166.104765260278,0.07014,NA,3,0,0.63,0,0.138,0.543,1,0,0,0,0,0,0,0,0,0,1,0.487
+"Pomacentridae Chromis westaustralis","location+rock.by.location",76.2058194409625,-1342.75582578209,0.04499,NA,4,1,0,0,1,1,0,0,0,0,1,0,0,0,0,0,1,1
+"total.abundance","kelps.by.location+location+tpi",461.154997321416,171.672035370807,0.03718,NA,5,1,0,0,0.959,1,0,1,0,0,0,0,0,1,0,0,1,0.959
+"species.richness","location+relief+tpi.by.location",229.743665328566,247.238581577229,0.51279,NA,6.37,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1

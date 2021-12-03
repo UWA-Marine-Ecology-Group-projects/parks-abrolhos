@@ -36,14 +36,16 @@ name <- "2021-05_Abrolhos_BOSS"  # set study name
 # load and wrangle data-
 maxn   <- read.csv("data/Tidy/2021-05_Abrolhos_BOSS.complete.maxn.csv") # let kingsley know if you've done ^^ and this doesn't work
 length <- read.csv("data/Tidy/2021-05_Abrolhos_BOSS.complete.length.csv")
-allhab <- readRDS("data/Tidy/merged_habitat.rds")
+allhab <- readRDS("data/Tidy/merged_habitat.rds")%>%
+  ga.clean.names()%>%
+  glimpse()
 
-allhab <- allhab[ , !colnames(allhab) %in% colnames(allhab)[9:38]]
+#allhab <- allhab[ , !colnames(allhab) %in% colnames(allhab)[9:38]]
 
 allhab <- allhab %>%
+  dplyr::filter(method%in%c('BOSS'))%>%
   transform(kelps = kelps / totalpts) %>%
   transform(macroalgae = macroalgae / totalpts) %>%
-  transform(sponge = sponge / totalpts) %>%
   transform(sand = sand / totalpts) %>%
   transform(rock = rock / totalpts) %>%
   transform(biog = biog / totalpts) %>%
@@ -141,7 +143,6 @@ names(allhab)
 pred.vars = c("depth", 
               "kelps", 
               "macroalgae", 
-              "sponge", 
               "sand", 
               "rock", 
               "biog", 
@@ -184,7 +185,7 @@ for (i in pred.vars) {
 
 
 # # Re-set the predictors for modeling----
-pred.vars <- c("depth", "kelps", "macroalgae", "sponge", "sand", 
+pred.vars <- c("depth", "kelps", "macroalgae",  "sand", 
               "rock", "biog", "relief","tpi","slope","detrended") 
 
 # Check to make sure Response vector has not more than 80% zeros----
@@ -208,7 +209,7 @@ savedir <- "output/fssgam - fish"
 use.dat <- as.data.frame(dat) 
 str(use.dat)
 
-factor.vars <- c("status","location")# Status as a Factor with two levels
+factor.vars <- c("location")# Status as a Factor with two levels
 out.all     <- list()
 var.imp     <- list()
 

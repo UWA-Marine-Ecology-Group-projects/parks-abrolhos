@@ -38,15 +38,16 @@ dir()
 length <- read.csv("2021-05_Abrolhos_BOSS.complete.length.csv")%>%
   mutate(scientific=paste(family,genus,species))
 
-allhab <- readRDS("merged_habitat.rds")
-allhab <- allhab[ , !colnames(allhab) %in% colnames(allhab)[9:38]]
+allhab <- readRDS("merged_habitat.rds")%>%
+  ga.clean.names()%>%
+  glimpse()
 allhab <- allhab %>%
-  transform(kelps = kelps/totalpts)%>%
-  transform(macroalgae = macroalgae/totalpts)%>%
-  transform(sponge = sponge/totalpts)%>%
-  transform(sand = sand/totalpts)%>%
-  transform(rock = rock/totalpts)%>%
-  transform(biog = biog/totalpts)%>%
+  dplyr::filter(method%in%c('BOSS'))%>%
+  transform(kelps = kelps / totalpts) %>%
+  transform(macroalgae = macroalgae / totalpts) %>%
+  transform(sand = sand / totalpts) %>%
+  transform(rock = rock / totalpts) %>%
+  transform(biog = biog / totalpts) %>%
   glimpse()
 
 metadata <- length %>%
@@ -145,17 +146,16 @@ complete.length <- combined.length %>%
 names(complete.length)
 names(allhab)
 
-pred.vars=c("depth", 
-            "kelps", 
-            "macroalgae", 
-            "sponge", 
-            "sand", 
-            "rock", 
-            "biog", 
-            "relief",
-            "tpi",
-            "slope",
-            "detrended") 
+pred.vars = c("depth", 
+              "kelps", 
+              "macroalgae", 
+              "sand", 
+              "rock", 
+              "biog", 
+              "relief",
+              "tpi",
+              "slope",
+              "detrended") 
 
 # predictor variables Removed at first pass---
 # broad.Sponges and broad.Octocoral.Black and broad.Consolidated , "InPreds","BioTurb" are too rare
@@ -192,17 +192,16 @@ for (i in pred.vars) {
 
 
 # # Re-set the predictors for modeling----
-pred.vars=c("depth", 
-            "kelps", 
-            "macroalgae", 
-            "sponge", 
-            "sand", 
-            "rock", 
-            "biog", 
-            "relief",
-            "tpi",
-            "slope",
-            "detrended")
+pred.vars = c("depth", 
+              "kelps", 
+              "macroalgae", 
+              "sand", 
+              "rock", 
+              "biog", 
+              "relief",
+              "tpi",
+              "slope",
+              "detrended")
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars=unique(as.character(dat$scientific))
@@ -229,7 +228,7 @@ str(use.dat)
 
 name<- paste(study,"length",sep="_")
 
-factor.vars=c("status","location")# Status as a Factor with two levels
+factor.vars=c("location")# Status as a Factor with two levels
 out.all=list()
 var.imp=list()
 
