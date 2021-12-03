@@ -14,10 +14,13 @@ library(patchwork)
 library(sf)
 
 # bring in spatial layers
-wampa  <- st_read("data/spatial/shp/WA_MPA_2018.shp")                           # all wa mpas
-ab_mpa <- wampa[wampa$NAME %in% c("Abrolhos Islands", #"Jurien Bay", "Ningaloo",
-                                  "Hamelin Pool", "Shark Bay"), ]               # just wa parks nearby
-
+aumpa  <- st_read("data/spatial/shp/AustraliaNetworkMarineParks.shp")           # all aus mpas
+sw_mpa <- aumpa[aumpa$ResName %in% c("Abrolhos"), ]                             # just Abrolhos Aus MP
+ab_npz <- sw_mpa[sw_mpa$ZoneName == "National Park Zone", ]
+ab_npz$parkid <- c(1:3)
+wgscrs <- CRS("+proj=longlat +datum=WGS84")
+sppcrs <- CRS("+proj=utm +zone=50 +south +datum=WGS84 +units=m +no_defs")     # crs for sp objects
+ab_npz <- st_transform(ab_npz, sppcrs)
 
 # read in outputs from 'R/4_habitat_model.R'
 # preddf <- readRDS("output/broad_habitat_predictions.rds")
@@ -28,7 +31,7 @@ spreddf$dom_tag <- dplyr::recode(spreddf$dom_tag,
                           pmacroalg = "Macroalgae",
                           prock = "Rock",
                           psand = "Sand",
-                          psponge = "Sponge")
+                          pbiogenic = "Biogenic Reef")
   
 spreddf$sitens <- ifelse(spreddf$y > 6940000, 1, 0)
 
@@ -38,7 +41,7 @@ hab_cols <- scale_fill_manual(values = c("Kelp" = "goldenrod1",# Commonwealth MP
                                          "Macroalgae" = "darkgoldenrod4",
                                          "Rock" = "grey40",
                                          "Sand" = "wheat",
-                                         "Sponge" = "plum"
+                                         "Biogenic Reef" = "plum"
 ))
 
 p1 <- ggplot(spreddf[spreddf$sitens == 1, ], aes(x, y)) +
@@ -70,23 +73,23 @@ widehabit$variable <- dplyr::recode(widehabit$variable,
                                     pmacroalg = "Macroalgae",
                                     prock = "Rock",
                                     psand = "Sand",
-                                    psponge = "Sponge")
+                                    pbiogenic = "Biogenic Reef")
 
-p2 <- ggplot(widehabit[widehabit$sitens == 1, ], aes(x, y)) +
-  geom_tile(aes(fill = value)) +
-  scale_fill_viridis(direction = -1) +
+p2 <- ggplot() +
+  geom_tile(data = widehabit[widehabit$sitens == 1, ], aes(x, y, fill = value)) +
+  scale_fill_viridis(direction = -1, limits = c(0, max(widehabit$value))) +
+  geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
   labs(x = NULL, y = NULL) +
-  coord_equal() +
   theme_minimal() +
   guides(fill = "none") +
   facet_wrap(~variable, ncol = 1) + 
   theme(axis.text = element_blank())
 
-p22 <- ggplot(widehabit[widehabit$sitens == 0, ], aes(x, y)) +
-  geom_tile(aes(fill = value)) +
-  scale_fill_viridis(direction = -1) +
+p22 <- ggplot() +
+  geom_tile(data = widehabit[widehabit$sitens == 2, ], aes(x, y, fill = value)) +
+  scale_fill_viridis(direction = -1, limits = c(0, max(widehabit$value))) +
+  geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   labs(x = NULL, y = NULL, fill = "Habitat (p)") +
-  coord_equal() +
   theme_minimal() +
   facet_wrap(~variable, ncol = 1) + 
   theme(axis.text = element_blank())
@@ -97,7 +100,7 @@ ggsave("plots/site_habitat_predicted.png", width = 8, height = 14, dpi = 160)
 # fig 3: biogenic reef
 p3 <- ggplot(spreddf[widehabit$sitens == 1, ], aes(x, y)) +
   geom_tile(aes(fill = pbiogenic)) +
-  scale_fill_viridis(direction = -1) +
+  scale_fill_viridis(direction = -1, limits = c(0, max(spreddf$pbiogenic))) +
   labs(x = NULL, y = NULL) +
   coord_equal() +
   guides(fill = "none") +
@@ -105,12 +108,12 @@ p3 <- ggplot(spreddf[widehabit$sitens == 1, ], aes(x, y)) +
 
 p32 <- ggplot(spreddf[widehabit$sitens == 0, ], aes(x, y)) +
   geom_tile(aes(fill = pbiogenic)) +
-  scale_fill_viridis(direction = -1) +
+  scale_fill_viridis(direction = -1, limits = c(0, max(spreddf$pbiogenic))) +
   labs(x = NULL, y = NULL, fill = "Biogenic\nReef (p)") +
   coord_equal() +
   theme_minimal()
 
-p3 + p32
+p3 + p32 + plot_layout(widths = c(0.46, 0.54))
 ggsave("plots/site_biogenicreef_p.png", width = 10, height = 6, dpi = 160)
 
 # fig 4: predicted relief
@@ -120,20 +123,21 @@ pcelldf$prelief[pcelldf$prelief < 0] <- 0
 
 p4 <- ggplot(pcelldf[pcelldf$sitens == 1, ], aes(x, y)) +
   geom_tile(aes(fill = prelief)) +
-  scale_fill_viridis(option = "C", direction = -1) +
+  scale_fill_viridis(option = "C", direction = -1, limits = c(0, max(pcelldf$prelief))) +
   coord_equal() +
   labs(x= NULL, y = NULL, 
        fill = "p. relief") +
+  guides(fill = "none") +
   theme_minimal()
 
 p42 <- ggplot(pcelldf[pcelldf$sitens == 0, ], aes(x, y)) +
   geom_tile(aes(fill = prelief)) +
-  scale_fill_viridis(option = "C", direction = -1) +
+  scale_fill_viridis(option = "C", direction = -1, limits = c(0, max(pcelldf$prelief))) +
   coord_equal() +
   labs(x= NULL, y = NULL, 
        fill = "p. relief") +
   theme_minimal()
 
-p4 + p42
+p4 + p42 + plot_layout(widths = c(0.44, 0.56))
 ggsave("plots/site_relief_p.png", width = 10, height = 6, dpi = 160)
 

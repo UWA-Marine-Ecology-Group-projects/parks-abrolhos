@@ -40,7 +40,7 @@ sbuff  <- buffer(habisp, 10000)
 # use formula from top model from '2_modelselect.R'
 m_kelps <- gam(cbind(kelps, totalpts - kelps) ~ 
                  s(Depth,     k = 5, bs = "cr")  + 
-                 s(detrended, k = 5, bs = "cr") + 
+                 s(roughness, k = 5, bs = "cr") + 
                  s(tpi, k = 5, bs = "cr"), 
                data = habi, method = "REML", family = binomial("logit"))
 summary(m_kelps)
@@ -56,14 +56,14 @@ summary(m_macro)
 gam.check(m_macro)
 vis.gam(m_macro)
 
-m_sponge <- gam(cbind(sponge, totalpts - sponge) ~ 
+m_biogenic <- gam(cbind(biog, totalpts - biog) ~ 
             s(Depth,     k = 5, bs = "cr") + 
             s(detrended, k = 5, bs = "cr") + 
             s(tpi,       k = 5, bs = "cr"), 
           data = habi, method = "REML", family = binomial("logit"))
-summary(m_sponge)
-gam.check(m_sponge)
-vis.gam(m_sponge)
+summary(m_biogenic)
+gam.check(m_biogenic)
+vis.gam(m_biogenic)
 
 m_sand <- gam(cbind(sand, totalpts - sand) ~ 
                 s(Depth,     k = 5, bs = "cr") + 
@@ -74,29 +74,20 @@ summary(m_sand)
 gam.check(m_sand)
 vis.gam(m_sand)
 
-m_rock <- gam(cbind(sand, totalpts - sand) ~ 
+m_rock <- gam(cbind(rock, totalpts - rock) ~ 
                 s(Depth, k = 5, bs = "cr") + 
                 s(detrended,  k = 5, bs = "cr") + 
-                s(roughness,    k = 5, bs = "cr"), 
+                s(tpi,    k = 5, bs = "cr"), 
               data = habi, method = "REML", family = binomial("logit"))
 summary(m_rock)
 gam.check(m_rock)
 vis.gam(m_rock)
 
-m_biogenic <- gam(cbind(biog, totalpts - biog) ~
-                    s(Depth,  k = 5, bs = "cr") + 
-                    s(roughness, k = 5, bs = "cr") + 
-                    s(tpi,    k = 5, bs = "cr"), 
-                  data = habi, method = "REML", family = binomial("logit"))
-summary(m_biogenic)
-gam.check(m_biogenic)
-vis.gam(m_biogenic)
 
 # predict, rasterise and plot
 preddf <- cbind(preddf, 
                 "pkelps" = predict(m_kelps, preddf, type = "response"),
                 "pmacroalg" = predict(m_macro, preddf, type = "response"),
-                "psponge" = predict(m_sponge, preddf, type = "response"),
                 "psand" = predict(m_sand, preddf, type = "response"),
                 "prock" = predict(m_rock, preddf, type = "response"),
                 "pbiogenic" = predict(m_biogenic, preddf, type = "response"))

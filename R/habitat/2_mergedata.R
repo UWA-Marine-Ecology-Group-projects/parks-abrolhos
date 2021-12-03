@@ -107,9 +107,9 @@ head(allbuv)
 allhab <- rbind(allbos, allbuv)
 
 # long to wide and summarise
-allhabw <- reshape2::dcast(allhab, Sample + method + Site + Latitude + Longitude + Depth + relief + sdrel ~ Broad + Morphology, 
+allhabw <- reshape2::dcast(allhab, Sample + method + Site + Latitude + Longitude + Depth + relief + sdrel ~ Broad + Morphology + Type.y, 
                            value.var = "pa", fun.aggregate = sum, drop = TRUE)
-allhabw$totalpts <- rowSums(allhabw[, 10:38]) - c(allhabw$Unknown_ + allhabw$`Open Water_`)
+allhabw$totalpts <- rowSums(allhabw[, 10:49]) - c(allhabw$Unknown_ + allhabw$`Open Water_`)
 head(allhabw)
 allhabw[(allhabw$totalpts - allhabw$Unconsolidated_Sand) < 0, ]
 
@@ -136,25 +136,36 @@ plot(preds[[1]])
 plot(allhab_t, add=T)
 habt_df   <- as.data.frame(allhab_t, xy = T)
 habi_df   <- cbind(habt_df, raster::extract(preds, allhab_t))
+
+# check all this malarkey has lined up (should get zero rows here)
 habi_df[(habi_df$totalpts - habi_df$Consolidated_Rock) < 0,]
-habi_df[(habi_df$totalpts - habi_df$Unconsolidated_Sand) < 0,]
+
 
 # collate generalised habitat tags
 habi_df <- habi_df %>%
-  mutate(kelps = Macroalgae_Large.canopy.forming) %>%
+  mutate(kelps = Macroalgae_Large.canopy.forming_Ecklonia.radiata) %>%
   mutate(macroalgae = rowSums(habi_df[ , grep("Macroalgae", colnames(habi_df))])) %>%
-  mutate(sponge = rowSums(habi_df[ , c(grep("Sponge", colnames(habi_df)),
+  mutate(biog = rowSums(habi_df[ , c(grep("Sponge", colnames(habi_df)),
                                       grep("Invertebrate", colnames(habi_df)),
                                       grep("coral", colnames(habi_df)),
-                                      10, 11, 15)])) %>%
+                                      grep("Ascidian", colnames(habi_df)),
+                                      grep("Bryozoa", colnames(habi_df)),
+                                      grep("Hydroid", colnames(habi_df)),
+                                      grep("turf", colnames(habi_df)))]
+                          )) %>%
   mutate(sand = rowSums(habi_df[ , grep("Unconsolidated", colnames(habi_df))])) %>%
-  mutate(rock = rowSums(habi_df[ , grep("Consolidated", colnames(habi_df))]))
-brfc <- colnames(habi_df[ , - c(1:10, 30, 38:ncol(habi_df), 
-                               grep("Unconsolidated", colnames(habi_df)),
-                               grep("Consolidated", colnames(habi_df)))])
-habi_df <- habi_df %>% 
-  mutate(biog = rowSums(habi_df[ , colnames(habi_df) %in% brfc])) %>%
-  mutate(sample = Sample)
+  mutate(turf = rowSums(habi_df[ , grep("Turf", colnames(habi_df))])) %>%
+  mutate(rock = rowSums(habi_df[ , grep("Consolidated", colnames(habi_df))]) - turf)
+# # biogenic reef - superceded above
+# brfc <- colnames(habi_df[ , - c(1:10, 30, 38:ncol(habi_df), 
+#                                grep("Unconsolidated", colnames(habi_df)),
+#                                grep("Consolidated", colnames(habi_df))
+#                                )])
+# habi_df <- habi_df %>% 
+#   mutate(biog = rowSums(habi_df[ , colnames(habi_df) %in% brfc])) %>%
+#   mutate(sample = Sample)
+
+habi_df[(habi_df$totalpts - habi_df$biog) < 0,]
 
 saveRDS(habi_df, "data/tidy/merged_habitat.rds")
 
