@@ -16,7 +16,7 @@ habi  <- readRDS("data/tidy/merged_habitat.rds")                                
 preds <- readRDS("data/spatial/spatial_covariates.rds")                         # spatial covs from 'R/1_mergedata.R'
 # colnames(habi)
 # trim predictor data cols and subset to npz6 area (if you want)
-habi      <- habi[ , c(1, 2, 7, 40:50)]
+habi      <- habi[ , c(1, 2, 7, 51:61)]
 habi$npz6 <- c(0)
 habi$npz6[grep("npz6", habi$Sample)] <- 1
 habi$npz6[grep("out6", habi$Sample)] <- 1
@@ -28,7 +28,7 @@ habi$npz6[grep("out6", habi$Sample)] <- 1
 # OR set aside train/test data
 set.seed(42)
 testd  <- habi[sample(nrow(habi), nrow(habi)/5), ]
-traind <- habi[!habi$Sample %in% testdat$Sample , ]
+traind <- habi[!habi$Sample %in% testd$Sample , ]
 
 # build inla mesh from spatial layout of sites - the constants need some tuning
 habisp         <- SpatialPointsDataFrame(coords = traind[4:5], data = traind)
@@ -88,11 +88,17 @@ summary(m1)
 # predict spatial random effect back onto mesh from spde model fit
 ypred <- m1$summary.random$s$mean
 # xlim  <- c(extent(preds)[1], extent(preds)[2])
-xlim  <- c(-102500 , 258000)
 # ylim  <- c(extent(preds)[3], extent(preds)[4])
-ylim  <- c(6775500, 7123250)
-xdims <- (xlim[2] - xlim[1]) / 250
-ydims <- (ylim[2] - ylim[1]) / 250
+# xlim  <- c(-102500 , 258000)
+# ylim  <- c(6775500, 7123250)
+# xdims <- (xlim[2] - xlim[1]) / 250
+# ydims <- (ylim[2] - ylim[1]) / 250
+
+xlim <- c(extent(preds)[1], extent(preds)[2])
+ylim  <- c(extent(preds)[3], extent(preds)[4])
+xdims <- (xlim[2] - xlim[1]) / res(preds)[1]
+ydims <- (ylim[2] - ylim[1]) / res(preds)[2]
+
 
 proj       <- inla.mesh.projector(mesha, xlim = xlim, ylim = ylim, 
                                   dims = c(xdims, ydims))

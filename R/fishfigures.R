@@ -30,7 +30,7 @@ spreddf$sitens <- ifelse(spreddf$y > 6940000, 1, 0)
 
 # plotting broad maps
 p1 <- ggplot() +
-  geom_raster(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_totabund)) +
+  geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_totabund)) +
   scale_fill_viridis(direction = -1, limits = c(0, max(spreddf$p_totabund))) +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
@@ -38,7 +38,7 @@ p1 <- ggplot() +
   labs(x = NULL, y = NULL, fill = "Total Abundance")
 
 p11 <- ggplot() +
-  geom_raster(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_totabund)) +
+  geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_totabund)) +
   scale_fill_viridis(direction = -1) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
@@ -68,55 +68,54 @@ p2 + p21 + plot_layout(widths = c(0.78,1), nrow = 1)
 ggsave("plots/site_total_fishrich.png", width = 10, height = 8, dpi = 160)
 
 # species maxn
-
-p3 <- ggplot(spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_cauricularis)) +
-  geom_raster() +
+p3 <- ggplot() +
+  geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_cauricularis)) +
   scale_fill_viridis(direction = -1, limits = c(0, max(spreddf$p_cauricularis))) +
+  geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "C. Auricularis\n(MaxN)") +
-  guides(fill = "none") +
-  coord_equal()
+  labs(x = NULL, y = NULL, fill = "C. auricularis\n(MaxN)") +
+  guides(fill = "none")
 
-p31 <- ggplot(spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_cauricularis)) +
-  geom_raster() +
+p31 <- ggplot() +
+  geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_cauricularis)) +
   scale_fill_viridis(direction = -1) +
+  geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "C. Auricularis\n(MaxN)") +
-  coord_equal()
+  labs(x = NULL, y = NULL, fill = "C. auricularis\n(MaxN)")
 
 p3 + p31 + plot_layout(widths = c(0.78,1), nrow = 1)
 
-p4 <- ggplot(spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_cwestaustralis)) +
-  geom_raster() +
+p4 <- ggplot() +
+  geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_cwestaustralis)) +
   scale_fill_viridis(direction = -1, limits = c(0, max(spreddf$p_cwestaustralis))) +
+  geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "C. Westaustralis\n(MaxN)") +
-  guides(fill = "none") +
-  coord_equal()
+  labs(x = NULL, y = NULL, fill = "C. westaustralis\n(MaxN)") +
+  guides(fill = "none")
 
-p41 <- ggplot(spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_cwestaustralis)) +
-  geom_raster() +
+p41 <- ggplot() +
+  geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_cwestaustralis)) +
   scale_fill_viridis(direction = -1) +
+  geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "C. Westaustralis\n(MaxN)") +
-  coord_equal()
+  labs(x = NULL, y = NULL, fill = "C. westaustralis\n(MaxN)")
 
 p4 + p41 + plot_layout(widths = c(0.78,1), nrow = 1)
 
-p5 <- ggplot(spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_lminatus)) +
-  geom_raster() +
+p5 <- ggplot() +
+  geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_lminatus)) +
   scale_fill_viridis(direction = -1, limits = c(0, max(spreddf$p_lminatus))) +
+  geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
   labs(x = NULL, y = NULL, fill = "L. minatus\n(MaxN)") +
-  guides(fill = "none") +
-  coord_equal()
+  guides(fill = "none")
 
-p51 <- ggplot(spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_lminatus)) +
-  geom_raster() +
+p51 <- ggplot() +
+  geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_lminatus)) +
   scale_fill_viridis(direction = -1) +
+  geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "L. minatus\n(MaxN)") +
-  coord_equal()
+  labs(x = NULL, y = NULL, fill = "L. minatus\n(MaxN)")
 
 (p3 + p31) / (p4 + p41) / (p5 + p51) + 
   plot_layout(widths = c(0.78,1))

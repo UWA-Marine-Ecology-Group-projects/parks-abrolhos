@@ -23,58 +23,55 @@ predsp$relief <- extract(prel, predsp)
 preddf        <- as.data.frame(predsp, xy = TRUE, na.rm = TRUE)
 preddf$depth  <- preddf$Z * -1
 preddf$rock   <- preddf$prock
-preddf$sponge <- preddf$psponge
-preddf        <- na.omit(preddf)
+preddf$biog   <- preddf$pbiogenic
+preddf$macroalgae   <- preddf$pmacroalg
 head(preddf)
-colnames(fabund)
 
 # reduce predictor space to fit survey area
-fishsp <- SpatialPointsDataFrame(coords = cbind(fabund$Longitude.1, 
-                                                fabund$Latitude.1), 
+fishsp <- SpatialPointsDataFrame(coords = cbind(fabund$longitude.1, 
+                                                fabund$latitude.1), 
                                  data = fabund)
 sbuff  <- buffer(fishsp, 10000)
 unique(fabund$scientific)
 
 # use formula from top model from FSSGam model selection
-m_totabund <- gam(maxn ~ s(depth, k = 3, bs = "cr")  + 
-                 s(detrended, k = 3, bs = "cr") + 
-                 s(sponge, k = 3, bs = "cr") +
-                 s(rock, k = 3, bs = "cr"), 
+m_totabund <- gam(maxn ~ s(relief, k = 3, bs = "cr"), 
                data = fabund[fabund$scientific == "total.abundance", ], 
                method = "REML", family = tw())
 summary(m_totabund)
-gam.check(m_totabund)
-vis.gam(m_totabund)
+# gam.check(m_totabund)
+# vis.gam(m_totabund)
 
-m_targetabund <- gam(maxn ~ s(depth, k = 3, bs = "cr")  + 
-                       s(tpi, k = 3, bs = "cr") + 
-                       s(sponge, k = 3, bs = "cr"),  # not necessarily the top model
+m_targetabund <- gam(maxn ~ s(biog, k = 3, bs = "cr")  + 
+                       s(detrended, k = 3, bs = "cr") + 
+                       s(macroalgae, k = 3, bs = "cr"),  # not necessarily the top model
                      data = fabund[fabund$scientific == "targeted.abundance", ], 
                      method = "REML", family = tw())
 summary(m_targetabund)
-gam.check(m_targetabund)
-vis.gam(m_targetabund)
+# gam.check(m_targetabund)
+# vis.gam(m_targetabund)
 
 m_richness <- gam(maxn ~ s(relief, k = 5, bs = "cr")  + 
-                    s(rock, k = 5, bs = "cr"), 
+                    s(tpi, k = 5, bs = "cr"), 
                   data = fabund[fabund$scientific == "species.richness", ], 
                   method = "REML", family = tw())
 summary(m_richness)
-gam.check(m_richness)
-vis.gam(m_richness)
+# gam.check(m_richness)
+# vis.gam(m_richness)
 
-m_cauricularis <- gam(maxn ~ s(depth, k = 5, bs = "cr"), 
+m_cauricularis <- gam(maxn ~ s(depth, k = 5, bs = "cr") +
+                        s(biog, k = 5, bs = "cr"), 
                       data = fabund[fabund$scientific == "Labridae Coris auricularis", ], 
                       method = "REML", family = tw())
 summary(m_cauricularis)
 
-m_cwestaustralis <- gam(maxn ~ s(depth, k = 5, bs = "cr"), 
+m_cwestaustralis <- gam(maxn ~ s(relief, k = 5, bs = "cr"), 
                       data = fabund[fabund$scientific == "Pomacentridae Chromis westaustralis", ], 
                       method = "REML", family = tw())
 summary(m_cwestaustralis)
 
 m_lminatus <- gam(maxn ~ s(depth, k = 5, bs = "cr") +
-                    s(sponge, k = 5, bs = "cr"), 
+                    s(biog, k = 5, bs = "cr"), 
                       data = fabund[fabund$scientific == "Lethrinidae Lethrinus miniatus", ], 
                       method = "REML", family = tw())
 summary(m_lminatus)
