@@ -97,6 +97,7 @@ master <- googlesheets4::read_sheet(url) %>%
   distinct() %>%
   glimpse()
 
+
 unique(master$fishing.type)
 
 fished.species <- maxn %>%

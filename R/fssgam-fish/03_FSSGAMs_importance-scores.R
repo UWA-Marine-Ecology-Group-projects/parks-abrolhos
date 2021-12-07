@@ -34,6 +34,9 @@ dat.taxa <-read.csv("2021-05_Abrolhos_BOSS_combined_imp.scores.csv")%>% #from lo
   mutate(label=ifelse(predictor=="biog"&resp.var== "smaller than legal size","X",label))%>%
   mutate(label=ifelse(predictor=="detrended"&resp.var== "smaller than legal size","X",label))%>%
   mutate(label=ifelse(predictor=="macroalgae"&resp.var== "smaller than legal size","X",label))%>%
+  mutate(resp.var = factor(resp.var, levels = c("Pomacentridae Chromis westaustralis","Lethrinidae Lethrinus miniatus", "Labridae Coris auricularis",
+                                                "legal size red throat", "smaller than legal size", "greater than legal size","targeted.abundance",
+                                                "species.richness","total.abundance")))%>%
   glimpse()
 
 # Theme-
@@ -70,8 +73,8 @@ gg.importance.scores <- ggplot(dat.taxa, aes(x=predictor,y=resp.var,fill=importa
    geom_tile(show.legend=T) +
    scale_fill_gradientn(legend_title, colours=c(re), na.value = "grey98",
                          limits = c(-1, 1))+
-     scale_y_discrete( labels=c("Greater than legal size","Coris auricularis abundance","Legal size Lethrinus miniatus","Lethrinus miniatus abundance",
-                                "Chromis westaustralis abundance","Smaller than legal size","Species richness","Targeted abundance","Total abundance"))+
+     scale_y_discrete( labels=c("Chromis westaustralis abundance","Lethrinus miniatus abundance",
+                                "Coris auricularis abundance","Legal size Lethrinus miniatus","Smaller than legal size","Greater than legal size","Targeted abundance","Species richness","Total abundance"))+
   scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Location", "Macroalgae", "Relief", "Sand", "Slope", 'TPI'))+
    xlab(NULL)+
    ylab(NULL)+
@@ -79,3 +82,5 @@ gg.importance.scores <- ggplot(dat.taxa, aes(x=predictor,y=resp.var,fill=importa
    Theme1+
    geom_text(aes(label=label))
 gg.importance.scores
+
+save_plot("abrolhos.fish.importance.png", gg.importance.scores,base_height = 9,base_width = 8.5)
