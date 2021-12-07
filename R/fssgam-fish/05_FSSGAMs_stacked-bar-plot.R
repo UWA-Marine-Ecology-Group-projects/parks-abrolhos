@@ -11,7 +11,7 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 library(stringr)
-
+library(plyr)
 library(ggmap)
 library(rgdal)
 library(raster)
@@ -85,6 +85,7 @@ maxn.10<-maxn%>%
   ungroup()%>%
   top_n(12)%>%
   dplyr::filter(!scientific %in% c('Unknown spp', 'SUS sus'))%>%
+  dplyr::mutate(scientific= plyr::revalue(scientific, c('Chaetodon assarius' = 'Chaetodon assarius*')))%>%
   glimpse()
 
 ## Total frequency of occurance
@@ -107,7 +108,7 @@ bar
 ## Top ten plot ----
 bar.top.10<-ggplot(maxn.10, aes(x=reorder(scientific,maxn), y=maxn)) +   
   geom_bar(stat="identity",colour="black",fill="lightgrey",position=position_dodge())+
-  ylim (0, 600)+
+  ylim (0, 630)+
   coord_flip()+
   xlab("Species")+
   ylab(expression(Overall~abundance~(Sigma~MaxN)))+
@@ -119,17 +120,16 @@ bar.top.10<-ggplot(maxn.10, aes(x=reorder(scientific,maxn), y=maxn)) +
   theme(axis.text.y = element_text(face="italic"))+
   theme_collapse+
   theme.larger.text+
-  #annotation_raster(c.w, xmin=9.75,xmax=10.25,ymin=210, ymax=250)+
-  annotation_raster(c.a, xmin=8.6,xmax=9.4,ymin=175, ymax=214)+
-  annotation_raster(c.ass, xmin=7.6, xmax=8.5, ymin=50, ymax=108)+
-  annotation_raster(l.m, xmin=6.6,xmax=7.4,ymin=28, ymax=65)+
-  annotation_raster(n.o, xmin=5.7,xmax=6.3,ymin=15, ymax=50)+
-  annotation_raster(p.s, xmin=4.7,xmax=5.3,ymin=12, ymax=67)+
-  annotation_raster(s.c, xmin=3.4,xmax=4.7,ymin=9, ymax=105)+
-  annotation_raster(c.r, xmin=2.7,xmax=3.3,ymin=9, ymax=63)+
-  annotation_raster(p.spp, xmin=1.55,xmax=2.5,ymin=6, ymax=95)+
-  annotation_raster(a.g, xmin=0.7,xmax=1.3,ymin=5, ymax=50)
+  annotation_raster(c.w, xmin=9.65,xmax=10.25,ymin=610, ymax=650)+
+  annotation_raster(c.a, xmin=8.65,xmax=9.35,ymin=220, ymax=290)+
+  annotation_raster(c.ass, xmin=7.8, xmax=8.3, ymin=130, ymax=180)+
+  annotation_raster(l.m, xmin=6.5,xmax=7.5,ymin=70, ymax=180)+
+  annotation_raster(n.o, xmin=5.7,xmax=6.3,ymin=50, ymax=100)+
+  annotation_raster(p.s, xmin=4.7,xmax=5.3,ymin=40, ymax=110)+
+  annotation_raster(s.c, xmin=3.65,xmax=4.25,ymin=30, ymax=100)+
+  annotation_raster(c.r, xmin=2.6,xmax=3.4,ymin=25, ymax=130)+
+  annotation_raster(p.spp, xmin=1.6,xmax=2.4,ymin=23, ymax=100)+
+  annotation_raster(a.g, xmin=0.7,xmax=1.3,ymin=20, ymax=90)
 bar.top.10
 
-setwd(plots.dir)
 ggsave("stacked.bar.plot.png",bar.top.10,dpi=600,width=5)
