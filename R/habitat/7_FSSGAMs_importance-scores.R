@@ -8,7 +8,6 @@ setwd(working.dir)
 #OR Set manually once
 
 
-
 dat.taxa <-read.csv("output/fssgam/egall.var.imp.csv")%>% #from local copy
   rename(resp.var=response)%>%
   gather(key=predictor,value=importance,2:ncol(.))%>%
