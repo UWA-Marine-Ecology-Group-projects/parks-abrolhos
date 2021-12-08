@@ -1,5 +1,6 @@
 rm(list=ls())
 
+
 library(dplyr)
 library(tidyr)
 library(gridExtra)
@@ -8,6 +9,11 @@ library(GlobalArchive)
 library(stringr)
 library(ggplot2)
 library(gamm4)
+library(ggmap)
+library(rgdal)
+library(raster)
+library(png)
+library(cowplot)
 
 # set theme
 # Theme-
@@ -439,6 +445,11 @@ predicts.coris.depth = testdata%>%data.frame(fits)%>%
 
 # PLOTS for Coris auricularis ----
 # depth ----
+#load fish pic
+c.a <- readPNG("data/images/Coris auricularis-3cmL.png")
+c.a <- as.raster(c.a)
+
+
 ggmod.coris.depth<- ggplot() +
   ylab("")+
   xlab("Depth")+
@@ -449,7 +460,8 @@ ggmod.coris.depth<- ggplot() +
   theme_classic()+
   Theme1+
   ggtitle("Coris auricularis abundance") +
-  theme(plot.title = element_text(hjust = 0))
+  theme(plot.title = element_text(hjust = 0))+
+  annotation_raster(c.a, xmin=125, xmax=175, ymin=25, ymax=30)
 ggmod.coris.depth
 
 # MODEL Lethrinus miniatus (biog + depth) ----
@@ -490,6 +502,11 @@ predicts.miniatus.depth = testdata%>%data.frame(fits)%>%
 
 # PLOTS for Lethrinus miniatus ----
 # biogenic reef ----
+#load fish pic
+l.m <- readPNG("data/images/Lethrinus miniatus 3cm.png")
+l.m <- as.raster(l.m)
+
+
 ggmod.miniatus.biog<- ggplot() +
   ylab("")+
   xlab("Biogenic reef")+
@@ -500,7 +517,8 @@ ggmod.miniatus.biog<- ggplot() +
   theme_classic()+
   Theme1+
   ggtitle("Lethrinus miniatus abundance") +
-  theme(plot.title = element_text(hjust = 0))
+  theme(plot.title = element_text(hjust = 0))+
+  annotation_raster(l.m, xmin=0.65, xmax=0.9, ymin=12.5, ymax=15.5)
 ggmod.miniatus.biog
 
 # depth ----
@@ -537,6 +555,11 @@ predicts.chromis.relief = testdata%>%data.frame(fits)%>%
 
 # PLOTS for Chromis westaustralis ----
 # depth ----
+#add fish pic
+c.w <- readPNG("data/images/Chromis westaustralis-3cmL.png")
+c.w <- as.raster(c.w)
+
+
 ggmod.chromis.relief<- ggplot() +
   ylab("")+
   xlab("Relief")+
@@ -547,7 +570,8 @@ ggmod.chromis.relief<- ggplot() +
   theme_classic()+
   Theme1+
   ggtitle("Chromis westaustralis abundance") +
-  theme(plot.title = element_text(hjust = 0))
+  theme(plot.title = element_text(hjust = 0))+
+  annotation_raster(c.w, xmin=2, xmax=2.5, ymin=100, ymax=110)
 ggmod.chromis.relief
 
 # MODEL Greater than legal size (biog + detrended + macroalgae) ----
@@ -785,7 +809,8 @@ ggmod.legal.miniatus.biog<- ggplot() +
   theme_classic()+
   Theme1+
   ggtitle("Legal Lethrinus miniatus") +
-  theme(plot.title = element_text(hjust = 0))
+  theme(plot.title = element_text(hjust = 0))+
+  annotation_raster(l.m, xmin=0.65, xmax=0.9, ymin=8.25, ymax=10.25)
 ggmod.legal.miniatus.biog
 
 # depth ----
@@ -814,17 +839,18 @@ plot.grid.abundance
 
 plot.grid.lengths <- plot_grid( ggmod.greater.biog, ggmod.greater.detrended, ggmod.greater.macroalgae,
                                  ggmod.legal.miniatus.biog, ggmod.legal.miniatus.depth,NULL,
-                                 ncol = 3, labels = c('g','h','i','j','k',''),align = "vh")
+                                NULL,NULL,NULL,
+                                 ncol = 3, labels = c('g','h','i','j','k','','','',''),align = "vh")
 plot.grid.lengths
 
-plot.grid.species <- plot_grid(ggmod.coris.depth,NULL,
-                                 ggmod.miniatus.biog, ggmod.miniatus.depth,
-                                 ggmod.chromis.relief,NULL,
-                                 ncol = 2, labels = c('l','','m','n','o',''),align = "vh")
+plot.grid.species <- plot_grid(ggmod.coris.depth,NULL, NULL,
+                                 ggmod.miniatus.biog, ggmod.miniatus.depth,NULL,
+                                 ggmod.chromis.relief,NULL,NULL,
+                                 ncol = 3, labels = c('l','','','m','n','','o','',''),align = "vh")
 plot.grid.species
 
 
 
-save_plot("abrolhos.boss.gam.abundance.png", plot.grid.abundance,base_height = 9,base_width = 8.5)
-save_plot("abrolhos.boss.gam.species.png", plot.grid.species,base_height = 9,base_width = 8.5)
-save_plot("abrolhos.boss.gam.lengths.png", plot.grid.lengths,base_height = 9,base_width = 8.5)
+save_plot("plots/abrolhos.boss.gam.abundance.png", plot.grid.abundance,base_height = 9,base_width = 8.5)
+save_plot("plots/abrolhos.boss.gam.species.png", plot.grid.species,base_height = 9,base_width = 8.5)
+save_plot("plots/abrolhos.boss.gam.lengths.png", plot.grid.lengths,base_height = 9,base_width = 8.5)
