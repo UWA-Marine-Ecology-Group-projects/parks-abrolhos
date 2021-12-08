@@ -6,8 +6,8 @@ study <- "2021-05_Abrolhos_BOSS"
 
 # Libraries required
 library(GlobalArchive)
-
 library(tidyr)
+library(plyr)
 library(dplyr)
 library(ggplot2)
 library(stringr)
@@ -19,7 +19,9 @@ library(png)
 library(cowplot)
 
 ## Set your working directory ----
-working.dir<-dirname(rstudioapi::getActiveDocumentContext()$path) # to directory of current file - or type your own
+working.dir <- getwd()
+setwd(working.dir)
+#OR set manually once
 
 
 theme_collapse<-theme(      ## the commented values are from theme_grey
@@ -120,16 +122,17 @@ bar.top.10<-ggplot(maxn.10, aes(x=reorder(scientific,maxn), y=maxn)) +
   theme(axis.text.y = element_text(face="italic"))+
   theme_collapse+
   theme.larger.text+
-  annotation_raster(c.w, xmin=9.65,xmax=10.25,ymin=610, ymax=650)+
-  annotation_raster(c.a, xmin=8.65,xmax=9.35,ymin=220, ymax=290)+
-  annotation_raster(c.ass, xmin=7.8, xmax=8.3, ymin=130, ymax=180)+
-  annotation_raster(l.m, xmin=6.5,xmax=7.5,ymin=70, ymax=180)+
-  annotation_raster(n.o, xmin=5.7,xmax=6.3,ymin=50, ymax=100)+
-  annotation_raster(p.s, xmin=4.7,xmax=5.3,ymin=40, ymax=110)+
-  annotation_raster(s.c, xmin=3.65,xmax=4.25,ymin=30, ymax=100)+
-  annotation_raster(c.r, xmin=2.6,xmax=3.4,ymin=25, ymax=130)+
-  annotation_raster(p.spp, xmin=1.6,xmax=2.4,ymin=23, ymax=100)+
-  annotation_raster(a.g, xmin=0.7,xmax=1.3,ymin=20, ymax=90)
+  annotation_raster(c.w, xmin=9.7,xmax=10.2,ymin=605, ymax=655)+
+  annotation_raster(c.a, xmin=8.65,xmax=9.35,ymin=215, ymax=305)+
+  annotation_raster(c.ass, xmin=7.8, xmax=8.3, ymin=130, ymax=200)+
+  annotation_raster(l.m, xmin=6.5,xmax=7.5,ymin=70, ymax=200)+
+  annotation_raster(n.o, xmin=5.7,xmax=6.3,ymin=45, ymax=115)+
+  annotation_raster(p.s, xmin=4.7,xmax=5.3,ymin=30, ymax=120)+
+  annotation_raster(s.c, xmin=3.65,xmax=4.25,ymin=25, ymax=115)+
+  annotation_raster(c.r, xmin=2.6,xmax=3.4,ymin=25, ymax=150)+
+  annotation_raster(p.spp, xmin=1.6,xmax=2.4,ymin=18, ymax=115)+
+  annotation_raster(a.g, xmin=0.7,xmax=1.3,ymin=15, ymax=105)
 bar.top.10
 
-ggsave("stacked.bar.plot.png",bar.top.10,dpi=600,width=5)
+ggsave("plots/stacked.bar.plot.png",bar.top.10,dpi=600,width=6.0)
+
