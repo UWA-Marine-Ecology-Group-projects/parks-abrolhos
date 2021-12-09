@@ -1,3 +1,6 @@
+rm(list=ls())
+
+
 # Plotting defaults----
 library(ggplot2)
 library(dplyr)
@@ -73,4 +76,4 @@ gg.importance.scores <- ggplot(dat.taxa, aes(x=predictor,y=resp.var,fill=importa
 gg.importance.scores
 
 
-save_plot("plots/abrolhos.habitat.importance.scores.png", gg.importance.scores,base_height = 9,base_width = 8.5)
+save_plot("plots/abrolhos.habitat.importance.scores.png", gg.importance.scores,base_height = 4.5,base_width = 4.25)

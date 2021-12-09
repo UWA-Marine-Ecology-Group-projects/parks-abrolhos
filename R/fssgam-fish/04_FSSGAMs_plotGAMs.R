@@ -41,8 +41,9 @@ Theme1 <-
 name <- "2021-05_Abrolhos_BOSS" # for the study
 
 ## Set working directory----
-working.dir <- 'H:/GitHub/parks-abrolhos'
+working.dir <- getwd()
 setwd(working.dir)
+#OR Set manually once
 
 
 
@@ -259,7 +260,7 @@ predicts.total = testdata%>%data.frame(fits)%>%
 ggmod.total<- ggplot() +
   ylab("")+
   xlab("Mean relief")+
-  geom_point(data=dat.total,aes(x=relief,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.total,aes(x=relief,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.total,aes(x=relief,y=maxn),alpha=0.5)+
   geom_line(data=predicts.total,aes(x=relief,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.total,aes(x=relief,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -308,7 +309,7 @@ predicts.species.tpi = testdata%>%data.frame(fits)%>%
 ggmod.species.relief<- ggplot() +
   ylab("")+
   xlab("Mean relief")+
-  geom_point(data=dat.species,aes(x=relief,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.species,aes(x=relief,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.species.relief,aes(x=relief,y=maxn),alpha=0.5)+
   geom_line(data=predicts.species.relief,aes(x=relief,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.species.relief,aes(x=relief,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -321,7 +322,7 @@ ggmod.species.relief
 ggmod.species.tpi<- ggplot() +
   ylab("Abundance")+
   xlab("TPI")+
-  geom_point(data=dat.species,aes(x=tpi,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.species,aes(x=tpi,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.species.tpi,aes(x=tpi,y=maxn),alpha=0.5)+
   geom_line(data=predicts.species.tpi,aes(x=tpi,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.species.tpi,aes(x=tpi,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -388,7 +389,7 @@ predicts.target.macroalgae = testdata%>%data.frame(fits)%>%
 ggmod.target.biog<- ggplot() +
   ylab("")+
   xlab("Biogenic reef")+
-  geom_point(data=dat.target,aes(x=biog,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.target,aes(x=biog,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.target.biog,aes(x=biog,y=maxn),alpha=0.5)+
   geom_line(data=predicts.target.biog,aes(x=biog,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.target.biog,aes(x=biog,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -402,7 +403,7 @@ ggmod.target.biog
 ggmod.target.detrended<- ggplot() +
   ylab("")+
   xlab("Detrended bathymetry")+
-  geom_point(data=dat.target,aes(x=detrended,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.target,aes(x=detrended,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.target.detrended,aes(x=detrended,y=maxn),alpha=0.5)+
   geom_line(data=predicts.target.detrended,aes(x=detrended,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.target.detrended,aes(x=detrended,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -414,7 +415,7 @@ ggmod.target.detrended
 ggmod.target.macroalgae<- ggplot() +
   ylab("")+
   xlab("Macroalgae")+
-  geom_point(data=dat.target,aes(x=macroalgae,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.target,aes(x=macroalgae,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.target.macroalgae,aes(x=macroalgae,y=maxn),alpha=0.5)+
   geom_line(data=predicts.target.macroalgae,aes(x=macroalgae,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.target.macroalgae,aes(x=macroalgae,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -453,7 +454,7 @@ c.a <- as.raster(c.a)
 ggmod.coris.depth<- ggplot() +
   ylab("")+
   xlab("Depth")+
-  geom_point(data=dat.coris,aes(x=depth,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.coris,aes(x=depth,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.coris.depth,aes(x=depth,y=maxn),alpha=0.5)+
   geom_line(data=predicts.coris.depth,aes(x=depth,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.coris.depth,aes(x=depth,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -461,7 +462,7 @@ ggmod.coris.depth<- ggplot() +
   Theme1+
   ggtitle("Coris auricularis abundance") +
   theme(plot.title = element_text(hjust = 0))+
-  annotation_raster(c.a, xmin=125, xmax=175, ymin=25, ymax=30)
+  annotation_raster(c.a, xmin=120, xmax=180, ymin=25, ymax=30)
 ggmod.coris.depth
 
 # MODEL Lethrinus miniatus (biog + depth) ----
@@ -510,7 +511,7 @@ l.m <- as.raster(l.m)
 ggmod.miniatus.biog<- ggplot() +
   ylab("")+
   xlab("Biogenic reef")+
-  geom_point(data=dat.miniatus,aes(x=biog,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.miniatus,aes(x=biog,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.miniatus.biog,aes(x=biog,y=maxn),alpha=0.5)+
   geom_line(data=predicts.miniatus.biog,aes(x=biog,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.miniatus.biog,aes(x=biog,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -518,14 +519,14 @@ ggmod.miniatus.biog<- ggplot() +
   Theme1+
   ggtitle("Lethrinus miniatus abundance") +
   theme(plot.title = element_text(hjust = 0))+
-  annotation_raster(l.m, xmin=0.65, xmax=0.9, ymin=12.5, ymax=15.5)
+  annotation_raster(l.m, xmin=0.60, xmax=0.95, ymin=12.5, ymax=15.5)
 ggmod.miniatus.biog
 
 # depth ----
 ggmod.miniatus.depth<- ggplot() +
   ylab("")+
   xlab("Depth")+
-  geom_point(data=dat.target,aes(x=depth,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.target,aes(x=depth,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.miniatus.depth,aes(x=depth,y=maxn),alpha=0.5)+
   geom_line(data=predicts.miniatus.depth,aes(x=depth,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.miniatus.depth,aes(x=depth,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -563,7 +564,7 @@ c.w <- as.raster(c.w)
 ggmod.chromis.relief<- ggplot() +
   ylab("")+
   xlab("Relief")+
-  geom_point(data=dat.chromis,aes(x=relief,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.chromis,aes(x=relief,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.chromis.relief,aes(x=relief,y=maxn),alpha=0.5)+
   geom_line(data=predicts.chromis.relief,aes(x=relief,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.chromis.relief,aes(x=relief,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -571,7 +572,7 @@ ggmod.chromis.relief<- ggplot() +
   Theme1+
   ggtitle("Chromis westaustralis abundance") +
   theme(plot.title = element_text(hjust = 0))+
-  annotation_raster(c.w, xmin=2, xmax=2.5, ymin=100, ymax=110)
+  annotation_raster(c.w, xmin=1.94, xmax=2.54, ymin=100, ymax=110)
 ggmod.chromis.relief
 
 # MODEL Greater than legal size (biog + detrended + macroalgae) ----
@@ -633,7 +634,7 @@ predicts.greater.macroalgae = testdata%>%data.frame(fits)%>%
 ggmod.greater.biog<- ggplot() +
   ylab("")+
   xlab("Biogenic reef")+
-  geom_point(data=dat.greater,aes(x=biog,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.greater,aes(x=biog,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.greater.biog,aes(x=biog,y=maxn),alpha=0.5)+
   geom_line(data=predicts.greater.biog,aes(x=biog,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.greater.biog,aes(x=biog,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -647,7 +648,7 @@ ggmod.greater.biog
 ggmod.greater.detrended<- ggplot() +
   ylab("")+
   xlab("Detrended bathymetry")+
-  geom_point(data=dat.greater,aes(x=detrended,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.greater,aes(x=detrended,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.greater.detrended,aes(x=detrended,y=maxn),alpha=0.5)+
   geom_line(data=predicts.greater.detrended,aes(x=detrended,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.greater.detrended,aes(x=detrended,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -659,7 +660,7 @@ ggmod.greater.detrended
 ggmod.greater.macroalgae<- ggplot() +
   ylab("")+
   xlab("Macroalgae")+
-  geom_point(data=dat.greater,aes(x=macroalgae,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.greater,aes(x=macroalgae,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.greater.macroalgae,aes(x=macroalgae,y=maxn),alpha=0.5)+
   geom_line(data=predicts.greater.macroalgae,aes(x=macroalgae,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.greater.macroalgae,aes(x=macroalgae,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -727,7 +728,7 @@ predicts.smaller.macroalgae = testdata%>%data.frame(fits)%>%
 ggmod.smaller.biog<- ggplot() +
   ylab("")+
   xlab("Biogenic reef")+
-  geom_point(data=dat.smaller,aes(x=biog,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.smaller,aes(x=biog,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.smaller.biog,aes(x=biog,y=maxn),alpha=0.5)+
   geom_line(data=predicts.smaller.biog,aes(x=biog,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.smaller.biog,aes(x=biog,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -741,7 +742,7 @@ ggmod.smaller.biog
 ggmod.smaller.detrended<- ggplot() +
   ylab("")+
   xlab("Detrended bathymetry")+
-  geom_point(data=dat.smaller,aes(x=detrended,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.smaller,aes(x=detrended,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.smaller.detrended,aes(x=detrended,y=maxn),alpha=0.5)+
   geom_line(data=predicts.smaller.detrended,aes(x=detrended,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.smaller.detrended,aes(x=detrended,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -753,7 +754,7 @@ ggmod.smaller.detrended
 ggmod.smaller.macroalgae<- ggplot() +
   ylab("Abundance")+
   xlab("Macroalgae")+
-  geom_point(data=dat.smaller,aes(x=macroalgae,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.smaller,aes(x=macroalgae,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.smaller.macroalgae,aes(x=macroalgae,y=maxn),alpha=0.5)+
   geom_line(data=predicts.smaller.macroalgae,aes(x=macroalgae,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.smaller.macroalgae,aes(x=macroalgae,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -802,7 +803,7 @@ predicts.legal.miniatus.depth = testdata%>%data.frame(fits)%>%
 ggmod.legal.miniatus.biog<- ggplot() +
   ylab("")+
   xlab("Biogenic reef")+
-  geom_point(data=dat.legal.miniatus,aes(x=biog,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.legal.miniatus,aes(x=biog,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.legal.miniatus.biog,aes(x=biog,y=maxn),alpha=0.5)+
   geom_line(data=predicts.legal.miniatus.biog,aes(x=biog,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.legal.miniatus.biog,aes(x=biog,y=maxn + se.fit),linetype="dashed",alpha=0.5)+
@@ -810,14 +811,14 @@ ggmod.legal.miniatus.biog<- ggplot() +
   Theme1+
   ggtitle("Legal Lethrinus miniatus") +
   theme(plot.title = element_text(hjust = 0))+
-  annotation_raster(l.m, xmin=0.65, xmax=0.9, ymin=8.25, ymax=10.25)
+  annotation_raster(l.m, xmin=0.6, xmax=0.95, ymin=8.25, ymax=10.25)
 ggmod.legal.miniatus.biog
 
 # depth ----
 ggmod.legal.miniatus.depth<- ggplot() +
   ylab("")+
   xlab("Depth")+
-  geom_point(data=dat.legal.miniatus,aes(x=depth,y=maxn),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.legal.miniatus,aes(x=depth,y=maxn),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.legal.miniatus.depth,aes(x=depth,y=maxn),alpha=0.5)+
   geom_line(data=predicts.legal.miniatus.depth,aes(x=depth,y=maxn - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.legal.miniatus.depth,aes(x=depth,y=maxn + se.fit),linetype="dashed",alpha=0.5)+

@@ -1,15 +1,17 @@
+rm(list=ls())
+
 # Plotting defaults----
 library(ggplot2)
 library(dplyr)
 
-working.dir <- 'H:/GitHub/parks-abrolhos/output/fssgam - fish'
-
+## Set working directory----
+working.dir <- getwd()
 setwd(working.dir)
-dir()
+#OR Set manually once
 
 
 
-dat.taxa <-read.csv("2021-05_Abrolhos_BOSS_combined_imp.scores.csv")%>% #from local copy
+dat.taxa <-read.csv("output/fssgam - fish/2021-05_Abrolhos_BOSS_combined_imp.scores.csv")%>% #from local copy
   rename(resp.var=response)%>%
   gather(key=predictor,value=importance,2:ncol(.))%>%
   mutate(label=NA)%>%
@@ -83,4 +85,4 @@ gg.importance.scores <- ggplot(dat.taxa, aes(x=predictor,y=resp.var,fill=importa
    geom_text(aes(label=label))
 gg.importance.scores
 
-save_plot("abrolhos.fish.importance.png", gg.importance.scores,base_height = 9,base_width = 8.5)
+save_plot("plots/abrolhos.fish.importance.png", gg.importance.scores,base_height = 6.75,base_width = 6.275)

@@ -134,7 +134,7 @@ predicts.kelps.tpi = testdata%>%data.frame(fits)%>%
 ggmod.kelp.depth<- ggplot() +
   ylab("")+
   xlab("Depth")+
-  geom_point(data=dat.kelps,aes(x=depth,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.kelps,aes(x=depth,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.kelps.depth,aes(x=depth,y=response),alpha=0.5)+
   geom_line(data=predicts.kelps.depth,aes(x=depth,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.kelps.depth,aes(x=depth,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -149,7 +149,7 @@ ggmod.kelp.depth
 ggmod.kelp.roughness<- ggplot() +
   ylab("")+
   xlab("Roughness")+
-  geom_point(data=dat.kelps,aes(x=roughness,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.kelps,aes(x=roughness,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.kelps.roughness,aes(x=roughness,y=response),alpha=0.5)+
   geom_line(data=predicts.kelps.roughness,aes(x=roughness,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.kelps.roughness,aes(x=roughness,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -162,7 +162,7 @@ ggmod.kelp.roughness
 ggmod.kelp.tpi<- ggplot() +
   ylab("")+
   xlab("TPI")+
-  geom_point(data=dat.kelps,aes(x=tpi,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.kelps,aes(x=tpi,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.kelps.tpi,aes(x=tpi,y=response),alpha=0.5)+
   geom_line(data=predicts.kelps.tpi,aes(x=tpi,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.kelps.tpi,aes(x=tpi,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -231,7 +231,7 @@ predicts.macro.detrended = testdata%>%data.frame(fits)%>%
 ggmod.macroalgae.depth<- ggplot() +
   ylab("")+
   xlab("Depth")+
-  geom_point(data=dat.kelps,aes(x=depth,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.kelps,aes(x=depth,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.macro.depth,aes(x=depth,y=response),alpha=0.5)+
   geom_line(data=predicts.macro.depth,aes(x=depth,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.macro.depth,aes(x=depth,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -246,7 +246,7 @@ ggmod.macroalgae.depth
 ggmod.macro.roughness<- ggplot() +
   ylab("")+
   xlab("Roughness")+
-  geom_point(data=dat.macro,aes(x=roughness,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.macro,aes(x=roughness,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.macro.roughness,aes(x=roughness,y=response),alpha=0.5)+
   geom_line(data=predicts.macro.roughness,aes(x=roughness,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.macro.roughness,aes(x=roughness,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -259,7 +259,7 @@ ggmod.macro.roughness
 ggmod.macro.detrended<- ggplot() +
   ylab("")+
   xlab("Detrended")+
-  geom_point(data=dat.kelps,aes(x=detrended,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.kelps,aes(x=detrended,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.macro.detrended,aes(x=detrended,y=response),alpha=0.5)+
   geom_line(data=predicts.macro.detrended,aes(x=detrended,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.macro.detrended,aes(x=detrended,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -328,7 +328,7 @@ predicts.biog.detrended = testdata%>%data.frame(fits)%>%
 ggmod.biog.depth<- ggplot() +
   ylab("")+
   xlab("Depth")+
-  geom_point(data=dat.biog,aes(x=depth,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.biog,aes(x=depth,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.biog.depth,aes(x=depth,y=response),alpha=0.5)+
   geom_line(data=predicts.biog.depth,aes(x=depth,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.biog.depth,aes(x=depth,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -343,7 +343,7 @@ ggmod.biog.depth
 ggmod.biog.roughness<- ggplot() +
   ylab("")+
   xlab("Roughness")+
-  geom_point(data=dat.biog,aes(x=roughness,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.biog,aes(x=roughness,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.biog.roughness,aes(x=roughness,y=response),alpha=0.5)+
   geom_line(data=predicts.biog.roughness,aes(x=roughness,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.biog.roughness,aes(x=roughness,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -356,7 +356,7 @@ ggmod.biog.roughness
 ggmod.biog.detrended<- ggplot() +
   ylab("")+
   xlab("Detrended")+
-  geom_point(data=dat.biog,aes(x=detrended,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.biog,aes(x=detrended,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.biog.detrended,aes(x=detrended,y=response),alpha=0.5)+
   geom_line(data=predicts.biog.detrended,aes(x=detrended,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.biog.detrended,aes(x=detrended,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -425,7 +425,7 @@ predicts.sand.tpi = testdata%>%data.frame(fits)%>%
 ggmod.sand.depth<- ggplot() +
   ylab("")+
   xlab("Depth")+
-  geom_point(data=dat.sand,aes(x=depth,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.sand,aes(x=depth,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.sand.depth,aes(x=depth,y=response),alpha=0.5)+
   geom_line(data=predicts.sand.depth,aes(x=depth,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.sand.depth,aes(x=depth,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -440,7 +440,7 @@ ggmod.sand.depth
 ggmod.sand.roughness<- ggplot() +
   ylab("")+
   xlab("Roughness")+
-  geom_point(data=dat.sand,aes(x=roughness,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.sand,aes(x=roughness,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.sand.roughness,aes(x=roughness,y=response),alpha=0.5)+
   geom_line(data=predicts.sand.roughness,aes(x=roughness,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.sand.roughness,aes(x=roughness,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -453,7 +453,7 @@ ggmod.sand.roughness
 ggmod.sand.tpi<- ggplot() +
   ylab("")+
   xlab("TPI")+
-  geom_point(data=dat.sand,aes(x=tpi,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.sand,aes(x=tpi,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.sand.tpi,aes(x=tpi,y=response),alpha=0.5)+
   geom_line(data=predicts.sand.tpi,aes(x=tpi,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.sand.tpi,aes(x=tpi,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -522,7 +522,7 @@ predicts.rock.tpi = testdata%>%data.frame(fits)%>%
 ggmod.rock.depth<- ggplot() +
   ylab("")+
   xlab("Depth")+
-  geom_point(data=dat.rock,aes(x=depth,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.rock,aes(x=depth,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.rock.depth,aes(x=depth,y=response),alpha=0.5)+
   geom_line(data=predicts.rock.depth,aes(x=depth,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.rock.depth,aes(x=depth,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -537,7 +537,7 @@ ggmod.rock.depth
 ggmod.rock.detrended<- ggplot() +
   ylab("")+
   xlab("Detrended")+
-  geom_point(data=dat.rock,aes(x=detrended,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.rock,aes(x=detrended,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.rock.detrended,aes(x=detrended,y=response),alpha=0.5)+
   geom_line(data=predicts.rock.detrended,aes(x=detrended,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.rock.detrended,aes(x=detrended,y=response + se.fit),linetype="dashed",alpha=0.5)+
@@ -550,7 +550,7 @@ ggmod.rock.detrended
 ggmod.rock.tpi<- ggplot() +
   ylab("")+
   xlab("TPI")+
-  geom_point(data=dat.rock,aes(x=tpi,y=response/totalpts),  alpha=0.75, size=1,show.legend=FALSE)+
+  geom_point(data=dat.rock,aes(x=tpi,y=response/totalpts),  alpha=0.2, size=1,show.legend=FALSE)+
   geom_line(data=predicts.rock.tpi,aes(x=tpi,y=response),alpha=0.5)+
   geom_line(data=predicts.rock.tpi,aes(x=tpi,y=response - se.fit),linetype="dashed",alpha=0.5)+
   geom_line(data=predicts.rock.tpi,aes(x=tpi,y=response + se.fit),linetype="dashed",alpha=0.5)+
