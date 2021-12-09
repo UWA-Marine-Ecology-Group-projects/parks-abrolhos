@@ -1,3 +1,11 @@
+###
+# Project: Parks - Abrolhos
+# Data:    BOSS fish, habitat
+# Task:    Plotting 10 most abundant species w/ cute pics
+# author:  Claude
+# date:    Nov-Dec 2021
+##
+
 # Set directories----
 rm(list=ls())
 
@@ -23,9 +31,8 @@ working.dir <- getwd()
 setwd(working.dir)
 #OR set manually once
 
-
-theme_collapse<-theme(      ## the commented values are from theme_grey
-  panel.grid.major=element_line(colour = "white"), ## element_line(colour = "white")
+theme_collapse<-theme(      
+  panel.grid.major=element_line(colour = "white"), 
   panel.grid.minor=element_line(colour = "white", size = 0.25), 
   plot.margin= grid::unit(c(0, 0, 0, 0), "in"))
 
@@ -90,7 +97,8 @@ maxn.10<-maxn%>%
   dplyr::mutate(scientific= plyr::revalue(scientific, c('Chaetodon assarius' = 'Chaetodon assarius*')))%>%
   glimpse()
 
-## Total frequency of occurance
+## Total frequency of occurance 
+# I think we could remove this section - but maybe good to see sometimes
 bar<-ggplot(maxn.10, aes(x=reorder(scientific,maxn), y=maxn)) +   
   geom_bar(stat="identity",position=position_dodge())+
   coord_flip()+
@@ -103,10 +111,6 @@ bar<-ggplot(maxn.10, aes(x=reorder(scientific,maxn), y=maxn)) +
   theme_collapse
 bar
 
-
-## Make labels for x axis
-#allbarlabs<-c("Terapon jarbua","Carcharhinus sorrah","Saurida undosquamis","Netuma thalassina","Caranx ignobilis","Pristipomoides multidens","Decapterus spp","Lagocephalus lunaris","Nemipterus spp","Carangoides chrysophrys")
-
 ## Top ten plot ----
 bar.top.10<-ggplot(maxn.10, aes(x=reorder(scientific,maxn), y=maxn)) +   
   geom_bar(stat="identity",colour="black",fill="lightgrey",position=position_dodge())+
@@ -114,10 +118,6 @@ bar.top.10<-ggplot(maxn.10, aes(x=reorder(scientific,maxn), y=maxn)) +
   coord_flip()+
   xlab("Species")+
   ylab(expression(Overall~abundance~(Sigma~MaxN)))+
-  #scale_x_discrete(labels=allbarlabs)+
-  #annotation_custom(lcpic, xmin=0.5, xmax=2.5, ymin=.75, ymax=1.5)+ 
-  #   scale_y_log10()+
-  # Apperance
   theme_bw()+
   theme(axis.text.y = element_text(face="italic"))+
   theme_collapse+
@@ -134,5 +134,5 @@ bar.top.10<-ggplot(maxn.10, aes(x=reorder(scientific,maxn), y=maxn)) +
   annotation_raster(a.g, xmin=0.7,xmax=1.3,ymin=15, ymax=105)
 bar.top.10
 
+#save out plot
 ggsave("plots/stacked.bar.plot.png",bar.top.10,dpi=600,width=6.0)
-

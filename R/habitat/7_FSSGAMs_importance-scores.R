@@ -1,5 +1,12 @@
-rm(list=ls())
+###
+# Project: Parks - Abrolhos
+# Data:    BOSS fish, habitat
+# Task:    Habitat importance scores
+# author:  Claude
+# date:    Nov-Dec 2021
+##
 
+rm(list=ls())
 
 # Plotting defaults----
 library(ggplot2)
@@ -9,7 +16,6 @@ library(dplyr)
 working.dir <- getwd()
 setwd(working.dir)
 #OR Set manually once
-
 
 dat.taxa <-read.csv("output/fssgam/egall.var.imp.csv")%>% #from local copy
   rename(resp.var=response)%>%
@@ -53,13 +59,11 @@ Theme1 <-
     axis.line.y=element_line(colour="black", size=0.5,linetype='solid'),
     strip.background = element_blank())
 
-
 # colour ramps-
 re <- colorRampPalette(c("blue3", "white","red2"))(200)
 
 # Labels-
 legend_title<-"Importance"
-
 
 # Plot gg.importance.scores ----
 gg.importance.scores <- ggplot(dat.taxa, aes(x=predictor,y=resp.var,fill=importance)) +
@@ -75,5 +79,5 @@ gg.importance.scores <- ggplot(dat.taxa, aes(x=predictor,y=resp.var,fill=importa
    geom_text(aes(label=label))
 gg.importance.scores
 
-
+#save plots
 save_plot("plots/abrolhos.habitat.importance.scores.png", gg.importance.scores,base_height = 4.5,base_width = 4.25)

@@ -1,3 +1,11 @@
+###
+# Project: Parks - Abrolhos
+# Data:    BOSS fish, habitat
+# Task:    Modelling fish lengths w/ FSSGAM
+# author:  Claude, Brooke, Kingsley
+# date:    Nov-Dec 2021
+##
+
 # Part 1-FSS modeling----
 rm(list=ls())
 
@@ -25,20 +33,13 @@ study <- "2021-05_Abrolhos_BOSS"
 name <- study
 
 ## Set your working directory ----
-#working.dir<-getwd()
-working.dir <- 'H:/GitHub/parks-abrolhos'
+working.dir<-getwd()
+setwd(working.dir)
 
-## Save these directory names to use later----
-tidy.dir<-paste(working.dir,"data/Tidy",sep="/")
-
-## Load the data sets -
-setwd(tidy.dir)
-dir()
-
-length <- read.csv("2021-05_Abrolhos_BOSS.complete.length.csv")%>%
+length <- read.csv("data/Tidy/2021-05_Abrolhos_BOSS.complete.length.csv")%>%
   mutate(scientific=paste(family,genus,species))
 
-allhab <- readRDS("merged_habitat.rds")%>%
+allhab <- readRDS("data/Tidy/merged_habitat.rds")%>%
   ga.clean.names()%>%
   glimpse()
 allhab <- allhab %>%
@@ -77,17 +78,6 @@ fished.species <- length %>%
 
 unique(fished.species$scientific)
 
-# Come back to maybe getting rid of some of these, but for now we continue on
-# fished.maxn <- fished.species %>%
-#   dplyr::ungroup() %>%
-#   dplyr::group_by(scientific,sample) %>%
-#   dplyr::summarise(maxn = sum(maxn)) %>%
-#   spread(scientific,maxn, fill = 0) %>%
-#   dplyr::mutate(targeted.abundance=rowSums(.[,2:(ncol(.))],na.rm = TRUE )) %>% #Add in Totals
-#   dplyr::select(sample,targeted.abundance) %>%
-#   gather(.,"scientific","maxn",2:2) %>%
-#   dplyr::glimpse()
-
 without.min.length <- fished.species %>%
   filter(is.na(minlegal.wa))%>%
   distinct(scientific) # only charlies don't have one
@@ -124,8 +114,7 @@ miniatus.sublegal <- fished.species %>%
   dplyr::mutate(scientific = "sublegal size red throat") %>%
   dplyr::glimpse() # only two of these
 
-
-combined.length <- bind_rows(legal, sublegal, miniatus.legal, miniatus.sublegal) # add pink snapper and other indicator species
+combined.length <- bind_rows(legal, sublegal, miniatus.legal, miniatus.sublegal) 
 
 unique(combined.length$scientific)
 
@@ -133,7 +122,7 @@ complete.length <- combined.length %>%
   dplyr::right_join(metadata, by = c("sample")) %>% # add in all samples
   dplyr::select(sample,scientific,number) %>%
   tidyr::complete(nesting(sample), scientific) %>%
-  replace_na(list(number = 0)) %>% #we add in zeros - in case we want to calulate abundance of species based on a length rule (e.g. greater than legal size)
+  replace_na(list(number = 0)) %>% #we add in zeros - in case we want to calculate abundance of species based on a length rule (e.g. greater than legal size)
   dplyr::ungroup()%>%
   dplyr::filter(!is.na(scientific)) %>% # this should not do anything
   dplyr::left_join(.,metadata) %>%
@@ -179,15 +168,6 @@ for (i in pred.vars) {
 
 # Review of individual predictors - we have to make sure they have an even distribution---
 #If the data are squewed to low numbers try sqrt>log or if squewed to high numbers try ^2 of ^3
-# sponges very low
-# octocoral, very very low
-# macroalgae, very very low
-# invert complex very very low
-# Hydroids very very low
-# consolidated ok
-# bryzoa very very low
-# ascidians very very low
-
 
 # # Re-set the predictors for modeling----
 pred.vars = c("depth", 
@@ -213,11 +193,8 @@ unique.vars.use
 
 # changed to 90% - smaller than legal size included
 
-
 # Run the full subset model selection----
-#setwd("C:/GitHub/parks-abrolhos/output/fssgam - fish") #Brooke directory
-setwd("H:/GitHub/parks-abrolhos/output/fssgam - fish") #Claude directory
-
+savedir <- "output/fssgam - fish"
 resp.vars=unique.vars.use
 use.dat=as.data.frame(dat)
 str(use.dat)
@@ -262,8 +239,7 @@ for(i in 1:length(resp.vars)){
   # plot the best models
   for(m in 1:nrow(out.i)){
     best.model.name=as.character(out.i$modname[m])
-    
-    png(file=paste(name,m,resp.vars[i],"mod_fits.png",sep="_"))
+    png(file = paste(savedir, paste(name, m, resp.vars[i], "mod_fits.png", sep = "_"), sep = "/"))
     if(best.model.name!="null"){
       par(mfrow=c(3,1),mar=c(9,4,3,1))
       best.model=out.list$success.models[[best.model.name]]
@@ -280,6 +256,7 @@ all.mod.fits=do.call("rbind",out.all)
 all.var.imp=do.call("rbind",var.imp)
 write.csv(all.mod.fits[,-2],file=paste(name,"all.mod.fits.csv",sep="_"))
 write.csv(all.var.imp,file=paste(name,"all.var.imp.csv",sep="_"))
+saveRDS(dat, "output/fish_lengths_fssgamdat.rds")
 
 # Generic importance plots-
 heatmap.2(all.var.imp,notecex=0.4,  dendrogram ="none",

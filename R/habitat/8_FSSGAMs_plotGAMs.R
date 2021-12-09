@@ -1,5 +1,12 @@
-rm(list=ls())
+###
+# Project: Parks - Abrolhos
+# Data:    BOSS fish, habitat
+# Task:    Habitat GAM plots
+# author:  Claude
+# date:    Nov-Dec 2021
+##
 
+rm(list=ls())
 
 library(dplyr)
 library(tidyr)
@@ -46,8 +53,6 @@ working.dir <- getwd()
 setwd(working.dir)
 #OR Set manually once
 
-# Bring in and format the raw data----
-
 # Load the dataset -
 #habitat
 dat <- readRDS("data/tidy/merged_habitat.rds")                                 # merged data from 'R/1_mergedata.R'
@@ -69,7 +74,6 @@ dat <- dat %>%
 
 # Manually make the most parsimonious GAM models for each taxa ----
 #### Abrolhos habitat ####
-
 unique(dat$taxa)
 names(dat)
 
@@ -88,7 +92,6 @@ testdata <- expand.grid(depth=seq(min(dat$depth),max(dat$depth),length.out = 100
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.kelps.depth = testdata%>%data.frame(fits)%>%
@@ -103,7 +106,6 @@ testdata <- expand.grid(roughness=seq(min(dat$roughness),max(dat$roughness),leng
                         tpi=mean(mod$model$tpi)) %>%
   distinct()%>%
   glimpse()
-
 
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
@@ -120,14 +122,12 @@ testdata <- expand.grid(tpi=seq(min(dat$tpi),max(dat$tpi),length.out = 100),
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.kelps.tpi = testdata%>%data.frame(fits)%>%
   group_by(tpi)%>% #only change here
   summarise(response=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
-
 
 # PLOTS for kelp ----
 # depth ----
@@ -185,7 +185,6 @@ testdata <- expand.grid(depth=seq(min(dat$depth),max(dat$depth),length.out = 100
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.macro.depth = testdata%>%data.frame(fits)%>%
@@ -200,7 +199,6 @@ testdata <- expand.grid(roughness=seq(min(dat$roughness),max(dat$roughness),leng
                         detrended=mean(mod$model$detrended)) %>%
   distinct()%>%
   glimpse()
-
 
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
@@ -217,14 +215,12 @@ testdata <- expand.grid(detrended=seq(min(dat$detrended),max(dat$detrended),leng
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.macro.detrended = testdata%>%data.frame(fits)%>%
   group_by(detrended)%>% #only change here
   summarise(response=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
-
 
 # PLOTS for macroalgae ----
 # depth ----
@@ -282,7 +278,6 @@ testdata <- expand.grid(depth=seq(min(dat$depth),max(dat$depth),length.out = 100
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.biog.depth = testdata%>%data.frame(fits)%>%
@@ -297,7 +292,6 @@ testdata <- expand.grid(roughness=seq(min(dat$roughness),max(dat$roughness),leng
                         detrended=mean(mod$model$detrended)) %>%
   distinct()%>%
   glimpse()
-
 
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
@@ -314,14 +308,12 @@ testdata <- expand.grid(detrended=seq(min(dat$detrended),max(dat$detrended),leng
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.biog.detrended = testdata%>%data.frame(fits)%>%
   group_by(detrended)%>% #only change here
   summarise(response=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
-
 
 # PLOTS for biogenic reef ----
 # depth ----
@@ -379,7 +371,6 @@ testdata <- expand.grid(depth=seq(min(dat$depth),max(dat$depth),length.out = 100
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.sand.depth = testdata%>%data.frame(fits)%>%
@@ -394,7 +385,6 @@ testdata <- expand.grid(roughness=seq(min(dat$roughness),max(dat$roughness),leng
                         tpi=mean(mod$model$tpi)) %>%
   distinct()%>%
   glimpse()
-
 
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
@@ -411,14 +401,12 @@ testdata <- expand.grid(tpi=seq(min(dat$tpi),max(dat$tpi),length.out = 100),
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.sand.tpi = testdata%>%data.frame(fits)%>%
   group_by(tpi)%>% #only change here
   summarise(response=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
-
 
 # PLOTS for sand ----
 # depth ----
@@ -476,7 +464,6 @@ testdata <- expand.grid(depth=seq(min(dat$depth),max(dat$depth),length.out = 100
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.rock.depth = testdata%>%data.frame(fits)%>%
@@ -491,7 +478,6 @@ testdata <- expand.grid(detrended=seq(min(dat$detrended),max(dat$detrended),leng
                         tpi=mean(mod$model$tpi)) %>%
   distinct()%>%
   glimpse()
-
 
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
@@ -508,14 +494,12 @@ testdata <- expand.grid(tpi=seq(min(dat$tpi),max(dat$tpi),length.out = 100),
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.rock.tpi = testdata%>%data.frame(fits)%>%
   group_by(tpi)%>% #only change here
   summarise(response=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
-
 
 # PLOTS for rock ----
 # depth ----
@@ -558,12 +542,10 @@ ggmod.rock.tpi<- ggplot() +
   Theme1
 ggmod.rock.tpi
 
-
 # Combine with cowplot
 library(cowplot)
 
 # view plots
-
 plot.grid.habitat <- plot_grid(ggmod.kelp.depth, ggmod.kelp.roughness,ggmod.kelp.tpi,
                        ggmod.macroalgae.depth, ggmod.macro.detrended,ggmod.macro.roughness,
                        ggmod.biog.depth, ggmod.biog.detrended, ggmod.biog.roughness,
@@ -572,5 +554,5 @@ plot.grid.habitat <- plot_grid(ggmod.kelp.depth, ggmod.kelp.roughness,ggmod.kelp
                        ncol = 3, labels = c('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o'),align = "vh")
 plot.grid.habitat
 
+#save plots
 save_plot("plots/abrolhos.habitat.gam.png", plot.grid.habitat,base_height = 9,base_width = 8.5)
-

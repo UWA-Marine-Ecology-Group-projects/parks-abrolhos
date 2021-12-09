@@ -31,6 +31,7 @@ library(ggplot2)
 # set your working directory (manually, once for the whole R project)
 # use the 'files' tab to set wd in '~/parks-abrolhos' manually (your relative path) then run this line (if we need it?)
 working.dir <- getwd()
+setwd(working.dir)
 name <- "2021-05_Abrolhos_BOSS"  # set study name
 
 # load and wrangle data-
@@ -96,7 +97,6 @@ master <- googlesheets4::read_sheet(url) %>%
   dplyr::select(family, genus, species, fishing.type, australian.common.name) %>%
   distinct() %>%
   glimpse()
-
 
 unique(master$fishing.type)
 
@@ -173,15 +173,6 @@ for (i in pred.vars) {
 
 # Review of individual predictors - we have to make sure they have an even distribution---
 #If the data are skewed to low numbers try sqrt>log or if skewed to high numbers try ^2 of ^3
-# sponges very low
-# octocoral, very very low
-# macroalgae, very very low
-# invert complex very very low
-# Hydroids very very low
-# consolidated ok
-# bryzoa very very low
-# ascidians very very low
-
 
 # # Re-set the predictors for modeling----
 pred.vars <- c("depth", "macroalgae",  "sand", 
@@ -200,10 +191,7 @@ resp.vars
 
 # butterfly fish removed becuase of too many zeros - I changed cutoff to 90%
 
-
 # Run the full subset model selection----
-#setwd("C:/GitHub/parks-abrolhos/output/fssgam - fish") #Brooke directory
-# setwd("H:/GitHub/parks-abrolhos/output/fssgam - fish") #Claude directory
 savedir <- "output/fssgam - fish"
 use.dat <- as.data.frame(dat) 
 str(use.dat)

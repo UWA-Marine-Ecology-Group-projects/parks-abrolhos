@@ -1,3 +1,11 @@
+###
+# Project: Parks - Abrolhos
+# Data:    BOSS fish, habitat
+# Task:    Plotting fish importance scores
+# author:  Claude
+# date:    Nov-Dec 2021
+##
+
 rm(list=ls())
 
 # Plotting defaults----
@@ -9,8 +17,7 @@ working.dir <- getwd()
 setwd(working.dir)
 #OR Set manually once
 
-
-
+#read in data - negative values manually added
 dat.taxa <-read.csv("output/fssgam - fish/2021-05_Abrolhos_BOSS_combined_imp.scores.csv")%>% #from local copy
   rename(resp.var=response)%>%
   gather(key=predictor,value=importance,2:ncol(.))%>%
@@ -62,13 +69,11 @@ Theme1 <-
     axis.line.y=element_line(colour="black", size=0.5,linetype='solid'),
     strip.background = element_blank())
 
-
 # colour ramps-
 re <- colorRampPalette(c("blue3", "white","red2"))(200)
 
 # Labels-
 legend_title<-"Importance"
-
 
 # Plot gg.importance.scores ----
 gg.importance.scores <- ggplot(dat.taxa, aes(x=predictor,y=resp.var,fill=importance)) +
@@ -85,4 +90,5 @@ gg.importance.scores <- ggplot(dat.taxa, aes(x=predictor,y=resp.var,fill=importa
    geom_text(aes(label=label))
 gg.importance.scores
 
+#save output - changed dimensions for larger text in report
 save_plot("plots/abrolhos.fish.importance.png", gg.importance.scores,base_height = 6.75,base_width = 6.275)

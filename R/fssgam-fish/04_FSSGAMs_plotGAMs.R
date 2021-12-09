@@ -1,5 +1,12 @@
-rm(list=ls())
+###
+# Project: Parks - Abrolhos
+# Data:    BOSS fish, habitat
+# Task:    Plotting fish importance GAM relationships
+# author:  Claude
+# date:    Nov-Dec 2021
+##
 
+rm(list=ls())
 
 library(dplyr)
 library(tidyr)
@@ -45,11 +52,7 @@ working.dir <- getwd()
 setwd(working.dir)
 #OR Set manually once
 
-
-
 # Bring in and format the raw data----
-
-# Load the dataset -
 #MaxN
 maxn   <- read.csv("data/Tidy/2021-05_Abrolhos_BOSS.complete.maxn.csv")
 names(maxn)
@@ -98,7 +101,7 @@ url <- "https://docs.google.com/spreadsheets/d/1SMLvR9t8_F-gXapR2EemQMEPSw_bUbPL
 master <- googlesheets4::read_sheet(url) %>%
   ga.clean.names() %>%
   filter(grepl('Australia', global.region)) %>% # Change country here
-  dplyr::select(family, genus, species, fishing.type, australian.common.name) %>%
+  dplyr::select(family,genus,species,fishing.type,australian.common.name,minlegal.wa) %>%
   distinct() %>%
   glimpse()
 
@@ -158,7 +161,6 @@ fished.species <- length %>%
   dplyr::filter(fishing.type %in% c("B/R","B/C/R","R","C/R"))%>%
   dplyr::filter(!family%in%c("Monacanthidae", "Scorpididae", "Mullidae")) # Brooke removed leatherjackets, sea sweeps and goat fish
 
-
 unique(fished.species$scientific)
 
 # Come back to maybe getting rid of some of these, but for now we continue on
@@ -208,7 +210,6 @@ miniatus.sublegal <- fished.species %>%
   dplyr::mutate(scientific = "sublegal size red throat") %>%
   dplyr::glimpse() # only two of these
 
-
 combined.length <- bind_rows(legal, sublegal, miniatus.legal, miniatus.sublegal) # add pink snapper and other indicator species
 
 unique(combined.length$scientific)
@@ -231,8 +232,6 @@ dat <- bind_rows(combined.maxn, complete.length)
 
 # Manually make the most parsimonious GAM models for each taxa ----
 #### Abrolhos MaxN ####
-
-
 unique(dat$scientific)
 
 # MODEL Total abundance (relief) ----
@@ -246,14 +245,12 @@ testdata <- expand.grid(relief=seq(min(dat$relief),max(dat$relief),length.out = 
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.total = testdata%>%data.frame(fits)%>%
   group_by(relief)%>% #only change here
   summarise(maxn=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
-
 
 # PLOTS for Total abundance ----
 # status ----
@@ -282,7 +279,6 @@ testdata <- expand.grid(relief=seq(min(dat$relief),max(dat$relief),length.out = 
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.species.relief = testdata%>%data.frame(fits)%>%
@@ -295,7 +291,6 @@ testdata <- expand.grid(tpi=seq(min(dat$tpi),max(dat$tpi),length.out = 20),
                         relief=mean(mod$model$relief)) %>%
   distinct()%>%
   glimpse()
-
 
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
@@ -343,7 +338,6 @@ testdata <- expand.grid(biog=seq(min(dat$biog),max(dat$biog),length.out = 20),
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.target.biog = testdata%>%data.frame(fits)%>%
@@ -358,7 +352,6 @@ testdata <- expand.grid(detrended=seq(min(dat$detrended),max(dat$detrended),leng
                         macroalgae=mean(mod$model$macroalgae)) %>%
   distinct()%>%
   glimpse()
-
 
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
@@ -375,14 +368,12 @@ testdata <- expand.grid(macroalgae=seq(min(dat$macroalgae),max(dat$macroalgae),l
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.target.macroalgae = testdata%>%data.frame(fits)%>%
   group_by(macroalgae)%>% #only change here
   summarise(maxn=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
-
 
 # PLOTS for Targeted abundance ----
 # biogenic reef ----
@@ -423,7 +414,6 @@ ggmod.target.macroalgae<- ggplot() +
   Theme1
 ggmod.target.macroalgae
 
-
 # MODEL coris auricularis (depth) ----
 dat.coris <- dat %>% filter(scientific=="Labridae Coris auricularis")
 
@@ -435,7 +425,6 @@ testdata <- expand.grid(depth=seq(min(dat$depth),max(dat$depth),length.out = 20)
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.coris.depth = testdata%>%data.frame(fits)%>%
@@ -443,13 +432,11 @@ predicts.coris.depth = testdata%>%data.frame(fits)%>%
   summarise(maxn=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
 
-
 # PLOTS for Coris auricularis ----
 # depth ----
 #load fish pic
 c.a <- readPNG("data/images/Coris auricularis-3cmL.png")
 c.a <- as.raster(c.a)
-
 
 ggmod.coris.depth<- ggplot() +
   ylab("")+
@@ -477,7 +464,6 @@ testdata <- expand.grid(biog=seq(min(dat$biog),max(dat$biog),length.out = 20),
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.miniatus.biog = testdata%>%data.frame(fits)%>%
@@ -492,7 +478,6 @@ testdata <- expand.grid(depth=seq(min(dat$depth),max(dat$depth),length.out = 20)
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.miniatus.depth = testdata%>%data.frame(fits)%>%
@@ -500,13 +485,11 @@ predicts.miniatus.depth = testdata%>%data.frame(fits)%>%
   summarise(maxn=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
 
-
 # PLOTS for Lethrinus miniatus ----
 # biogenic reef ----
 #load fish pic
 l.m <- readPNG("data/images/Lethrinus miniatus 3cm.png")
 l.m <- as.raster(l.m)
-
 
 ggmod.miniatus.biog<- ggplot() +
   ylab("")+
@@ -545,7 +528,6 @@ testdata <- expand.grid(relief=seq(min(dat$relief),max(dat$relief),length.out = 
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.chromis.relief = testdata%>%data.frame(fits)%>%
@@ -553,13 +535,11 @@ predicts.chromis.relief = testdata%>%data.frame(fits)%>%
   summarise(maxn=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
 
-
 # PLOTS for Chromis westaustralis ----
 # depth ----
 #add fish pic
 c.w <- readPNG("data/images/Chromis westaustralis-3cmL.png")
 c.w <- as.raster(c.w)
-
 
 ggmod.chromis.relief<- ggplot() +
   ylab("")+
@@ -588,7 +568,6 @@ testdata <- expand.grid(biog=seq(min(dat$biog),max(dat$biog),length.out = 20),
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.greater.biog = testdata%>%data.frame(fits)%>%
@@ -603,7 +582,6 @@ testdata <- expand.grid(detrended=seq(min(dat$detrended),max(dat$detrended),leng
                         macroalgae=mean(mod$model$macroalgae)) %>%
   distinct()%>%
   glimpse()
-
 
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
@@ -620,14 +598,12 @@ testdata <- expand.grid(macroalgae=seq(min(dat$macroalgae),max(dat$macroalgae),l
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.greater.macroalgae = testdata%>%data.frame(fits)%>%
   group_by(macroalgae)%>% #only change here
   summarise(maxn=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
-
 
 # PLOTS for greater than legal size  ----
 # biogenic reef ----
@@ -668,7 +644,6 @@ ggmod.greater.macroalgae<- ggplot() +
   Theme1
 ggmod.greater.macroalgae
 
-
 # MODEL Smaller than legal size (biog + detrended + macroalgae) ----
 dat.smaller <- dat %>% filter(scientific=="smaller than legal size")
 
@@ -681,7 +656,6 @@ testdata <- expand.grid(biog=seq(min(dat$biog),max(dat$biog),length.out = 20),
                         macroalgae=mean(mod$model$macroalgae)) %>%
   distinct()%>%
   glimpse()
-
 
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
@@ -698,7 +672,6 @@ testdata <- expand.grid(detrended=seq(min(dat$detrended),max(dat$detrended),leng
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.smaller.detrended = testdata%>%data.frame(fits)%>%
@@ -714,14 +687,12 @@ testdata <- expand.grid(macroalgae=seq(min(dat$macroalgae),max(dat$macroalgae),l
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.smaller.macroalgae = testdata%>%data.frame(fits)%>%
   group_by(macroalgae)%>% #only change here
   summarise(maxn=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
-
 
 # PLOTS for smaller than legal size  ----
 # biogenic reef ----
@@ -774,7 +745,6 @@ testdata <- expand.grid(biog=seq(min(dat$biog),max(dat$biog),length.out = 20),
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.legal.miniatus.biog = testdata%>%data.frame(fits)%>%
@@ -789,14 +759,12 @@ testdata <- expand.grid(depth=seq(min(dat$depth),max(dat$depth),length.out = 20)
   distinct()%>%
   glimpse()
 
-
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.legal.miniatus.depth = testdata%>%data.frame(fits)%>%
   group_by(depth)%>% #only change here
   summarise(maxn=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
-
 
 # PLOTS for legal size lethrinus miniatus ----
 # biogenic reef ----
@@ -826,12 +794,10 @@ ggmod.legal.miniatus.depth<- ggplot() +
   Theme1
 ggmod.legal.miniatus.depth
 
-
 # Combine with cowplot
 library(cowplot)
 
 # view plots
-
 plot.grid.abundance <- plot_grid(ggmod.total, NULL,NULL,
                        ggmod.species.relief, ggmod.species.tpi,NULL,
                        ggmod.target.biog, ggmod.target.detrended, ggmod.target.macroalgae,
@@ -850,8 +816,7 @@ plot.grid.species <- plot_grid(ggmod.coris.depth,NULL, NULL,
                                  ncol = 3, labels = c('l','','','m','n','','o','',''),align = "vh")
 plot.grid.species
 
-
-
+#Save plots
 save_plot("plots/abrolhos.boss.gam.abundance.png", plot.grid.abundance,base_height = 9,base_width = 8.5)
 save_plot("plots/abrolhos.boss.gam.species.png", plot.grid.species,base_height = 9,base_width = 8.5)
 save_plot("plots/abrolhos.boss.gam.lengths.png", plot.grid.lengths,base_height = 9,base_width = 8.5)
