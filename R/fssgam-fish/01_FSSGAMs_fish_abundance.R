@@ -130,12 +130,10 @@ species.maxn <- maxn %>%
   dplyr::select(sample,scientific,maxn) %>%
   distinct()
 
-combined.maxn <- bind_rows(fished.maxn, species.maxn, ta.sr) %>%
+dat <- bind_rows(fished.maxn, species.maxn, ta.sr) %>%
   left_join(allhab) %>%
   left_join(metadata) %>%
   distinct()
-
-glimpse(combined.maxn)
 
 # Set predictor variables---
 names(maxn)
@@ -151,8 +149,7 @@ pred.vars = c("depth",
               "detrended") 
 
 # predictor variables Removed at first pass---
-# broad.Sponges and broad.Octocoral.Black and broad.Consolidated , "InPreds","BioTurb" are too rare
-dat <- combined.maxn
+# broad.Sponges and broad.Octocoral.Black and broad.Consolidated 
 
 # Check for correlation of predictor variables- remove anything highly correlated (>0.95)---
 round(cor(dat[,pred.vars]), 2)

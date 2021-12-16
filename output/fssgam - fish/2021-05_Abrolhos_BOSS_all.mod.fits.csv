@@ -1,12 +1,13 @@
 "","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","macroalgae","sand","biog","relief","tpi","slope","detrended","location","cumsum.wi"
-"targeted.abundance","biog+detrended+macroalgae",184.844374550596,199.55783599667,0.24267,NA,5.01,0,0,0,0.532,0.733,0,1,0,1,0,0,0,1,0,0.532
-"Labridae Coris auricularis.depth","depth",194.992285624557,203.690809507274,0.25209,NA,2,0,0,0,0.243,0.679,1,0,0,0,0,0,0,0,0,0.243
-"Labridae Coris auricularis.depth+location","depth+location",196.195680000503,206.913555350793,0.29248,NA,3,0,1.203,3.223,0.133,0.136,1,0,0,0,0,0,0,0,1,0.376
-"Labridae Coris auricularis.biog+depth","biog+depth",196.427729967679,208.977855035518,0.28702,NA,3.75,0,1.435,5.287,0.119,0.048,1,0,0,1,0,0,0,0,0,0.495
-"Lethrinidae Lethrinus miniatus","biog+depth+location",151.797433679781,166.327288802514,0.07595,NA,4.89,0,0,0.223,0.406,0.355,1,0,0,1,0,0,0,0,1,0.406
-"Pomacentridae Chromis westaustralis.relief","relief",196.233265274981,206.848329198659,0.1294,NA,2.77,0,0,0.208,0.267,0.291,0,0,0,0,1,0,0,0,0,0.267
-"Pomacentridae Chromis westaustralis.sand","sand",197.941262556377,206.639832399006,0.14733,NA,2,0,1.708,0,0.114,0.323,0,0,1,0,0,0,0,0,0,0.381
-"total.abundance.relief","relief",472.419939536657,483.131488501079,0.19774,NA,2.94,0,0,0,0.317,0.714,0,0,0,0,1,0,0,0,0,0.317
-"total.abundance.relief+tpi","relief+tpi",472.923958805321,486.982208190143,0.19099,NA,4.44,0,0.504,3.851,0.247,0.104,0,0,0,0,1,1,0,0,0,0.564
-"total.abundance.location+relief","location+relief",473.762651914671,486.427066290802,0.20003,NA,3.95,0,1.343,3.296,0.162,0.137,0,0,0,0,1,0,0,0,1,0.726
+"targeted.abundance","biog+detrended+macroalgae",186.937843216493,201.484926845428,0.25329,NA,4.95,0,0,0,0.534,0.604,0,1,0,1,0,0,0,1,0,0.534
+"Labridae Coris auricularis.depth","depth",194.992285624557,203.690809507274,0.25209,NA,2,0,0,0,0.195,0.643,1,0,0,0,0,0,0,0,0,0.195
+"Labridae Coris auricularis.biog+depth","biog+depth",195.212673939432,207.815791322537,0.29825,NA,3.81,0,0.22,4.125,0.175,0.082,1,0,0,1,0,0,0,0,0,0.37
+"Labridae Coris auricularis.biog+depth+location","biog+depth+location",195.721051754068,210.210351339127,0.36277,NA,4.82,0,0.729,6.52,0.135,0.025,1,0,0,1,0,0,0,0,1,0.505
+"Labridae Coris auricularis.depth+location","depth+location",196.195680000503,206.913555350793,0.29248,NA,3,0,1.203,3.223,0.107,0.128,1,0,0,0,0,0,0,0,1,0.612
+"Lethrinidae Lethrinus miniatus","biog+depth+location",150.932100061966,165.466388946858,0.07711,NA,4.91,0,0,0,0.55,0.467,1,0,0,1,0,0,0,0,1,0.55
+"Pomacentridae Chromis westaustralis.relief","relief",196.233265274981,206.848329198659,0.1294,NA,2.77,0,0,0.442,0.274,0.283,0,0,0,0,1,0,0,0,0,0.274
+"Pomacentridae Chromis westaustralis.sand","sand",197.707071448477,206.405936788624,0.13416,NA,2,0,1.474,0,0.131,0.353,0,0,1,0,0,0,0,0,0,0.405
+"total.abundance.relief","relief",472.419939536657,483.131488501079,0.19774,NA,2.94,0,0,0,0.318,0.714,0,0,0,0,1,0,0,0,0,0.318
+"total.abundance.relief+tpi","relief+tpi",472.923958805321,486.982208190143,0.19099,NA,4.44,0,0.504,3.851,0.247,0.104,0,0,0,0,1,1,0,0,0,0.565
+"total.abundance.location+relief","location+relief",473.762651914671,486.427066290802,0.20003,NA,3.95,0,1.343,3.296,0.162,0.137,0,0,0,0,1,0,0,0,1,0.727
 "species.richness","location+relief+tpi.by.location",229.743665328566,247.238581577229,0.51279,NA,6.37,0,0,0,1,1,0,0,0,0,1,1,0,0,1,1
