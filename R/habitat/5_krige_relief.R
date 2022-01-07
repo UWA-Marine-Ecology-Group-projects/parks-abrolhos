@@ -65,6 +65,30 @@ m1 <- inla(modform,
 
 summary(m1)
 
+# plot effect sizes
+avgs <- rbind(m1$summary.fixed)
+avgs$covariate <- gsub("[0-9]", "", rownames(avgs)) 
+colnames(avgs)[3:5] <- c("lwrq", "midq", "uprq")
+avgs$sig <-  ifelse(avgs$lwrq < 0 & avgs$uprq < 0, 1, 
+                    ifelse(avgs$lwrq > 0 & avgs$uprq > 0, 1, 0))
+avgs$covariate <- dplyr::recode(
+  avgs$covariate,
+  dtren = "detrended",
+  rough = "roughness"
+)
+
+p1 <- ggplot(avgs[avgs$covariate != "(Intercept)", ], 
+             aes(covariate, mean, colour = as.factor(sig))) +  
+  geom_point(shape = 20) + 
+  geom_errorbar(aes(ymin = lwrq, ymax = uprq), width = 0.1, size = 0.2) + 
+  geom_hline(aes(yintercept = 0), lty = 3) +
+  scale_colour_viridis(option = "B", discrete = TRUE, begin = 0, end = 0.6) +
+  labs(x = NULL, y = NULL) + guides(colour = "none") +
+  theme_bw()
+p1
+
+ggsave("plots/reliefmodel_ci.png", width = 5, height = 4, dpi = 160)
+
 # # evaluate fit and tuning
 # rf <- inla.spde.result(inla = m1, name = "sp", spde = spde, do.transf = TRUE)
 # 
@@ -132,15 +156,15 @@ pcelldf$prelief <- 1 + modout$mean[1] +
 
 pcelldf$prelief[pcelldf$prelief < 0] <- 0                                       # rm p out of sample range (-ve relief)
 
-prelief <- rasterFromXYZ(cbind(pcelldf[c(1:2, 7)]))
-plot(prelief)
-saveRDS(prelief, "output/predicted_relief_raster.rds")
+prelief <- rasterFromXYZ(cbind(pcelldf[c(1:2, 6:7)]))
+plot(prelief[[2]])
+saveRDS(prelief[[2]], "output/predicted_relief_raster.rds")
 
 sitebuf <- buffer(habisp, 10000)
 prelief <- mask(prelief, sitebuf)
 prelief <- crop(prelief, extent(sitebuf))
 plot(prelief)
-plot(habisp, add = TRUE, col = "red")
+# plot(habisp, add = TRUE, col = "red")
 pcelldf <- as.data.frame(prelief, xy = TRUE, na.rm = TRUE)
 
 saveRDS(pcelldf, 'output/predicted_relief_site.rds')
@@ -157,9 +181,20 @@ ggplot(pcelldf, aes(x, y)) +
        colour = "obs. relief (points)") +
   theme_minimal()
 
+# spatial random effect
+ggplot(pcelldf, aes(x, y)) +
+  geom_tile(aes(fill = p_sp)) +
+  scale_fill_viridis() +
+  geom_point(data = habi, aes(Longitude.1, Latitude.1), 
+             alpha = 1/5, size = 1, shape = 3) +
+  coord_equal() +
+  labs(x= NULL, y = NULL, 
+       fill = "p. relief") +
+  theme_minimal()
+
 # perform quick cross-validation (single fold with 20% of data)
 testsp <- SpatialPointsDataFrame(coords = testd[4:5], data = testd)
-testd$predicted <- extract(prelief, testsp)
+testd$predicted <- extract(prelief[[2]], testsp)
 testd$pdiff     <- testd$predicted - testd$relief
 testsp$pdiff    <- testd$pdiff
 testd <- na.omit(testd) # there is an NA - there are some gaps in the rasters, that may be why
@@ -178,6 +213,8 @@ ggplot(testd, aes(relief, predicted)) +
   coord_equal() +
   theme_minimal() + 
   labs(x = "observed")
+
+ggsave("plots/relief_prediction_accuracy.png", width = 5, height = 4, dpi = 160)
 
 # # plot difference across sites? i.e. way to view spatial prediction success?
 # 
