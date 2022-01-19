@@ -169,11 +169,11 @@ p3 <- ggplot() +
   annotate("rect", xmin = 113.02, xmax = 113.28, ymin = -27.19, ymax = -27.08,
            colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
   annotate("text", x = 113.15, y = -27.05, size = 3, 
-           colour = "grey20", label = "Fig. 3.1. swabrnpz09") +
+           colour = "grey20", label = "swabrnpz09") +
   annotate("rect", xmin = 113.24, xmax = 113.58, ymin = -28.13, ymax = -28.02,
            colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
   annotate("text", x = 113.42, y = -27.99, size = 3,
-           colour = "grey20", label = "Fig. 3.2. swabrnpz06") +
+           colour = "grey20", label = "swabrnpz06") +
   coord_sf(xlim = c(112.5, 114.5), ylim = c(-28.2, -27)) +
   labs(colour = "Sample", x = NULL, y = NULL) +
   theme_minimal()
