@@ -73,7 +73,7 @@ fished.species <- length %>%
   dplyr::mutate(fishing.type = ifelse(scientific %in%c("Serranidae Plectropomus spp")
                                       ,"R",fishing.type))%>%
   dplyr::mutate(minlegal.wa = ifelse(scientific %in% c("Serranidae Plectropomus spp"), "450", minlegal.wa))%>%
-  dplyr::filter(fishing.type %in% c("B/R","B/C/R","R","C/R"))%>%
+  dplyr::filter(fishing.type %in% c("B/R","B/C/R","R","C/R","C"))%>%
   dplyr::filter(!family%in%c("Monacanthidae", "Scorpididae", "Mullidae")) # Brooke removed leatherjackets, sea sweeps and goat fish
 
 unique(fished.species$scientific)

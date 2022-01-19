@@ -104,7 +104,7 @@ fished.species <- maxn %>%
   dplyr::left_join(master) %>%
   dplyr::mutate(fishing.type = ifelse(
     scientific %in%c("Serranidae Plectropomus spp"),"R", fishing.type)) %>%
-  dplyr::filter(fishing.type %in% c("B/R", "B/C/R", "R", "C/R")) %>%
+  dplyr::filter(fishing.type %in% c("B/R", "B/C/R", "R", "C/R","C")) %>%
   dplyr::filter(!family%in%c("Monacanthidae", "Scorpididae", "Mullidae"))       # Brooke removed leatherjackets, sea sweeps and goat fish
 
 unique(fished.species$scientific)
@@ -133,6 +133,7 @@ species.maxn <- maxn %>%
 dat <- bind_rows(fished.maxn, species.maxn, ta.sr) %>%
   left_join(allhab) %>%
   left_join(metadata) %>%
+  dplyr::filter(!scientific%in%c("targeted.abundance"))
   distinct()
 
 # Set predictor variables---
