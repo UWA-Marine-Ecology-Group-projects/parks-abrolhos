@@ -4,11 +4,11 @@ rm(list=ls())
 # Libraries required ----
 # To connect to GlobalArchive
 library(devtools)
-install_github("UWAMEGFisheries/GlobalArchive") #to check for updates
+#install_github("UWAMEGFisheries/GlobalArchive") #to check for updates
 library(GlobalArchive)
 # To connect to life.history
 library(httpuv)
-library(googlesheets)
+library(googlesheets4)
 # To tidy data
 library(tidyr)
 library(plyr)
@@ -19,7 +19,7 @@ library(stringr)
 
 ## Set Study Name ----
 # Change this to suit your study name. This will also be the prefix on your final saved files.
-study<-"2021-05_Abrolhos_BOSS" 
+study<-"2021-05_Abrolhos_stereo-BRUVs" 
 
 ## Set your working directory ----
 working.dir<-getwd()
@@ -59,18 +59,15 @@ length<-read_csv(file=paste(study,"length3dpoints.csv",sep = "_"),na = c("", " "
 
 # BASIC checks----
 # Check if we have 3d points (Number) in addition to length----
-
 three.d.points<-length%>%
   filter(is.na(length))%>%
   filter(!is.na(number))%>%
   glimpse() # Do we have 3d points? 
 
 # Check if we have more than one fish associated with single length measurement----
-
 schools<-length%>%
   filter(number>1)%>%
   glimpse() # Do we have schools? 
-
 
 # Plot to visualise length data ----
 # Add justification and units to x
@@ -106,7 +103,6 @@ ggplot(data=length, aes(range,length)) +
   labs(x = "Range (mm)", y = "Length (mm)")+theme_ga
 
 ggsave(file=paste(study,"check.range.vs.length.png",sep = "_"))
-
 
 # Standardise for Range ----
 # To standardise for Range we can remove any length observations outside Range rules
@@ -251,17 +247,12 @@ ggplot(taxa.maxn.vs.stereo.summary,aes(x=maxn,y=stereo.maxn,label = paste(genus,
 setwd(plots.dir)
 ggsave(file=paste(study,"check.stereo.vs.maxn.png",sep = "_"))
 
+
 # We strongly encourage you to fix these errors at the source (i.e. EMObs), however, there may be observations that you want to keep in the raw data but not upload to Global Archive (i.e. seasnakes), that you can drop using the code below.
 # NOW check through the files in your "Errors to check" folder and make corrections to .EMObs / generic files and then re-run this script.
 # IF you are happy to proceed by removing the species, length and range errors here you can run the lines below and write the checked data 
 
 # Drop errors from data ----
-
-# CAUTION Standardise by Range if you wish  ----
-length<-length%>%
-  filter(range<10000)%>%
-  glimpse()
-
 
 # WRITE FINAL checked data----
 setwd(tidy.dir)
@@ -271,4 +262,5 @@ write.csv(metadata, file=paste(study,"checked.metadata.csv",sep = "."), row.name
 write.csv(maxn, file=paste(study,"checked.maxn.csv",sep = "."), row.names=FALSE)
 write.csv(length, file=paste(study,"checked.length.csv",sep = "."), row.names=FALSE)
 
+setwd(working.dir)
 # Go to FORMAT script (3) 

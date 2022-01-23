@@ -272,3 +272,4 @@ write.csv(maxn, file=paste(study,"checked.maxn.csv",sep = "."), row.names=FALSE)
 write.csv(length, file=paste(study,"checked.length.csv",sep = "."), row.names=FALSE)
 
 # Go to FORMAT script (3) 
+setwd(working.dir)

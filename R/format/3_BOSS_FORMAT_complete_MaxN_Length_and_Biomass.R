@@ -240,10 +240,4 @@ write.csv(expanded.length, file=paste(study,"expanded.length.csv",sep = "."), ro
 
 write.csv(complete.length.number.mass, file=paste(study,"complete.mass.csv",sep = "."), row.names=FALSE)
 
-complete.length.number<-complete.length.number%>%
-  filter(number>0)
-
-# Write .fst files for shiny app ---
-write.fst(complete.maxn, "complete.maxn.fst")
-write.fst(complete.length.number,"complete.length.fst")
-write.fst(complete.length.number.mass,"complete.mass.fst")
+setwd(working.dir)

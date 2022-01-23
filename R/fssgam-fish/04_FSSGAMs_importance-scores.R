@@ -20,12 +20,12 @@ setwd(working.dir)
 #OR Set manually once
 
 #read in data - negative values manually added
-dat1 <- read.csv("output/fssgam - fish/2021-05_Abrolhos_BOSS_all.var.imp.csv")%>% #from local copy
+dat1 <- read.csv("output/fssgam - fish/2021-05_Abrolhos_BOSS-BRUV_all.var.imp.csv")%>% #from local copy
   rename(resp.var=X)%>%
   gather(key=predictor,value=importance,2:ncol(.))%>%
   glimpse()
 
-dat2 <- read.csv("output/fssgam - fish/2021-05_Abrolhos_BOSS_length_all.var.imp.csv")%>% #from local copy
+dat2 <- read.csv("output/fssgam - fish/2021-05_Abrolhos_BOSS-BRUV_length_all.var.imp.csv")%>% #from local copy
   rename(resp.var=X)%>%
   gather(key=predictor,value=importance,2:ncol(.))%>%
   glimpse()
@@ -35,24 +35,10 @@ dat <- bind_rows(dat1,dat2)%>%
 
 dat.taxa <- dat %>%
   mutate(label=NA)%>%
-  mutate(label=ifelse(predictor=="depth"&resp.var=="Labridae Coris auricularis","X",label))%>%
-  mutate(label=ifelse(predictor=="biog"&resp.var=="Lethrinidae Lethrinus miniatus","X",label))%>%
-  mutate(label=ifelse(predictor=="depth"&resp.var=="Lethrinidae Lethrinus miniatus","X",label))%>%
-  mutate(label=ifelse(predictor=="location"&resp.var=="Lethrinidae Lethrinus miniatus","X",label))%>%
-  mutate(label=ifelse(predictor=="relief"&resp.var=="Pomacentridae Chromis westaustralis","X",label))%>%
-  mutate(label=ifelse(predictor=="relief"&resp.var== "total.abundance","X",label))%>%
-  mutate(label=ifelse(predictor=="location"&resp.var== "species.richness","X",label))%>%
-  mutate(label=ifelse(predictor=="relief"&resp.var== "species.richness","X",label))%>%
-  mutate(label=ifelse(predictor=="tpi"&resp.var== "species.richness","X",label))%>%
-  mutate(label=ifelse(predictor=="biog"&resp.var== "greater than legal size","X",label))%>%
-  mutate(label=ifelse(predictor=="detrended"&resp.var== "greater than legal size","X",label))%>%
-  mutate(label=ifelse(predictor=="macroalgae"&resp.var== "greater than legal size","X",label))%>%
-  mutate(label=ifelse(predictor=="biog"&resp.var== "legal size red throat","X",label))%>%
-  mutate(label=ifelse(predictor=="depth"&resp.var== "legal size red throat","X",label))%>%
-  mutate(label=ifelse(predictor=="location"&resp.var== "legal size red throat","X",label))%>%
-  mutate(label=ifelse(predictor=="biog"&resp.var== "smaller than legal size","X",label))%>%
-  mutate(label=ifelse(predictor=="detrended"&resp.var== "smaller than legal size","X",label))%>%
-  mutate(label=ifelse(predictor=="macroalgae"&resp.var== "smaller than legal size","X",label))%>%
+  mutate(label=ifelse(predictor=="relief"&resp.var=="total.abundance","X",label))%>%
+  mutate(label=ifelse(predictor=="relief"&resp.var=="species.richness","X",label))%>%
+  mutate(label=ifelse(predictor=="detrended"&resp.var=="greater than legal size","X",label))%>%
+  mutate(label=ifelse(predictor=="tpi"&resp.var=="smaller than legal size","X",label))%>%
   glimpse()
 
 # Theme-

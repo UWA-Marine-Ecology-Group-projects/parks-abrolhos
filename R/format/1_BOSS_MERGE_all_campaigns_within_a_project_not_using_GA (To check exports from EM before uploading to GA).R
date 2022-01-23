@@ -36,6 +36,7 @@ setwd(working.dir)
 metadata <-ga.list.files("_Metadata.csv")%>% # list all files ending in "_Metadata.csv"
   purrr::map_df(~ga.read.files_em.csv(.))%>% # combine into dataframe
   dplyr::select(campaignid,sample,latitude,longitude,date,time,location,status,site,depth,observer,successful.count,successful.length)%>% # This line ONLY keep the 15 columns listed. Remove or turn this line off to keep all columns (Turn off with a # at the front).
+  dplyr::filter(campaignid%in%c("2021-05_Abrolhos_BOSS"))%>%
   glimpse()
 
 unique(metadata$campaignid) # check the number of campaigns in metadata, and the campaign name
@@ -51,8 +52,8 @@ points<-as.data.frame(points.files)%>%
   filter(lines>1)%>% # filter out all empty text files
   dplyr::select(campaign)%>%
   as_vector(.)%>% # remove all empty files
-  purrr::map_df(~ga.read.files_em.txt(.))#%>%
-#select(-c(project))
+  purrr::map_df(~ga.read.files_em.txt(.))%>%
+  dplyr::filter(campaignid%in%c("2021-05_Abrolhos_BOSS"))
 
 maxn<-points%>%
   dplyr::select(-c(sample)) %>%
@@ -70,7 +71,8 @@ maxn<-points%>%
   dplyr::filter(maxn>0)%>%
   dplyr::inner_join(metadata)%>%
   dplyr::filter(successful.count=="Y")%>%
-  dplyr::filter(maxn>0)
+  dplyr::filter(maxn>0)%>%
+  glimpse()
 
 # Save MaxN file ----
 setwd(staging.dir)
@@ -92,3 +94,4 @@ length3dpoints<-ga.create.em.length3dpoints()%>%
 setwd(staging.dir)
 write.csv(length3dpoints,paste(study,"length3dpoints.csv",sep="_"),row.names = FALSE)
 
+setwd(working.dir)

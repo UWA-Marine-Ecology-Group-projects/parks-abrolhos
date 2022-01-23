@@ -19,7 +19,7 @@ library(ggplot2)
 library(fst)
 
 # Study name---
-study<-"2021-05_Abrolhos_BOSS" 
+study<-"2021-05_Abrolhos_stereo-BRUVs" 
 
 ## Set your working directory ----
 working.dir<-getwd()
@@ -91,8 +91,8 @@ complete.length.number<-read_csv(file=paste(study,"checked.length.csv",sep = "."
   left_join(.,metadata)%>%
   glimpse()
 
-length(unique(metadata$id)) # 1121
-length(unique(complete.length.number$id)) # 1121
+length(unique(metadata$id)) # 50
+length(unique(complete.length.number$id)) # 50
 
 # Make the expanded length data----
 # For use in length analyses - i.e KDE or histograms
@@ -226,8 +226,6 @@ setwd(error.dir)
 write.csv(check.mass,file=paste(study,"check.mass.csv",sep = "_"), row.names=FALSE)
 
 # CHECK these mass estimates before using them!!!
-
-
 # WRITE FINAL complete and expanded data----
 setwd(tidy.dir)
 dir()
@@ -240,10 +238,4 @@ write.csv(expanded.length, file=paste(study,"expanded.length.csv",sep = "."), ro
 
 write.csv(complete.length.number.mass, file=paste(study,"complete.mass.csv",sep = "."), row.names=FALSE)
 
-complete.length.number<-complete.length.number%>%
-  filter(number>0)
-
-# Write .fst files for shiny app ---
-write.fst(complete.maxn, "complete.maxn.fst")
-write.fst(complete.length.number,"complete.length.fst")
-write.fst(complete.length.number.mass,"complete.mass.fst")
+setwd(working.dir)
