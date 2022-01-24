@@ -6,6 +6,8 @@
 # date:    Nov-Dec 2021
 ##
 
+rm(list=ls())
+
 library(reshape2)
 library(mgcv)
 library(ggplot2)
@@ -13,7 +15,11 @@ library(viridis)
 library(raster)
 
 # read in
-fabund <- readRDS("output/fish_abundance_fssgamdat.rds")                        # merged fish data used for fssgam script
+dat1 <- readRDS("data/Tidy/dat.maxn.rds")%>%
+  dplyr::rename(number=maxn)%>%
+  glimpse()
+dat2 <- readRDS("data/Tidy/dat.length.rds")
+fabund <- bind_rows(dat1,dat2)                        # merged fish data used for fssgam script
 preds  <- readRDS("output/broad_habitat_predictions.rds")                       # spatial and habitat covs
 prel   <- readRDS("output/predicted_relief_raster.rds")                         # predicted relief from 'R/habitat/5_krige_relief.R'
 
@@ -35,55 +41,39 @@ sbuff  <- buffer(fishsp, 10000)
 unique(fabund$scientific)
 
 # use formula from top model from FSSGam model selection
-m_totabund <- gam(maxn ~ s(relief, k = 3, bs = "cr"), 
-               data = fabund[fabund$scientific == "total.abundance", ], 
+#NPZ6
+#total abundance
+m_totabund <- gam(number ~ s(relief, k = 3, bs = "cr")+s(slope, k = 3, bs = "cr"), 
+               data = fabund%>%dplyr::filter(scientific%in%"total.abundance",location%in%"NPZ6"), 
                method = "REML", family = tw())
 summary(m_totabund)
-# gam.check(m_totabund)
-# vis.gam(m_totabund)
 
-m_targetabund <- gam(maxn ~ s(biog, k = 3, bs = "cr")  + 
+m_richness <- gam(number ~ s(depth, k = 3, bs = "cr")  + 
                        s(detrended, k = 3, bs = "cr") + 
-                       s(macroalgae, k = 3, bs = "cr"),  # not necessarily the top model
-                     data = fabund[fabund$scientific == "targeted.abundance", ], 
+                       s(biog, k = 3, bs = "cr"),  # not necessarily the top model
+                     data = fabund%>%dplyr::filter(scientific%in%"species.richness",location%in%"NPZ6"), 
                      method = "REML", family = tw())
-summary(m_targetabund)
+summary(m_richness)
 # gam.check(m_targetabund)
 # vis.gam(m_targetabund)
-
-m_richness <- gam(maxn ~ s(relief, k = 5, bs = "cr")  + 
-                    s(tpi, k = 5, bs = "cr"), 
-                  data = fabund[fabund$scientific == "species.richness", ], 
+m_legal <- gam(number ~ s(slope, k = 3, bs = "cr")  + 
+                    s(tpi, k = 3, bs = "cr"),  # not necessarily the top model
+                  data = fabund%>%dplyr::filter(scientific%in%"greater than legal size",location%in%"NPZ6"), 
                   method = "REML", family = tw())
-summary(m_richness)
-# gam.check(m_richness)
-# vis.gam(m_richness)
+summary(m_legal)
 
-m_cauricularis <- gam(maxn ~ s(depth, k = 5, bs = "cr") +
-                        s(biog, k = 5, bs = "cr"), 
-                      data = fabund[fabund$scientific == "Labridae Coris auricularis", ], 
-                      method = "REML", family = tw())
-summary(m_cauricularis)
-
-m_cwestaustralis <- gam(maxn ~ s(relief, k = 5, bs = "cr"), 
-                      data = fabund[fabund$scientific == "Pomacentridae Chromis westaustralis", ], 
-                      method = "REML", family = tw())
-summary(m_cwestaustralis)
-
-m_lminatus <- gam(maxn ~ s(depth, k = 5, bs = "cr") +
-                    s(biog, k = 5, bs = "cr"), 
-                      data = fabund[fabund$scientific == "Lethrinidae Lethrinus miniatus", ], 
-                      method = "REML", family = tw())
-summary(m_lminatus)
+m_sublegal <- gam(number ~ s(detrended, k = 3, bs = "cr")  + 
+                 s(slope, k = 3, bs = "cr"),  # not necessarily the top model
+               data = fabund%>%dplyr::filter(scientific%in%"greater than legal size",location%in%"NPZ6"), 
+               method = "REML", family = tw())
+summary(m_sublegal)
 
 # predict, rasterise and plot
 preddf <- cbind(preddf, 
                 "p_totabund" = predict(m_totabund, preddf, type = "response"),
-                "p_argetabund" = predict(m_targetabund, preddf, type = "response"),
-                "p_richness" = predict(m_richness, preddf, type = "response"),
-                "p_cauricularis" = predict(m_cauricularis, preddf, type = "response"),
-                "p_cwestaustralis" = predict(m_cwestaustralis, preddf, type = "response"),
-                "p_lminatus" = predict(m_lminatus, preddf, type = "response"))
+                "p_argetabund" = predict(m_richness, preddf, type = "response"),
+                "p_richness" = predict(m_legal, preddf, type = "response"),
+                "p_cauricularis" = predict(m_sublegal, preddf, type = "response"))
 
 prasts <- rasterFromXYZ(preddf[, c(1, 2, 27:32)], res = c(247, 277))
 plot(prasts)
