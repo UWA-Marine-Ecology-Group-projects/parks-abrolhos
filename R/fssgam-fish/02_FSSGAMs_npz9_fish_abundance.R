@@ -1,6 +1,6 @@
 ###
 # Project: Parks - Abrolhos
-# Data:    BOSS fish, habitat
+# Data:    BOSS & BRUV fish, habitat
 # Task:    Modelling fish abundance w/ FSSGAM
 # author:  Claude, Brooke, Kingsley
 # date:    Nov-Dec 2021
@@ -32,13 +32,15 @@ library(ggplot2)
 # use the 'files' tab to set wd in '~/parks-abrolhos' manually (your relative path) then run this line (if we need it?)
 working.dir <- getwd()
 setwd(working.dir)
-name <- "2021-05_Abrolhos_BOSS-BRUV"  # set study name
+name <- "2021-05_Abrolhos_npz9"  # set study name
 
-dat <- readRDS("data/Tidy/dat.maxn.rds")
+dat <- readRDS("data/Tidy/dat.maxn.rds")%>%
+  dplyr::filter(location%in%"NPZ9")%>%
+  glimpse()
 
 # # Re-set the predictors for modeling----
 pred.vars <- c("depth", "macroalgae",
-               "biog", "relief","tpi","slope","detrended") 
+               "biog", "relief","tpi","slope","detrended") #macroalgae has no data but leave it in so tables match up
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars <- unique(as.character(dat$scientific))
@@ -56,7 +58,7 @@ savedir <- "output/fssgam - fish"
 use.dat <- as.data.frame(dat) 
 str(use.dat)
 
-#factor.vars <- c("location","method")# Status and method as a factors with 2 levels
+#factor.vars <- c("status")# no information on status in this npz so exclude
 out.all     <- list()
 var.imp     <- list()
 

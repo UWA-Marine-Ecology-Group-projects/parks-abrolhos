@@ -1,0 +1,7 @@
+"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","macroalgae","biog","relief","tpi","slope","detrended","cumsum.wi"
+"total.abundance.relief+slope","relief+slope",445.842830423038,457.478179614968,0.32189,NA,4.84,0,0,1.166,0.227,0.149,0,0,0,1,0,1,0,0.227
+"total.abundance.biog+slope","biog+slope",445.851321272507,457.497739154367,0.31849,NA,4.87,0,0.008,1.186,0.226,0.147,0,0,1,0,0,1,0,0.453
+"total.abundance.slope","slope",446.43664511974,456.724835477676,0.23551,NA,3.94,0,0.594,0.413,0.168,0.217,0,0,0,0,0,1,0,0.621
+"total.abundance.relief","relief",447.496087823775,456.312113164485,0.15371,NA,3,0,1.653,0,0.099,0.266,0,0,0,1,0,0,0,0.72
+"species.richness.relief","relief",303.420930329808,312.233359921171,0.09023,NA,3,0,0,0,0.369,0.516,0,0,0,1,0,0,0,0.369
+"species.richness.relief+slope","relief+slope",305.008725768522,315.303133141347,0.1018,NA,4,0,1.588,3.07,0.167,0.111,0,0,0,1,0,1,0,0.536

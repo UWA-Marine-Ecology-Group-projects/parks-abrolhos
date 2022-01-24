@@ -1,0 +1,11 @@
+"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","macroalgae","biog","relief","tpi","slope","detrended","status","cumsum.wi"
+"greater than legal size.detrended+status","detrended+status",527.468932973237,544.499902745547,0.2831,NA,4.82,0,0,0,0.456,0.757,0,0,0,0,0,0,1,1,0.456
+"greater than legal size.biog+detrended+status","biog+detrended+status",528.282730898463,547.591790214559,0.29852,NA,5.85,0,0.814,3.092,0.304,0.161,0,0,1,0,0,0,1,1,0.76
+"greater than legal size.detrended+slope+status","detrended+slope+status",528.99999370264,550.204620258928,0.29863,NA,6.46,0,1.531,5.705,0.212,0.044,0,0,0,0,0,1,1,1,0.972
+"smaller than legal size.status+tpi","status+tpi",388.212757768465,404.964979181349,0.1116,NA,4.93,0,0,0.612,0.166,0.233,0,0,0,0,1,0,0,1,0.166
+"smaller than legal size.slope+status+tpi","slope+status+tpi",388.27996991734,409.201759166714,0.13191,NA,6.64,0,0.067,4.849,0.161,0.028,0,0,0,0,1,1,0,1,0.327
+"smaller than legal size.relief+status+tpi","relief+status+tpi",388.872112737564,407.816488495333,0.12379,NA,5.91,0,0.659,3.464,0.12,0.056,0,0,0,1,1,0,0,1,0.447
+"smaller than legal size.tpi","tpi",389.850839475292,404.352559946477,0.09405,NA,3.92,0,1.638,0,0.073,0.316,0,0,0,0,1,0,0,0,0.52
+"smaller than legal size.macroalgae+status+tpi","macroalgae+status+tpi",389.933748670967,408.880941595862,0.11507,NA,5.92,0,1.721,4.528,0.07,0.033,0,1,0,0,1,0,0,1,0.59
+"smaller than legal size.biog+status+tpi","biog+status+tpi",390.038459479612,408.988441264589,0.11319,NA,5.93,0,1.826,4.636,0.067,0.031,0,0,1,0,1,0,0,1,0.657
+"smaller than legal size.relief+tpi","relief+tpi",390.09723923466,406.842873252157,0.10739,NA,4.91,0,1.884,2.49,0.065,0.091,0,0,0,1,1,0,0,0,0.722

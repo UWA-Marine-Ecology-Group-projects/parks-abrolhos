@@ -1,0 +1,17 @@
+"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","macroalgae","biog","relief","tpi","slope","detrended","status","cumsum.wi"
+"total.abundance.detrended+status","detrended+status",693.790947094582,707.580511079939,0.18782,NA,4.71,0,0,1.272,0.144,0.097,0,0,0,0,0,0,1,1,0.144
+"total.abundance.relief+status","relief+status",694.21867717545,706.377092211109,0.26499,NA,4,0,0.428,0.069,0.116,0.178,0,0,0,1,0,0,0,1,0.26
+"total.abundance.biog+relief+status","biog+relief+status",694.225896663197,709.419132761924,0.31165,NA,5.49,0,0.435,3.111,0.115,0.039,0,0,1,1,0,0,0,1,0.375
+"total.abundance.detrended+slope+status","detrended+slope+status",694.77929870281,710.312870896442,0.20068,NA,5.76,0,0.988,4.005,0.088,0.025,0,0,0,0,0,1,1,1,0.463
+"total.abundance.detrended","detrended",694.832758184502,706.92267102516,0.15529,NA,3.81,0,1.042,0.614,0.085,0.135,0,0,0,0,0,0,1,0,0.548
+"total.abundance.detrended+slope","detrended+slope",695.081537664611,708.966520785419,0.17079,NA,4.83,0,1.291,2.658,0.075,0.049,0,0,0,0,0,1,1,0,0.623
+"total.abundance.relief+status+tpi","relief+status+tpi",695.514463754281,709.448209353115,0.27801,NA,5,0,1.724,3.14,0.061,0.038,0,0,0,1,1,0,0,1,0.684
+"total.abundance.biog+detrended+status","biog+detrended+status",695.779812733891,711.285567913475,0.19308,NA,5.73,0,1.989,4.977,0.053,0.015,0,0,1,0,0,0,1,1,0.737
+"species.richness.relief+status+tpi","relief+status+tpi",426.851425722584,442.344694787196,0.36646,NA,5.59,0,0,3.363,0.142,0.04,0,0,0,1,1,0,0,1,0.142
+"species.richness.relief+status","relief+status",427.272555637439,440.443633439262,0.32903,NA,4.34,0,0.421,1.462,0.115,0.104,0,0,0,1,0,0,0,1,0.257
+"species.richness.biog+depth+status","biog+depth+status",427.678536724699,441.612121234075,0.32347,NA,5,0,0.827,2.631,0.094,0.058,1,0,1,0,0,0,0,1,0.351
+"species.richness.detrended+status","detrended+status",428.22960038493,441.562159356539,0.31191,NA,4.41,0,1.378,2.581,0.071,0.059,0,0,0,0,0,0,1,1,0.422
+"species.richness.biog+relief+status","biog+relief+status",428.237195054363,443.717286274798,0.34416,NA,5.7,0,1.386,4.736,0.071,0.02,0,0,1,1,0,0,0,1,0.493
+"species.richness.relief","relief",428.50199223353,439.551183704174,0.27107,NA,3.22,0,1.651,0.57,0.062,0.162,0,0,0,1,0,0,0,0,0.555
+"species.richness.depth","depth",428.676594583919,438.981570794166,0.25491,NA,3,0,1.825,0,0.057,0.215,1,0,0,0,0,0,0,0,0.612
+"species.richness.biog+detrended+status","biog+detrended+status",428.817973794275,442.751524686803,0.31131,NA,5,0,1.967,3.77,0.053,0.033,0,0,1,0,0,0,1,1,0.665

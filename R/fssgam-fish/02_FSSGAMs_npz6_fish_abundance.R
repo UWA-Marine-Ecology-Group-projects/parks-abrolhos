@@ -1,6 +1,6 @@
 ###
 # Project: Parks - Abrolhos
-# Data:    BOSS fish, habitat
+# Data:    BOSS & BRUV fish, habitat
 # Task:    Modelling fish abundance w/ FSSGAM
 # author:  Claude, Brooke, Kingsley
 # date:    Nov-Dec 2021
@@ -32,7 +32,7 @@ library(ggplot2)
 # use the 'files' tab to set wd in '~/parks-abrolhos' manually (your relative path) then run this line (if we need it?)
 working.dir <- getwd()
 setwd(working.dir)
-name <- "2021-05_Abrolhos_BOSS-BRUV"  # set study name
+name <- "2021-05_Abrolhos_npz6"  # set study name
 
 dat <- readRDS("data/Tidy/dat.maxn.rds")%>%
   dplyr::filter(location%in%"NPZ6")%>%
@@ -58,7 +58,7 @@ savedir <- "output/fssgam - fish"
 use.dat <- as.data.frame(dat) 
 str(use.dat)
 
-is.na(dat$status) #there are NAs in status so need to fix in metadata
+is.na(dat$status) 
 
 factor.vars <- c("status")# Status as a factors with 2 levels
 out.all     <- list()
@@ -77,7 +77,7 @@ for(i in 1:length(resp.vars)){
   model.set <- generate.model.set(use.dat = use.dat,
                                   test.fit = Model1,
                                   pred.vars.cont = pred.vars,
-                                  pred.vars.fact = NA,
+                                  pred.vars.fact = factor.vars,
                                   linear.vars = "depth",
                                   k = 3,
                                   factor.smooth.interactions = F,

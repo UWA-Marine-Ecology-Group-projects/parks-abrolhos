@@ -1,6 +1,6 @@
 ###
 # Project: Parks - Abrolhos
-# Data:    BOSS fish, habitat
+# Data:    BOSS & BRUV fish, habitat
 # Task:    Modelling fish lengths w/ FSSGAM
 # author:  Claude, Brooke, Kingsley
 # date:    Nov-Dec 2021
@@ -29,14 +29,16 @@ library(GlobalArchive)
 library(ggplot2)
 
 ## set study name
-study <- "2021-05_Abrolhos_BOSS-BRUV" 
+study <- "2021-05_Abrolhos_npz9" 
 name <- study
 
 ## Set your working directory ----
 working.dir<-getwd()
 setwd(working.dir)
 
-dat <- readRDS("data/Tidy/dat.length.rds")
+dat <- readRDS("data/Tidy/dat.length.rds")%>%
+  dplyr::filter(location%in%"NPZ9")%>%
+  glimpse()
 
 # # Re-set the predictors for modeling----
 pred.vars = c("depth", 
