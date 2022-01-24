@@ -1,6 +1,6 @@
 ###
 # Project: Parks - Abrolhos
-# Data:    BOSS fish, habitat
+# Data:    BOSS & BRUV fish, habitat
 # Task:    Plotting fish importance scores
 # author:  Claude
 # date:    Nov-Dec 2021
@@ -19,25 +19,28 @@ working.dir <- getwd()
 setwd(working.dir)
 #OR Set manually once
 
+###    NPZ6
+
 #read in data - negative values manually added
-dat1 <- read.csv("output/fssgam - fish/2021-05_Abrolhos_BOSS-BRUV_all.var.imp.csv")%>% #from local copy
+dat1 <- read.csv("output/fssgam - fish/2021-05_Abrolhos_npz6_all.var.imp.csv")%>% #from local copy
   rename(resp.var=X)%>%
   gather(key=predictor,value=importance,2:ncol(.))%>%
   glimpse()
 
-dat2 <- read.csv("output/fssgam - fish/2021-05_Abrolhos_BOSS-BRUV_length_all.var.imp.csv")%>% #from local copy
+dat2 <- read.csv("output/fssgam - fish/2021-05_Abrolhos_npz6_length_all.var.imp.csv")%>% #from local copy
   rename(resp.var=X)%>%
   gather(key=predictor,value=importance,2:ncol(.))%>%
   glimpse()
 
-dat <- bind_rows(dat1,dat2)%>%
+datnpz6 <- bind_rows(dat1,dat2)%>%
   glimpse()
 
-dat.taxa <- dat %>%
+dat.taxa.npz6 <- datnpz6 %>%
   mutate(label=NA)%>%
   mutate(label=ifelse(predictor=="relief"&resp.var=="total.abundance","X",label))%>%
-  mutate(label=ifelse(predictor=="relief"&resp.var=="species.richness","X",label))%>%
+  mutate(label=ifelse(predictor=="depth"&resp.var=="species.richness","X",label))%>%
   mutate(label=ifelse(predictor=="detrended"&resp.var=="greater than legal size","X",label))%>%
+  mutate(label=ifelse(predictor=="status"&resp.var=="greater than legal size","X",label))%>%
   mutate(label=ifelse(predictor=="tpi"&resp.var=="smaller than legal size","X",label))%>%
   glimpse()
 
@@ -69,20 +72,59 @@ re <- colorRampPalette(c("blue3", "white","red2"))(200)
 legend_title<-"Importance"
 
 # Plot gg.importance.scores ----
-gg.importance.scores <- ggplot(dat.taxa%>%dplyr::filter(resp.var%in%c("total.abundance","species.richness","greater than legal size",
-                                                                        "smaller than legal size")), 
+gg.importance.npz6 <- ggplot(dat.taxa.npz6, 
                                aes(x=predictor,y=resp.var,fill=importance)) +
    geom_tile(show.legend=T) +
    scale_fill_gradientn(legend_title, colours=c(re), na.value = "grey98",
                          limits = c(-1, 1))+
      scale_y_discrete(labels=c("Greater than legal size","Smaller than legal size","Species richness","Total abundance"))+
-  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Location", "Macroalgae", "Relief", "Sand", "Slope", 'TPI'))+
+  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Macroalgae", "Relief","Slope","Status", 'TPI'))+
     xlab(NULL)+
    ylab(NULL)+
    theme_classic()+
    Theme1+
    geom_text(aes(label=label))
-gg.importance.scores
+gg.importance.npz6
 
 #save output - changed dimensions for larger text in report
-save_plot("plots/abrolhos.fish.importance.png", gg.importance.scores,base_height = 4,base_width = 6.275)
+save_plot("plots/abrolhos.fish.importance.npz6.png", gg.importance.npz6,base_height = 4,base_width = 6.275)
+
+#read in data - negative values manually added
+dat3 <- read.csv("output/fssgam - fish/2021-05_Abrolhos_npz9_all.var.imp.csv")%>% #from local copy
+  rename(resp.var=X)%>%
+  gather(key=predictor,value=importance,2:ncol(.))%>%
+  glimpse()
+
+dat4 <- read.csv("output/fssgam - fish/2021-05_Abrolhos_npz9_length_all.var.imp.csv")%>% #from local copy
+  rename(resp.var=X)%>%
+  gather(key=predictor,value=importance,2:ncol(.))%>%
+  glimpse()
+
+datnpz9 <- bind_rows(dat3,dat4)%>%
+  glimpse()
+
+dat.taxa.npz9 <- datnpz9 %>%
+  mutate(label=NA)%>%
+  mutate(label=ifelse(predictor=="relief"&resp.var=="total.abundance","X",label))%>%
+  mutate(label=ifelse(predictor=="slope"&resp.var=="total.abundance","X",label))%>%
+  mutate(label=ifelse(predictor=="slope"&resp.var=="greater than legal size","X",label))%>%
+  mutate(label=ifelse(predictor=="depth"&resp.var=="smaller than legal size","X",label))%>%
+  glimpse()
+
+# Plot gg.importance.scores ----
+gg.importance.npz9 <- ggplot(dat.taxa.npz9, 
+                             aes(x=predictor,y=resp.var,fill=importance)) +
+  geom_tile(show.legend=T) +
+  scale_fill_gradientn(legend_title, colours=c(re), na.value = "grey98",
+                       limits = c(-1, 1))+
+  scale_y_discrete(labels=c("Greater than legal size","Smaller than legal size","Species richness","Total abundance"))+
+  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Relief","Slope", 'TPI'))+
+  xlab(NULL)+
+  ylab(NULL)+
+  theme_classic()+
+  Theme1+
+  geom_text(aes(label=label))
+gg.importance.npz9
+
+#save output - changed dimensions for larger text in report
+save_plot("plots/abrolhos.fish.importance.npz9.png", gg.importance.npz9,base_height = 4,base_width = 6.275)

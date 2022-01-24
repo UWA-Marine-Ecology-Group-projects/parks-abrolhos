@@ -1,3 +1,3 @@
-"","depth","macroalgae","biog","relief","tpi","slope","detrended"
-"total.abundance",0.046,NA,0.226,0.227,0.049,0.227,0.056
-"species.richness",0.023,NA,0.042,0.369,0.075,0.167,0.032
+,depth,biog,relief,tpi,slope,detrended
+total.abundance,0,0.084,0.647,-0.268,-0.647,0
+species.richness,-0.238,0.001,0.107,0.107,0.107,0.222

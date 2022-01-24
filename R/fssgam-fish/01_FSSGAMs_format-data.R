@@ -99,12 +99,13 @@ ggplot(maxn.sum, aes(x = reorder(scientific, maxn), y = maxn)) +
 # Create total abundance and species richness ----
 ta.sr <- maxn %>%
   dplyr::ungroup() %>%
-  dplyr::group_by(scientific,sample) %>%
+  dplyr::group_by(scientific,sample,method) %>%
   dplyr::summarise(maxn = sum(maxn)) %>%
-  tidyr::spread(scientific, maxn, fill = 0) %>%
-  dplyr::mutate(total.abundance = rowSums(.[, 2:(ncol(.))], na.rm = TRUE )) %>% #Add in Totals
-  dplyr::mutate(species.richness = rowSums(.[, 2:(ncol(.))] > 0)) %>% # double check these
-  dplyr::select(sample, total.abundance, species.richness) %>%
+  tidyr::spread(scientific, maxn, fill = 0) %>% 
+  dplyr::ungroup() %>%
+  dplyr::mutate(total.abundance = rowSums(.[, 3:125], na.rm = TRUE )) %>% #Add in Totals
+  dplyr::mutate(species.richness = rowSums(.[, 3:(ncol(.))] > 0)) %>% # double check these
+  dplyr::select(sample, total.abundance, species.richness,method) %>%
   tidyr::gather(., "scientific", "maxn", 2:3) %>%
   dplyr::glimpse()
 
@@ -184,6 +185,7 @@ fished.species <- length %>%
 without.min.length <- fished.species %>%
   filter(is.na(minlegal.wa))%>%
   distinct(scientific) 
+
 unique(without.min.length$scientific)
 
 legal <- fished.species %>%
@@ -207,14 +209,14 @@ unique(combined.length$scientific)
 
 complete.length <- combined.length %>%
   dplyr::right_join(metadata, by = c("sample")) %>% # add in all samples
-  dplyr::select(sample,scientific,number) %>%
-  tidyr::complete(nesting(sample), scientific) %>%
+  dplyr::select(sample,scientific,number,method) %>%
+  tidyr::complete(nesting(sample,method), scientific) %>%
   replace_na(list(number = 0)) %>% #we add in zeros - in case we want to calculate abundance of species based on a length rule (e.g. greater than legal size)
   dplyr::ungroup()%>%
   dplyr::filter(!is.na(scientific)) %>% # this should not do anything
   dplyr::left_join(.,metadata) %>%
   dplyr::left_join(.,allhab) %>%
-  dplyr::filter(successful.length%in%c("Y")) %>%
+  dplyr::filter(successful.length%in%c("Y")) %>%    #250 observations before filtering by successful length
   dplyr::mutate(scientific=as.character(scientific)) %>%
   dplyr::glimpse()
 
