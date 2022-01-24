@@ -15,11 +15,9 @@ study <- "2021-05_Abrolhos_BOSS"
 # Libraries required
 library(GlobalArchive)
 library(tidyr)
-library(plyr)
 library(dplyr)
 library(ggplot2)
 library(stringr)
-library(plyr)
 library(ggmap)
 library(rgdal)
 library(raster)
@@ -94,7 +92,6 @@ maxn.10<-maxn%>%
   ungroup()%>%
   top_n(12)%>%
   dplyr::filter(!scientific %in% c('Unknown spp', 'SUS sus'))%>%
-  dplyr::mutate(scientific= plyr::revalue(scientific, c('Chaetodon assarius' = 'Chaetodon assarius*')))%>%
   glimpse()
 
 ## Total frequency of occurance 

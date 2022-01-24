@@ -114,7 +114,19 @@ dat.maxn <- bind_rows(ta.sr) %>%
   left_join(metadata) %>%
   dplyr::filter(!scientific%in%c("targeted.abundance"))%>%
   distinct()
-  
+
+testboss <- dat.maxn %>%
+  dplyr::filter(method%in%"BOSS")
+
+testbruv <- dat.maxn %>%
+  dplyr::filter(method%in%"BRUV")
+
+length(unique(testboss$sample))
+75*2
+length(unique(testbruv$sample))
+50*2
+
+
 unique(dat.maxn$scientific)
 
 # Set predictor variables---
@@ -216,9 +228,20 @@ complete.length <- combined.length %>%
   dplyr::filter(!is.na(scientific)) %>% # this should not do anything
   dplyr::left_join(.,metadata) %>%
   dplyr::left_join(.,allhab) %>%
-  dplyr::filter(successful.length%in%c("Y")) %>%    #250 observations before filtering by successful length
+  dplyr::filter(successful.length%in%c("Y")) %>%
   dplyr::mutate(scientific=as.character(scientific)) %>%
   dplyr::glimpse()
+
+testboss <- complete.length %>%
+  dplyr::filter(method%in%"BOSS")
+
+testbruv <- complete.length %>%
+  dplyr::filter(method%in%"BRUV")
+
+length(unique(testboss$sample))
+75*2
+length(unique(testbruv$sample))
+47*2
 
 # Set predictor variables---
 names(complete.length)
