@@ -32,112 +32,98 @@ spreddf <- readRDS("output/site_fish_predictions.rds")                       # s
 spreddf$sitens <- ifelse(spreddf$y > 6940000, 1, 0)
 
 # plotting broad maps
-p1 <- ggplot() +
-  geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_totabund)) +
-  scale_fill_viridis(direction = -1, limits = c(0, max(spreddf$p_totabund))) +
-  geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
-  theme_minimal() +
-  scale_x_continuous(breaks = c(113,113.10,113.2,113.3))+
-  guides(fill = "none") +
-  labs(x = NULL, y = NULL, fill = "Total Abundance")
-p1
-
+#npz6
+#total abundance
 p11 <- ggplot() +
-  geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_totabund)) +
+  geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_totabund6)) +
   scale_fill_viridis(direction = -1) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Total Abundance")
+  labs(x = NULL, y = NULL, fill = "Total Abundance")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
-p1 + p11 + plot_layout(widths = c(0.78,1), nrow = 1)
+p11
 
-# ggsave("plots/site_total_fishabund.png", width = 10, height = 8, dpi = 160)
+#species richness
+p21 <- ggplot() +
+  geom_raster(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_richness6)) +
+  scale_fill_viridis(direction = -1) +
+  geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
+  theme_minimal() +
+  labs(x = NULL, y = NULL, fill = "Species Richness")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
+p21
+
+# greater than legal size
+p31 <- ggplot() +
+  geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_legal6)) +
+  scale_fill_viridis(direction = -1) +
+  geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
+  theme_minimal() +
+  labs(x = NULL, y = NULL, fill = "Greater than legal size")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+
+p31
+
+#smaller than legal size
+p41 <- ggplot() +
+  geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_sublegal6)) +
+  scale_fill_viridis(direction = -1) +
+  geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
+  theme_minimal() +
+  labs(x = NULL, y = NULL, fill = "Smaller than legal size")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+
+p41
+
+#npz9
+#total abundance
+p1 <- ggplot() +
+  geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_totabund9)) +
+  scale_fill_viridis(direction = -1) +
+  geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
+  theme_minimal() +
+  scale_x_continuous(breaks = c(113,113.10,113.2,113.3))+
+  labs(x = NULL, y = NULL, fill = "Total Abundance")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+p1
+
+#species richness
 p2 <- ggplot() +
-  geom_raster(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_richness)) +
-  scale_fill_viridis(direction = -1, limits = c(0, max(spreddf$p_richness))) +
+  geom_raster(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_richness9)) +
+  scale_fill_viridis(direction = -1) +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
   labs(x = NULL, y = NULL, fill = "Species Richness") +
-  scale_x_continuous(breaks = c(113,113.10,113.2,113.3))+
-  guides(fill = "none")
+  scale_x_continuous(breaks = c(113,113.10,113.2,113.3))+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
-p21 <- ggplot() +
-  geom_raster(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_richness)) +
-  scale_fill_viridis(direction = -1) +
-  geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
-  theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Species Richness")
-
-p2 + p21 + plot_layout(widths = c(0.78,1), nrow = 1)
-
-# ggsave("plots/site_total_fishrich.png", width = 10, height = 8, dpi = 160)
+p2
 
 # greater than legal size
 p3 <- ggplot() +
-  geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_legal)) +
-  scale_fill_viridis(direction = -1, limits = c(0, max(spreddf$p_legal))) +
+  geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_legal9)) +
+  scale_fill_viridis(direction = -1) +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
   labs(x = NULL, y = NULL, fill = "Greater than legal size") +
-  scale_x_continuous(breaks = c(113,113.10,113.2,113.3))+
-  guides(fill = "none")
+  scale_x_continuous(breaks = c(113,113.10,113.2,113.3))+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
-p31 <- ggplot() +
-  geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_legal)) +
-  scale_fill_viridis(direction = -1) +
-  geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
-  theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Greater than legal size")
-
-p3 + p31 + plot_layout(widths = c(0.78,1), nrow = 1)
-
-# ggsave("plots/site_total_legal.png", width = 10, height = 8, dpi = 160)
+p3
 
 #smaller than legal size
 p4 <- ggplot() +
-  geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_sublegal)) +
-  scale_fill_viridis(direction = -1, limits = c(0, max(spreddf$p_sublegal))) +
+  geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_sublegal9)) +
+  scale_fill_viridis(direction = -1) +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
   labs(x = NULL, y = NULL, fill = "Smaller than legal size") +
-  scale_x_continuous(breaks = c(113,113.10,113.2,113.3))+
-  guides(fill = "none")
+  scale_x_continuous(breaks = c(113,113.10,113.2,113.3))+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
-p41 <- ggplot() +
-  geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_sublegal)) +
-  scale_fill_viridis(direction = -1) +
-  geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
-  theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Smaller than legal size")
+p4
 
-p4 + p41 + plot_layout(widths = c(0.78,1), nrow = 1)
+gg.predictions.npz6 <- plot_grid(NULL,NULL,p11,p21,NULL,NULL,p31,p41,NULL,NULL,
+                                 ncol = 2, align = "vh",rel_heights = c(-0.3,1,-0.5,1,0))
+gg.predictions.npz6
 
-# ggsave("plots/site_total_sublegal.png", width = 10, height = 8, dpi = 160)
+gg.predictions.npz9 <- plot_grid(p1,p2,p3,p4,
+                                 ncol = 2)
+gg.predictions.npz9
 
-
-gg.predictions <- (p1+p11)/(p2+p21)/(p3+p31)/(p4+p41)
-gg.predictions
-ggsave("plots/site_fish_predictions.png", gg.predictions,width = 12, height = 8, dpi = 160)
-
-
-# 
-# p5 <- ggplot() +
-#   geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = p_lminatus)) +
-#   scale_fill_viridis(direction = -1, limits = c(0, max(spreddf$p_lminatus))) +
-#   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
-#   theme_minimal() +
-#   labs(x = NULL, y = NULL, fill = "L. minatus\n(MaxN)") +
-#   guides(fill = "none")
-# 
-# p51 <- ggplot() +
-#   geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_lminatus)) +
-#   scale_fill_viridis(direction = -1) +
-#   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
-#   theme_minimal() +
-#   labs(x = NULL, y = NULL, fill = "L. minatus\n(MaxN)")
-# 
-# (p3 + p31) / (p4 + p41) / (p5 + p51) + 
-#   plot_layout(widths = c(0.78,1))
-
-# ggsave("plots/site_maxn_topsp.png", width = 10, height = 8, dpi = 160)
+ggsave("plots/site_fish_predictions-npz6.png", gg.predictions.npz6,width = 10, height = 7, dpi = 160)
+ggsave("plots/site_fish_predictions-npz9.png", gg.predictions.npz9,width = 10, height = 7, dpi = 160)
