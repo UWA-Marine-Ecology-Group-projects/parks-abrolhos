@@ -213,7 +213,7 @@ bar.npz9.top.10<-ggplot(maxn.npz9.10, aes(x=reorder(scientific,maxn), y=maxn)) +
   annotation_raster(l.m, xmin=7.5, xmax=8.5, ymin=75, ymax=110)+
   annotation_raster(c.au, xmin=6.5,xmax=7.5,ymin=73, ymax=110)+
   annotation_raster(s.d, xmin=5.5,xmax=6.5,ymin=30, ymax=80)+
-  annotation_raster(p.m, xmin=4.5,xmax=5.5,ymin=29, ymax=75)+          #lots of white space to the left of this one, crop
+  annotation_raster(p.m, xmin=4.5,xmax=5.5,ymin=29, ymax=75)+          
   annotation_raster(c.a, xmin=3.65,xmax=4.25,ymin=20, ymax=50)+
   annotation_raster(p.spp, xmin=2.65,xmax=3.35,ymin=14, ymax=40)+
   annotation_raster(p.s, xmin=1.6,xmax=2.4,ymin=13, ymax=35)

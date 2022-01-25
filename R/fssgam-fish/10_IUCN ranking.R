@@ -26,21 +26,26 @@ setwd(working.dir)
 #OR set manually once
 boss <- read_csv("data/Tidy/2021-05_Abrolhos_BOSS.complete.length.csv")%>%
   mutate(scientific=paste(family,genus,species,sep=" "))%>%
+  dplyr::filter(number>0)%>%
   glimpse()
 
 boss.species <- boss %>%
-  dplyr::select(sample,family,genus,species)%>%
+  dplyr::select(sample,family,genus,species,location)%>%
+  
   unique()%>%
   glimpse()
 
-bruv <- read.delim(file = 'data/raw/EM Export/2021-05_Abrolhos_stereo-BRUVs_Points.txt')%>%   #update later with tidy bruv data
-  ga.clean.names()%>%
-  dplyr::select(opcode,family,genus,species)%>%
-  dplyr::rename(sample = opcode)%>%
+bruv <- read_csv("data/Tidy/2021-05_Abrolhos_stereo-BRUVs.complete.length.csv")%>%
+  mutate(scientific=paste(family,genus,species,sep=" "))%>%
+  dplyr::filter(number>0)%>%
+  glimpse()
+
+bruv.species <- bruv %>%
+  dplyr::select(sample,family,genus,species,location)%>%
   unique()%>%
   glimpse()
 
-species.list <- bind_rows(bruv,boss.species)%>%
+species.list <- bind_rows(bruv.species,boss.species)%>%
   dplyr::select(-sample)%>%
   dplyr::mutate(scientific = paste(family,genus,species, sep = " "))%>%
   unique()%>%
@@ -73,7 +78,20 @@ fished.species <- species.list %>%
   dplyr::mutate(minlegal.wa = ifelse(scientific %in% c("Lethrinidae Unknown spp"), "280", minlegal.wa))%>%
   dplyr::mutate(minlegal.wa = ifelse(scientific %in% c("Platycephalidae Platycephalus spp"), "280", minlegal.wa))%>%
   dplyr::filter(fishing.type %in% c("B/R","B/C/R","R","C/R","C"))%>%
-  dplyr::filter(!family%in%c("Monacanthidae", "Scorpididae", "Mullidae"))
+  dplyr::filter(!family%in%c("Monacanthidae", "Scorpididae", "Mullidae"))%>%
+  dplyr::select(location,scientific,fishing.type,australian.common.name)%>%
+  glimpse()
+
+npz6.fished <- fished.species %>%
+  dplyr::filter(location%in%"NPZ6")%>%
+  glimpse()
+
+npz9.fished <- fished.species %>%
+  dplyr::filter(location%in%"NPZ9")%>%
+  glimpse()
+
+write.csv(npz6.fished, file = "output/fssgam - fish/npz6-fished-species.csv")
+write.csv(npz9.fished, file = "output/fssgam - fish/npz9-fished-species.csv")
 
 iucn.species <- species.list %>%
   dplyr::left_join(master) %>%
