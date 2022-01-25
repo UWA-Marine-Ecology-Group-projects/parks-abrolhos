@@ -13,6 +13,7 @@ library(mgcv)
 library(ggplot2)
 library(viridis)
 library(raster)
+library(dplyr)
 
 # read in
 dat1 <- readRDS("data/Tidy/dat.maxn.rds")%>%
@@ -48,22 +49,18 @@ m_totabund <- gam(number ~ s(relief, k = 3, bs = "cr")+s(slope, k = 3, bs = "cr"
                method = "REML", family = tw())
 summary(m_totabund)
 
-m_richness <- gam(number ~ s(depth, k = 3, bs = "cr")  + 
-                       s(detrended, k = 3, bs = "cr") + 
-                       s(biog, k = 3, bs = "cr"),  # not necessarily the top model
+m_richness <- gam(number ~ s(depth, k = 3, bs = "cr"),  # not necessarily the top model
                      data = fabund%>%dplyr::filter(scientific%in%"species.richness",location%in%"NPZ6"), 
                      method = "REML", family = tw())
 summary(m_richness)
 # gam.check(m_targetabund)
 # vis.gam(m_targetabund)
-m_legal <- gam(number ~ s(slope, k = 3, bs = "cr")  + 
-                    s(tpi, k = 3, bs = "cr"),  # not necessarily the top model
+m_legal <- gam(number ~ s(slope, k = 3, bs = "cr"),  # not necessarily the top model
                   data = fabund%>%dplyr::filter(scientific%in%"greater than legal size",location%in%"NPZ6"), 
                   method = "REML", family = tw())
 summary(m_legal)
 
-m_sublegal <- gam(number ~ s(detrended, k = 3, bs = "cr")  + 
-                 s(slope, k = 3, bs = "cr"),  # not necessarily the top model
+m_sublegal <- gam(number ~ s(depth, k = 3, bs = "cr"),  # not necessarily the top model
                data = fabund%>%dplyr::filter(scientific%in%"greater than legal size",location%in%"NPZ6"), 
                method = "REML", family = tw())
 summary(m_sublegal)
@@ -71,11 +68,11 @@ summary(m_sublegal)
 # predict, rasterise and plot
 preddf <- cbind(preddf, 
                 "p_totabund" = predict(m_totabund, preddf, type = "response"),
-                "p_argetabund" = predict(m_richness, preddf, type = "response"),
-                "p_richness" = predict(m_legal, preddf, type = "response"),
-                "p_cauricularis" = predict(m_sublegal, preddf, type = "response"))
+                "p_richness" = predict(m_richness, preddf, type = "response"),
+                "p_legal" = predict(m_legal, preddf, type = "response"),
+                "p_sublegal" = predict(m_sublegal, preddf, type = "response"))
 
-prasts <- rasterFromXYZ(preddf[, c(1, 2, 27:32)], res = c(247, 277))
+prasts <- rasterFromXYZ(preddf[, c(1, 2, 27:30)], res = c(247, 277))
 plot(prasts)
 
 # subset to 10km from sites only
