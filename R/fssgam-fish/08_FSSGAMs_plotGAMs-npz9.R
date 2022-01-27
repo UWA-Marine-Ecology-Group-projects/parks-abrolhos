@@ -230,7 +230,7 @@ plot.grid.npz9 <- plot_grid(ggmod.total.relief, ggmod.total.slope,
                             ggmod.species.depth,NULL,
                             ggmod.legal.slope, NULL,
                             ggmod.sublegal.depth, NULL,
-                            ncol = 2, labels = c('a','b','c','','d',''),align = "vh")
+                            ncol = 2, labels = c('a','b','c','','d','','e',''),align = "vh")
 plot.grid.npz9
 
 #Save plots

@@ -39,6 +39,7 @@ p11 <- ggplot() +
   scale_fill_viridis(direction = -1) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
+  scale_x_continuous(breaks = c(113.2,113.4,113.6))+
   labs(x = NULL, y = NULL, fill = "Total Abundance")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
 p11
@@ -49,6 +50,7 @@ p21 <- ggplot() +
   scale_fill_viridis(direction = -1) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
+  scale_x_continuous(breaks = c(113.2,113.4,113.6))+
   labs(x = NULL, y = NULL, fill = "Species Richness")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
 p21
@@ -59,7 +61,8 @@ p31 <- ggplot() +
   scale_fill_viridis(direction = -1) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Greater than legal size")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+  scale_x_continuous(breaks = c(113.2,113.4,113.6))+
+  labs(x = NULL, y = NULL, fill = "Legal")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
 p31
 
@@ -69,7 +72,8 @@ p41 <- ggplot() +
   scale_fill_viridis(direction = -1) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Smaller than legal size")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+  scale_x_continuous(breaks = c(113.2,113.4,113.6))+
+  labs(x = NULL, y = NULL, fill = "Sublegal")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
 p41
 
@@ -101,7 +105,7 @@ p3 <- ggplot() +
   scale_fill_viridis(direction = -1) +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Greater than legal size") +
+  labs(x = NULL, y = NULL, fill = "Legal") +
   scale_x_continuous(breaks = c(113,113.10,113.2,113.3))+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
 p3
@@ -112,17 +116,18 @@ p4 <- ggplot() +
   scale_fill_viridis(direction = -1) +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Smaller than legal size") +
+  labs(x = NULL, y = NULL, fill = "Sublegal") +
   scale_x_continuous(breaks = c(113,113.10,113.2,113.3))+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
 p4
 
-gg.predictions.npz6 <- plot_grid(NULL,NULL,p11,p21,NULL,NULL,p31,p41,NULL,NULL,
-                                 ncol = 2, align = "vh",rel_heights = c(-0.3,1,-0.5,1,0))
+# gg.predictions.npz6 <- plot_grid(NULL,NULL,p11,p21,NULL,NULL,p31,p41,NULL,NULL,
+#                                  ncol = 2, align = "vh",rel_heights = c(-0.3,1,-0.5,1,0))
+
+gg.predictions.npz6 <- p11+p21+p31+p41 & theme(legend.justification = "left", aspect.ratio=1)
 gg.predictions.npz6
 
-gg.predictions.npz9 <- plot_grid(p1,p2,p3,p4,
-                                 ncol = 2)
+gg.predictions.npz9 <- p1+p2+p3+p4 & theme(legend.justification = "left", aspect.ratio=1)
 gg.predictions.npz9
 
 ggsave("plots/site_fish_predictions-npz6.png", gg.predictions.npz6,width = 10, height = 7, dpi = 160)
