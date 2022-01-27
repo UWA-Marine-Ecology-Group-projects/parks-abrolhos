@@ -93,11 +93,11 @@ preddf <- cbind(preddf,
                 "pbiogenic" = predict(m_biogenic, preddf, type = "response"))
 
 prasts <- rasterFromXYZ(preddf, res = c(247, 277))
-prasts$dom_tag <- which.max(prasts[[10:14]])
+prasts$dom_tag <- which.max(prasts[[11:15]])
 plot(prasts)
 
 # categorise by dominant tag
-preddf$dom_tag <- apply(preddf[12:16], 1,
+preddf$dom_tag <- apply(preddf[13:17], 1,
                         FUN = function(x){names(which.max(x))})
 preddf$dom_tag <- sub('.', '', preddf$dom_tag)
 head(preddf)
@@ -108,7 +108,7 @@ plot(sprast)
 
 # tidy and output data
 spreddf         <- as.data.frame(sprast, xy = TRUE, na.rm = TRUE)
-spreddf$dom_tag <- (names(spreddf)[12:16])[spreddf$dom_tag]
+spreddf$dom_tag <- (names(spreddf)[13:17])[spreddf$dom_tag]
 
 saveRDS(preddf, "output/broad_habitat_predictions.rds")
 saveRDS(spreddf, "output/site_habitat_predictions.rds")

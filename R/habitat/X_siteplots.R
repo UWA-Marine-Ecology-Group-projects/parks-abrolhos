@@ -11,6 +11,7 @@ library(sf)
 library(rgeos)
 library(rnaturalearth)
 library(ggplot2)
+library(metR)
 library(googlesheets4)
 library(patchwork)
 library(raster)
@@ -46,32 +47,32 @@ ab_mpa$waname[ab_mpa$NAME == "Abrolhos Islands"] <- "Fish Habitat Protection Are
 ab_mpa$waname <- dplyr::recode(ab_mpa$waname, 
                                "General Use" = "General Use Zone",
                                # "MMA" = "Marine Management Area",
-                               "Recreation Area" = "Recreation Zone",
+                               # "Recreation Area" = "Recreation Zone",
                                # "Conservation Area" = "Sanctuary Zone",
                                "Special Purpose Zone (Shore Based Activities)" = 
                                  "Special Purpose Zone\n(Shore Based Activities)")
 
 
 # assign mpa colours
-nmpa_cols <- scale_fill_manual(values = c("Habitat Protection Zone" = "#fff8a3",# Commonwealth MPA colours
+nmpa_cols <- scale_fill_manual(values = c("National Park Zone" = "#7bbc63",
+                                          "Habitat Protection Zone" = "#fff8a3",# Commonwealth MPA colours
                                           # "Habitat Protection Zone (Reefs)" = "#fbff85",
-                                          "National Park Zone" = "#7bbc63",
                                           "Multiple Use Zone" = "#b9e6fb",
-                                          "Recreational Use Zone" = "#ffb36b",
-                                          "Sanctuary Zone" = "#f7c0d8",
+                                          # "Recreational Use Zone" = "#ffb36b",
+                                          # "Sanctuary Zone" = "#f7c0d8",
                                           # "Special Purpose Zone (Mining Exclusion)" = "#368ac1",
                                           # "Special Purpose Zone (Trawl)" = "#3e8ec4",
                                           "Special Purpose Zone" = "#6daff4"
 ))
 
-wampa_cols <- scale_fill_manual(values = c(# "Habitat Protection Zone" = "#fffbcc",# State MPA colours
+wampa_cols <- scale_fill_manual(values = c("Sanctuary Zone" = "#bfd054",
+                                           "Marine Nature Reserve" = "#bfd054",
+                                           "Conservation Area" = "#b3a63d",
+                                           # "Habitat Protection Zone" = "#fffbcc",# State MPA colours
                                            "Fish Habitat Protection Area" = "#fbff85",
                                            # "National Park Zone" = "#a4d194",
                                            "General Use Zone" = "#bddde1",
                                            "Recreation Zone" = "#f4e952",
-                                           "Sanctuary Zone" = "#bfd054",
-                                           "Marine Nature Reserve" = "#bfd054",
-                                           "Conservation Area" = "#b3a63d",
                                            "Special Purpose Zone" = "#c5bcc9",
                                            # "Special Purpose Zone\n(Shore Based Activities)" = "#ba3030"
                                            # "Special Purpose Zone\n(Habitat Protection)" = "#f0ac41",
@@ -81,28 +82,35 @@ wampa_cols <- scale_fill_manual(values = c(# "Habitat Protection Zone" = "#fffbc
 
 # build basic plot elements
 p1 <- ggplot() +
-  geom_raster(data = bathdf, aes(x, y, fill = Depth), alpha = 0.9) +
-  scale_fill_gradient(low = "black", high = "grey70") +
-  geom_contour(data = bathdf, aes(x = x, y = y, z = Depth), 
-               binwidth = 250, colour = "white", alpha = 3/5, size = 0.1) +
+  # geom_raster(data = bathdf, aes(x, y, fill = Depth), alpha = 0.9) +
+  # scale_fill_gradient(low = "black", high = "grey70") +
+  geom_contour_filled(data = bathdf, aes(x = x, y = y, z = Depth,
+                                         fill = after_stat(level)),
+                      breaks = c(0, -40, -70, -120, -7000)) +
+  # geom_contour(data = bathdf, aes(x = x, y = y, z = Depth), 
+               # binwidth = 250, colour = "white", alpha = 3/5, size = 0.1) +
+  scale_fill_grey(start = 1, end = 0.5, guide = "none") +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
   geom_sf(data = dirkh, fill = "seashell2", colour = "grey80", size = 0.1) +
   new_scale_fill() +
-  geom_sf(data = ab_mpa, aes(fill = waname), alpha = 3/5, colour = NA) +
+  geom_sf(data = ab_mpa, aes(fill = waname), alpha = 2/5, colour = NA) +
   geom_sf(data = roas, aes(fill = Type), alpha = 3/5, colour = NA) +
   wampa_cols + 
-  labs(fill = "State") +
+  labs(fill = "State Marine Parks") +
   new_scale_fill() +
   geom_sf(data = ab_nmp, aes(fill = ZoneName), alpha = 4/5, colour = NA) +
-  geom_sf(data = cwatr, colour = "firebrick", alpha = 4/5, size = 0.2) +
   nmpa_cols + 
-  labs(x = NULL, y = NULL, fill = "Commonwealth") +
+  geom_sf(data = cwatr, colour = "firebrick", alpha = 4/5, size = 0.2) +
+  geom_contour(data = bathdf, aes(x, y, z = Depth),
+               breaks = c(0, -40, -70, -120), colour = "white", 
+               alpha = 1, size = 0.1) +
+  labs(x = NULL, y = NULL, fill = "Australian Marine Parks") +
   guides(fill = guide_legend(order = 1)) +
   annotate("rect", xmin = 112.5, xmax = 114.5, ymin = -28.3, ymax = -27, 
-           colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
+           colour = "grey15", fill = "white", alpha = 0.1, size = 0.1) +
   coord_sf(xlim = c(108.8, 115.5), ylim = c(-29.3, -24.5)) +
   theme_minimal()
-# p1
+p1
 
 # inset map
 p2 <- ggplot(data = aus) +
@@ -122,7 +130,7 @@ p2 <- ggplot(data = aus) +
 # plot both 
 p2 + p1 + plot_layout(widths = c(0.8, 2.2))
 
-ggsave("plots/locplot.png", dpi = 200, width = 12, height = 9)
+ggsave("plots/locplot.png", dpi = 200, width = 10, height = 6)
 
 
 # site zoom plots
@@ -132,7 +140,6 @@ bossd <- readRDS('data/2105_abrolhos_boss.rds')
 bruvd <- readRDS('data/2105_abrolhos_bruv.rds')
 
 # reduce mpa levels for these plots
-
 snmpa_cols <- scale_fill_manual(values = c("National Park Zone" = "#7bbc63",
                                           "Multiple Use Zone" = "#b9e6fb",
                                           "Special Purpose Zone" = "#6daff4"
@@ -145,20 +152,21 @@ swampa_cols <- scale_fill_manual(values = c(
 # closer plot
 sitebathy <- readRDS('output/ga_bathy_fine.rds')                                # finer bathy
 colnames(sitebathy)[3] <- "Depth"
-sitebathy <- sitebathy[sitebathy$Depth > -3100, ]                               # trim to reduce legend
+sitebathy <- sitebathy[sitebathy$Depth > -1000, ]                               # trim to reduce legend
+sitebathy <- sitebathy[sitebathy$x > 112.5 & sitebathy$x < 114.4, ]
+sitebathy <- sitebathy[sitebathy$y > -28.4 & sitebathy$y < -26.8, ]
 
 p3 <- ggplot() +
   geom_raster(data = sitebathy, aes(x, y, fill = Depth), alpha = 4/5) +
-  scale_fill_gradient(low = "black", high = "grey70") +
-  geom_contour(data = sitebathy, aes(x = x, y = y, z = Depth), 
-               binwidth = 250, colour = "white", alpha = 3/5, size = 0.1) +
+  scale_fill_gradient(low = "black", high = "grey70", guide = "none") +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
   new_scale_fill() +
-  geom_sf(data = ab_mpa, aes(fill = waname), alpha = 3/5, colour = NA) +
-  swampa_cols + labs(fill = "State") +
-  new_scale_fill() +
-  geom_sf(data = ab_nmp, aes(fill = ZoneName), alpha = 4/5, colour = NA) +
-  snmpa_cols + labs(x = NULL, y = NULL, fill = "Commonwealth") +
+  geom_sf(data = ab_nmp, aes(fill = ZoneName), alpha = 3/5, colour = NA) +
+  snmpa_cols + labs(x = NULL, y = NULL, fill = "Australian Marine Park") +
+  geom_contour(data = sitebathy, aes(x = x, y = y, z = Depth), 
+               binwidth = 50, colour = "white", alpha = 4/5, size = 0.1) +
+  geom_text_contour(data = sitebathy, aes(x = x, y = y, z = Depth), 
+                    binwidth = 100, size = 2.5, label.placer = label_placer_n(1)) +
   geom_point(data = bruvd, aes(Longitude, Latitude, colour = "BRUV"), 
              alpha = 3/5, shape = 10) +
   geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"), 
@@ -166,7 +174,7 @@ p3 <- ggplot() +
   geom_sf(data = cwatr, colour = "firebrick", alpha = 4/5, size = 0.2) +
   scale_colour_manual(values = c("BRUV" = "indianred4",
                                  "Drop Camera" = "seagreen4")) +
-  annotate("rect", xmin = 113.02, xmax = 113.28, ymin = -27.19, ymax = -27.08,
+  annotate("rect", xmin = 113.02, xmax = 113.29, ymin = -27.19, ymax = -27.08,
            colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
   annotate("text", x = 113.15, y = -27.05, size = 3, 
            colour = "grey20", label = "swabrnpz09") +
@@ -174,42 +182,79 @@ p3 <- ggplot() +
            colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
   annotate("text", x = 113.42, y = -27.99, size = 3,
            colour = "grey20", label = "swabrnpz06") +
-  coord_sf(xlim = c(112.5, 114.5), ylim = c(-28.2, -27)) +
+  coord_sf(xlim = c(112.8, 114.2), ylim = c(-28.1, -27.05)) +
   labs(colour = "Sample", x = NULL, y = NULL) +
   theme_minimal()
 p3
 
-ggsave("plots/siteplot.png", dpi = 200, width = 10, height = 8)
+ggsave("plots/siteplot.png", dpi = 200, width = 8, height = 6)
 
 ## single site zoom plots
+snmpa_cols <- scale_colour_manual(values = c("National Park Zone" = "#7bbc63"))
 
-snmpa_cols <- scale_fill_manual(values = c("National Park Zone" = "#7bbc63",
-                                           "Multiple Use Zone" = "#b9e6fb",
-                                           "Special Purpose Zone" = "#6daff4"
-))
+nsitebathy <- sitebathy[sitebathy$Depth > -160, ]                               # trim to reduce legend
+nsitebathy <- nsitebathy[nsitebathy$x > 113 & nsitebathy$x < 113.3, ]
+nsitebathy <- nsitebathy[nsitebathy$y > -27.2 & nsitebathy$y < -27.05, ]
 
-ssitebathy <- sitebathy[sitebathy$Depth < -10 & sitebathy$Depth > -380, ]                               # trim to reduce legend
 
-p5 <- ggplot() +
-  geom_raster(data = ssitebathy, aes(x, y, fill = Depth), alpha = 4/5) +
-  scale_fill_gradient(low = "black", high = "grey70") +
-  geom_contour(data = ssitebathy, aes(x = x, y = y, z = Depth), 
-               binwidth = 10, colour = "white", alpha = 4/5, size = 0.1) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  new_scale_fill() +
-  geom_sf(data = ab_nmp, aes(fill = ZoneName), alpha = 1/5, colour = NA) +
-  snmpa_cols + labs(x = NULL, y = NULL, fill = "Commonwealth") +
+p4 <- ggplot() +
+  geom_raster(data = nsitebathy, aes(x, y, fill = Depth), alpha = 4/5) +
+  scale_fill_gradient(low = "black", high = "grey70", guide = "none") +
+  geom_contour(data = nsitebathy, aes(x = x, y = y, z = Depth), 
+               binwidth = 10, colour = "white", alpha = 1, size = 0.1) +
+  geom_text_contour(data = nsitebathy, aes(x = x, y = y, z = Depth), 
+                    binwidth = 10, size = 2.5,
+                    label.placer = label_placer_n(1)) +
+  geom_sf(data = ab_nmp, aes(colour = ZoneName), alpha = 4/5, fill = NA) +
+  snmpa_cols + 
+  labs(x = NULL, y = NULL, colour = NULL) +
+  new_scale_colour() +
   geom_point(data = bruvd, aes(Longitude, Latitude, colour = "BRUV"), 
              alpha = 3/5, shape = 10) +
   geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"), 
              alpha = 3/5, shape = 10) +
   scale_colour_manual(values = c("BRUV" = "indianred4",
                                  "Drop Camera" = "navyblue")) +
-  coord_sf(xlim = c(113.24, 113.58), ylim = c(-28.13, -28.02)) +
-  labs(colour = "Sample", x = NULL, y = NULL) +
+  coord_sf(xlim = c(113.02, 113.28), ylim = c(-27.18, -27.08)) +
+  labs(colour = NULL, x = NULL, y = NULL) +
+  theme_minimal()
+p4
+ggsave("plots/nthsite.png", dpi = 200, width = 7, height = 4)
+
+
+snmpa_cols <- scale_colour_manual(values = c("National Park Zone" = "#7bbc63"
+                                          #  "Multiple Use Zone" = "#b9e6fb",
+                                          # "Special Purpose Zone" = "#6daff4"
+))
+sab_nmp <- ab_nmp[ab_nmp$ZoneName == "National Park Zone", ]
+
+ssitebathy <- sitebathy[sitebathy$Depth < -10 & sitebathy$Depth > -380, ]                               # trim to reduce legend
+ssitebathy <- ssitebathy[ssitebathy$x > 113.23 & ssitebathy$x < 113.6, ]
+ssitebathy <- ssitebathy[ssitebathy$y > -28.15 & ssitebathy$y < -28, ]
+
+p5 <- ggplot() +
+  geom_raster(data = ssitebathy, aes(x, y, fill = Depth), alpha = 4/5) +
+  scale_fill_gradient(low = "black", high = "grey70", guide = "none") +
+  geom_contour(data = ssitebathy, aes(x = x, y = y, z = Depth), 
+               binwidth = 20, colour = "white", alpha = 4/5, size = 0.1) +
+  geom_text_contour(data = ssitebathy, aes(x = x, y = y, z = Depth), 
+                    binwidth = 20, size = 2.5, label.placer = label_placer_n(1)) +
+  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+  geom_sf(data = sab_nmp, aes(colour = ZoneName), alpha = 1, fill = NA) +
+  snmpa_cols + 
+  labs(x = NULL, y = NULL, colour = NULL) +
+  new_scale_colour() +
+  geom_point(data = bruvd, aes(Longitude, Latitude, colour = "BRUV"), 
+             alpha = 3/5, shape = 10) +
+  geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"), 
+             alpha = 3/5, shape = 10) +
+  scale_colour_manual(values = c("BRUV" = "indianred4",
+                                 "Drop Camera" = "navyblue")) +
+  coord_sf(xlim = c(113.24, 113.58), ylim = c(-28.125, -28.03)) +
+  labs(colour = NULL, x = NULL, y = NULL) +
   theme_minimal()
 p5
 
-ggsave("plots/sthsite.png", dpi = 200, width = 10, height = 8)
+ggsave("plots/sthsite.png", dpi = 200, width = 7, height = 4)
 
 

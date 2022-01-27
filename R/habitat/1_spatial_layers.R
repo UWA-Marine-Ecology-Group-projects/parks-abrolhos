@@ -58,6 +58,21 @@ names(detre) <- c("detrended", "lineartrend")
 preds <- stack(preds, detre)
 plot(preds)
 
+# add status in NPZ areas
+aumpa  <- st_read("data/spatial/shp/AustraliaNetworkMarineParks.shp")           # all aus mpas
+sw_mpa <- aumpa[aumpa$ResName %in% c("Abrolhos"), ]                             # just Abrolhos Aus MP
+ab_npz <- sw_mpa[sw_mpa$ZoneName == "National Park Zone", ]
+ab_npz$parkid <- c(1:3) 
+ab_npz <- st_transform(ab_npz, sppcrs)
+status <- preds[[1]]
+status[] <- 1
+innpz <- mask(status, ab_npz)
+status[] <- 0
+status <- cover(innpz, status)
+plot(status)
+names(status) <- "status"
+preds <- stack(preds, status)
+
 saveRDS(preds, "data/spatial/spatial_covariates.rds")
 
 
