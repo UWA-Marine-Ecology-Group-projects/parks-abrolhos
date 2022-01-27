@@ -145,9 +145,10 @@ bar.npz6<-ggplot(maxn.npz6.10, aes(x=reorder(scientific,maxn), y=maxn)) +
 bar.npz6
 
 ## Top ten plot ----
-bar.npz6.top.10<-ggplot(maxn.npz6.10, aes(x=reorder(scientific,maxn), y=maxn)) +   
+bar.npz6.top.10<-ggplot(maxn.npz6.10%>%mutate(scientific=str_replace_all(.$scientific,
+  c("miniatus"="miniatus*","auratus"="auratus*","rubescens"="rubescens*","nebulosus"="nebulosus*"))), aes(x=reorder(scientific,maxn), y=maxn)) +   
   geom_bar(stat="identity",colour="black",fill="lightgrey",position=position_dodge())+
-  ylim (0, 1200)+
+  ylim (0, 1140)+
   coord_flip()+
   xlab("Species")+
   ylab(expression(Overall~abundance~(Sigma~MaxN)))+
@@ -155,16 +156,16 @@ bar.npz6.top.10<-ggplot(maxn.npz6.10, aes(x=reorder(scientific,maxn), y=maxn)) +
   theme(axis.text.y = element_text(face="italic"))+
   theme_collapse+
   theme.larger.text+
-  annotation_raster(c.w, xmin=9.7,xmax=10.2,ymin=1080, ymax=1170)+
-  annotation_raster(c.a, xmin=8.65,xmax=9.35,ymin=785, ymax=975)+
-  annotation_raster(l.m, xmin=7.5, xmax=8.5, ymin=100, ymax=310)+
-  annotation_raster(c.au, xmin=6.5,xmax=7.5,ymin=90, ymax=320)+
-  annotation_raster(p.s, xmin=5.7,xmax=6.3,ymin=60, ymax=190)+
-  annotation_raster(c.r, xmin=4.6,xmax=5.4,ymin=50, ymax=240)+
-  annotation_raster(s.c, xmin=3.8,xmax=4.2,ymin=45, ymax=140)+
-  annotation_raster(n.o, xmin=2.75,xmax=3.25,ymin=45, ymax=150)+
-  annotation_raster(p.n, xmin=1.72,xmax=2.25,ymin=35, ymax=160)+
-  annotation_raster(l.n, xmin=0.5,xmax=1.5,ymin=35, ymax=245)
+  annotation_raster(c.w, xmin=9.7,xmax=10.2,ymin=1080, ymax=1190)+
+  annotation_raster(c.a, xmin=8.65,xmax=9.35,ymin=785, ymax=995)+
+  annotation_raster(l.m, xmin=7.5, xmax=8.5, ymin=100, ymax=330)+
+  annotation_raster(c.au, xmin=6.5,xmax=7.5,ymin=90, ymax=340)+
+  annotation_raster(p.s, xmin=5.7,xmax=6.3,ymin=60, ymax=210)+
+  annotation_raster(c.r, xmin=4.6,xmax=5.4,ymin=55, ymax=265)+
+  annotation_raster(s.c, xmin=3.8,xmax=4.2,ymin=45, ymax=160)+
+  annotation_raster(n.o, xmin=2.75,xmax=3.25,ymin=45, ymax=170)+
+  annotation_raster(p.n, xmin=1.72,xmax=2.25,ymin=35, ymax=180)+
+  annotation_raster(l.n, xmin=0.5,xmax=1.5,ymin=35, ymax=265)
 bar.npz6.top.10
 
 #save out plot
@@ -198,7 +199,9 @@ bar.npz9<-ggplot(maxn.npz9.10, aes(x=reorder(scientific,maxn), y=maxn)) +
 bar.npz9
 
 ## Top ten plot ----
-bar.npz9.top.10<-ggplot(maxn.npz9.10, aes(x=reorder(scientific,maxn), y=maxn)) +   
+bar.npz9.top.10<-ggplot(maxn.npz9.10%>%mutate(scientific=str_replace_all(.$scientific,
+  c("miniatus"="miniatus*","auratus"="auratus*","dumerili"="dumerili*","multidens"="multidens*","Pseudocaranx spp"="Pseudocaranx spp*"))), 
+  aes(x=reorder(scientific,maxn), y=maxn)) +   
   geom_bar(stat="identity",colour="black",fill="lightgrey",position=position_dodge())+
   ylim (0, 175)+
   coord_flip()+
@@ -216,7 +219,7 @@ bar.npz9.top.10<-ggplot(maxn.npz9.10, aes(x=reorder(scientific,maxn), y=maxn)) +
   annotation_raster(p.m, xmin=4.5,xmax=5.5,ymin=29, ymax=75)+          
   annotation_raster(c.a, xmin=3.65,xmax=4.25,ymin=20, ymax=50)+
   annotation_raster(p.spp, xmin=2.65,xmax=3.35,ymin=14, ymax=40)+
-  annotation_raster(p.s, xmin=1.6,xmax=2.4,ymin=13, ymax=35)
+  annotation_raster(p.s, xmin=1.6,xmax=2.4,ymin=13, ymax=38)
 bar.npz9.top.10
 
 #save out plot
