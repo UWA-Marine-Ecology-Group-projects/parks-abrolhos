@@ -126,6 +126,38 @@ ggmod.total.slope<- ggplot() +
   Theme1
 ggmod.total.slope
 
+# MODEL species richness (depth) ----
+dat.species <- dat %>% filter(scientific=="species.richness")
+
+mod=gam(number~s(depth,k=3,bs='cr'), family=tw,data=dat.species)
+
+# predict - slope ----
+testdata <- expand.grid(depth=seq(min(dat$depth),max(dat$depth),length.out = 20)) %>%
+  distinct()%>%
+  glimpse()
+
+fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
+
+predicts.species.depth = testdata%>%data.frame(fits)%>%
+  group_by(depth)%>% #only change here
+  summarise(number=mean(fit),se.fit=mean(se.fit))%>%
+  ungroup()
+
+# PLOTS for species richness ----
+# depth ----
+ggmod.species.depth<- ggplot() +
+  ylab("")+
+  xlab("Depth")+
+  geom_point(data=dat.species,aes(x=depth,y=number),  alpha=0.2, size=1,show.legend=F)+
+  geom_line(data=predicts.species.depth,aes(x=depth,y=number),alpha=0.5)+
+  geom_line(data=predicts.species.depth,aes(x=depth,y=number - se.fit),linetype="dashed",alpha=0.5)+
+  geom_line(data=predicts.species.depth,aes(x=depth,y=number + se.fit),linetype="dashed",alpha=0.5)+
+  theme_classic()+
+  Theme1+
+  ggtitle("Species richness") +
+  theme(plot.title = element_text(hjust = 0))
+ggmod.species.depth
+
 # MODEL Greater than legal size (slope) ----
 dat.legal <- dat %>% filter(scientific=="greater than legal size")
 
@@ -195,9 +227,9 @@ library(cowplot)
 
 # view plots
 plot.grid.npz9 <- plot_grid(ggmod.total.relief, ggmod.total.slope,
+                            ggmod.species.depth,NULL,
                             ggmod.legal.slope, NULL,
                             ggmod.sublegal.depth, NULL,
-                            NULL,NULL,
                             ncol = 2, labels = c('a','b','c','','d',''),align = "vh")
 plot.grid.npz9
 
