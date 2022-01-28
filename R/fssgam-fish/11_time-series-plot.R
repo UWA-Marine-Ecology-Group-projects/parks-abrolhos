@@ -129,29 +129,29 @@ gg.npz6.l
 
 #NPZ9
 # plot year by species richness - plus a line for MPA gazetting time ---
-gg.npz9.sr <- ggplot(data = npz9, aes(x = year, y = species.richness, fill = status))+
-  geom_errorbar(data = npz9,aes(ymin=species.richness-species.richness.se,ymax= species.richness+species.richness.se), width = 0.2,position=position_dodge(width=0.3))+
+gg.npz9.sr <- ggplot(data = npz9%>%filter(status%in%"No-take"), aes(x = year, y = species.richness, fill = status))+
+  geom_errorbar(data = npz9%>%filter(status%in%"No-take"),aes(ymin=species.richness-species.richness.se,ymax= species.richness+species.richness.se), width = 0.2,position=position_dodge(width=0.3))+
   geom_point(shape = 21,size = 2, position=position_dodge(width=0.3),stroke = 1, color = "black")+
   theme_classic()+
   scale_y_continuous(limits = c(0,8))+
   geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
   ylab("Species richness")+
   xlab("Year")+
-  scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
+  scale_fill_manual(labels = c("National Park Zone"),values=c( "#7bbc63"))+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
   Theme1
 gg.npz9.sr
 
 #greater than legal
-gg.npz9.l <- ggplot(data = npz9, aes(x = year, y = legal, fill = status))+
-  geom_errorbar(data = npz9,aes(ymin=legal-legal.se,ymax= legal+legal.se), width = 0.2,position=position_dodge(width=0.3))+
+gg.npz9.l <- ggplot(data = npz9%>%filter(status%in%"No-take"), aes(x = year, y = legal, fill = status))+
+  geom_errorbar(data = npz9%>%filter(status%in%"No-take"),aes(ymin=legal-legal.se,ymax= legal+legal.se), width = 0.2,position=position_dodge(width=0.3))+
   geom_point(shape = 21,size = 2, position=position_dodge(width=0.3),stroke = 1, color = "black")+
   theme_classic()+
   scale_y_continuous(limits = c(0,8))+
   geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
   ylab("Greater than legal size")+
   xlab("Year")+
-  scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
+  scale_fill_manual(labels = c("National Park Zone"),values=c("#7bbc63"))+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
   Theme1
 gg.npz9.l

@@ -51,6 +51,13 @@ species.list <- bind_rows(bruv.species,boss.species)%>%
   unique()%>%
   glimpse()
 
+num.fish <- bind_rows(bruv,boss)%>%
+  summarise(fish = sum(number))
+
+length(unique(species.list$scientific)) #90 species
+length(unique(species.list$genus)) #55 genera
+length(unique(species.list$family)) #35 families
+
 # Read in life history
 url <- "https://docs.google.com/spreadsheets/d/1SMLvR9t8_F-gXapR2EemQMEPSw_bUbPLcXd3lJ5g5Bo/edit?ts=5e6f36e2#gid=825736197"
 

@@ -14,6 +14,7 @@ library(ggplot2)
 library(viridis)
 library(raster)
 library(dplyr)
+library(stringr)
 
 # read in
 dat1 <- readRDS("data/Tidy/dat.maxn.rds")%>%
@@ -21,7 +22,9 @@ dat1 <- readRDS("data/Tidy/dat.maxn.rds")%>%
   glimpse()
 dat2 <- readRDS("data/Tidy/dat.length.rds")
 fabund <- bind_rows(dat1,dat2)                        # merged fish data used for fssgam script
-preds  <- readRDS("output/broad_habitat_predictions.rds")                       # spatial and habitat covs
+preds  <- readRDS("output/broad_habitat_predictions.rds") %>%# spatial and habitat covs
+  dplyr::mutate(status = str_replace_all(.$status,c("0"="Fished","1"="No-take")))
+
 prel   <- readRDS("output/predicted_relief_raster.rds")                         # predicted relief from 'R/habitat/5_krige_relief.R'
 
 # join habitat and relief predictions
@@ -41,10 +44,6 @@ fishsp <- SpatialPointsDataFrame(coords = cbind(fabund$longitude.1,
 sbuff  <- buffer(fishsp, 10000)
 unique(fabund$scientific)
 
-#add in status
-
-
-
 # use formula from top model from FSSGam model selection
 #NPZ6
 #total abundance
@@ -59,7 +58,7 @@ m_richness6 <- gam(number ~ s(depth, k = 3, bs = "cr"),  # not necessarily the t
 summary(m_richness6)
 # gam.check(m_targetabund)
 # vis.gam(m_targetabund)
-m_legal6 <- gam(number ~ s(detrended, k = 3, bs = "cr"),  # not necessarily the top model
+m_legal6 <- gam(number ~ s(detrended, k = 3, bs = "cr")+status,  # not necessarily the top model
                   data = fabund%>%dplyr::filter(scientific%in%"greater than legal size",location%in%"NPZ6"), 
                   method = "REML", family = tw())
 summary(m_legal6)
@@ -105,7 +104,7 @@ preddf <- cbind(preddf,
                 "p_legal9" = predict(m_legal9, preddf, type = "response"),
                 "p_sublegal9" = predict(m_sublegal9, preddf, type = "response"))
 
-prasts <- rasterFromXYZ(preddf[, c(1, 2, 27:34)], res = c(247, 277)) 
+prasts <- rasterFromXYZ(preddf[, c(1, 2, 28:35)], res = c(247, 277)) 
 plot(prasts)
 
 # subset to 10km from sites only

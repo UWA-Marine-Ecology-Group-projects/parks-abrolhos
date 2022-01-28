@@ -130,6 +130,26 @@ maxn.npz6.10<-maxn%>%
   dplyr::filter(!scientific %in% c('Unknown spp', 'SUS sus'))%>%
   glimpse()
 
+test1<-maxn%>%
+  dplyr::filter(location%in%"NPZ6"&status%in%"Fished")%>%
+  mutate(scientific=paste(genus,species,sep=" "))%>%
+  group_by(scientific)%>%
+  dplyr::summarise(maxn=sum(maxn))%>%
+  ungroup()%>%
+  top_n(11)%>%
+  dplyr::filter(!scientific %in% c('Unknown spp', 'SUS sus'))%>%
+  glimpse()
+
+test2<-maxn%>%
+  dplyr::filter(location%in%"NPZ6"&status%in%"No-take")%>%
+  mutate(scientific=paste(genus,species,sep=" "))%>%
+  group_by(scientific)%>%
+  dplyr::summarise(maxn=sum(maxn))%>%
+  ungroup()%>%
+  top_n(11)%>%
+  dplyr::filter(!scientific %in% c('Unknown spp', 'SUS sus'))%>%
+  glimpse()
+
 ## Total frequency of occurance 
 # I think we could remove this section - but maybe good to see sometimes
 bar.npz6<-ggplot(maxn.npz6.10, aes(x=reorder(scientific,maxn), y=maxn)) +   
