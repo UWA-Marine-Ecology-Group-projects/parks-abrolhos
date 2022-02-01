@@ -70,7 +70,7 @@ summary(m_sublegal6)
 
 #NPZ9
 #total abundance
-m_totabund9 <- gam(number ~ s(relief, k = 3, bs = "cr")+s(slope, k = 3, bs = "cr"), 
+m_totabund9 <- gam(number ~ s(relief, k = 3, bs = "cr")+s(roughness, k = 3, bs = "cr"), 
                   data = fabund%>%dplyr::filter(scientific%in%"total.abundance",location%in%"NPZ9"), 
                   method = "REML", family = tw())
 summary(m_totabund9)
@@ -81,17 +81,15 @@ m_richness9 <- gam(number ~ s(depth, k = 3, bs = "cr"),  # not necessarily the t
 summary(m_richness9)
 # gam.check(m_targetabund)
 # vis.gam(m_targetabund)
-m_legal9 <- gam(number ~ s(slope, k = 3, bs = "cr"),  # not necessarily the top model
+m_legal9 <- gam(number ~ s(roughness, k = 3, bs = "cr"),  # not necessarily the top model
                data = fabund%>%dplyr::filter(scientific%in%"greater than legal size",location%in%"NPZ9"), 
                method = "REML", family = tw())
 summary(m_legal9)
 
-m_sublegal9 <- gam(number ~ s(depth, k = 3, bs = "cr"),  # not necessarily the top model
+m_sublegal9 <- gam(number ~ s(depth, k = 3, bs = "cr")+s(roughness, k = 3, bs = "cr"),  # not necessarily the top model
                   data = fabund%>%dplyr::filter(scientific%in%"smaller than legal size",location%in%"NPZ9"), 
                   method = "REML", family = tw())
 summary(m_sublegal9)
-
-hist(preddf$slope)
 
 # predict, rasterise and plot
 preddf <- cbind(preddf, 

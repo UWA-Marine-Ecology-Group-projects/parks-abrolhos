@@ -40,7 +40,7 @@ dat <- readRDS("data/Tidy/dat.maxn.rds")%>%
 
 # # Re-set the predictors for modeling----
 pred.vars <- c("depth", "macroalgae",
-               "biog", "relief","tpi","slope","detrended") 
+               "biog", "relief","tpi","roughness","detrended") 
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars <- unique(as.character(dat$scientific))

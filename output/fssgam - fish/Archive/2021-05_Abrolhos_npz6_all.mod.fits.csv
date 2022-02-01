@@ -1,0 +1,11 @@
+"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","macroalgae","biog","relief","tpi","slope","detrended","status","cumsum.wi"
+"total.abundance.relief","relief",545.051078668252,557.181712787782,0.39762,NA,3.88,0,0,0,0.144,0.232,0,0,0,1,0,0,0,0,0.144
+"total.abundance.relief+tpi","relief+tpi",545.064603530485,558.974527977062,0.41095,NA,4.88,0,0.014,1.793,0.143,0.095,0,0,0,1,1,0,0,0,0.287
+"total.abundance.relief+status","relief+status",545.074408838587,558.985038169592,0.39302,NA,4.89,0,0.023,1.803,0.142,0.094,0,0,0,1,0,0,0,1,0.429
+"total.abundance.relief+status+tpi","relief+status+tpi",545.73298711995,561.340730458721,0.40517,NA,5.89,0,0.682,4.159,0.102,0.029,0,0,0,1,1,0,0,1,0.531
+"total.abundance.biog+relief","biog+relief",546.028142007892,559.943750523119,0.40564,NA,4.89,0,0.977,2.762,0.088,0.058,0,0,1,1,0,0,0,0,0.619
+"total.abundance.biog+relief+status","biog+relief+status",546.746011840029,562.350895284884,0.39906,NA,5.88,0,1.695,5.169,0.062,0.017,0,0,1,1,0,0,0,1,0.681
+"total.abundance.biog+relief+tpi","biog+relief+tpi",546.867892914745,562.577332994321,0.41583,NA,5.91,0,1.817,5.396,0.058,0.016,0,0,1,1,1,0,0,0,0.739
+"total.abundance.depth","depth",547.012007963106,557.316984173353,0.3042,NA,3,0,1.961,0.135,0.054,0.217,1,0,0,0,0,0,0,0,0.793
+"species.richness.depth","depth",342.047165383271,352.352141593518,0.53809,NA,3,0,0,0,0.426,0.788,1,0,0,0,0,0,0,0,0.426
+"species.richness.biog+detrended","biog+detrended",343.779538280211,357.57914901119,0.5191,NA,4.72,0,1.732,5.227,0.179,0.058,0,0,1,0,0,0,1,0,0.605

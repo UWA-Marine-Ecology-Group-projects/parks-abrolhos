@@ -1,10 +1,6 @@
-"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","macroalgae","biog","relief","tpi","slope","detrended","cumsum.wi"
-"greater than legal size.slope+tpi","slope+tpi",275.820287355161,287.089252072271,0.22365,NA,4.83,0,0,1.83,0.246,0.131,0,0,0,0,1,1,0,0.246
-"greater than legal size.slope","slope",276.684014544184,285.259691526322,0.14459,NA,3,0,0.864,0,0.159,0.327,0,0,0,0,0,1,0,0.405
-"greater than legal size.depth+slope","depth+slope",276.789004703771,287.19048606527,0.16844,NA,4.16,0,0.969,1.931,0.151,0.124,1,0,0,0,0,1,0,0.556
-"greater than legal size.relief+slope+tpi","relief+slope+tpi",277.474763652374,290.862721489689,0.24992,NA,6.48,0,1.654,5.603,0.107,0.02,0,0,0,1,1,1,0,0.663
-"greater than legal size.detrended+slope","detrended+slope",277.49982481876,287.495684825367,0.15519,NA,4,0,1.68,2.236,0.106,0.107,0,0,0,0,0,1,1,0.769
-"smaller than legal size.depth","depth",179.719200912874,189.698607688589,0.12503,NA,3.89,0,0,1.39,0.246,0.224,1,0,0,0,0,0,0,0.246
-"smaller than legal size.biog","biog",179.73304908583,188.308147799438,0.09117,NA,3,0,0.014,0,0.245,0.449,0,0,1,0,0,0,0,0.491
-"smaller than legal size.detrended+slope","detrended+slope",179.908119659887,191.203043123372,0.16686,NA,4.92,0,0.189,2.895,0.224,0.106,0,0,0,0,0,1,1,0.715
-"smaller than legal size.depth+slope","depth+slope",180.862956745032,192.163910444109,0.20238,NA,4.96,0,1.144,3.856,0.139,0.065,1,0,0,0,0,1,0,0.854
+,modname,AICc,BIC,r2.vals,r2.vals.unique,edf,edf.less.1,delta.AICc,delta.BIC,wi.AICc,wi.BIC,depth,macroalgae,biog,relief,tpi,roughness,detrended,cumsum.wi
+greater than legal size.roughness+tpi,roughness+tpi,274.4255451,285.7031652,0.24959,NA,4.86,0,0,1.191,0.291,0.178,0,0,0,0,1,1,0,0.291
+greater than legal size.relief+roughness+tpi,relief+roughness+tpi,275.6204934,289.0049387,0.27269,NA,6.49,0,1.195,4.493,0.16,0.034,0,0,0,1,1,1,0,0.451
+greater than legal size.depth+roughness,depth+roughness,275.7767568,286.4651514,0.19179,NA,4.31,0,1.351,1.953,0.148,0.122,1,0,0,0,0,1,0,0.599
+greater than legal size.roughness,roughness,275.93686,284.5121647,0.15715,NA,3,0,1.511,0,0.137,0.324,0,0,0,0,0,1,0,0.736
+smaller than legal size,depth+roughness,177.4554092,189.2598037,0.19954,NA,5.18,0,0,0.952,0.478,0.233,1,0,0,0,0,1,0,0.478

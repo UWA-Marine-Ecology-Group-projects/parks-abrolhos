@@ -139,7 +139,7 @@ pred.vars = c("depth",
               "biog", 
               "relief",
               "tpi",
-              "slope",
+              "roughness",
               "detrended") 
 
 # predictor variables Removed at first pass---
@@ -253,7 +253,7 @@ pred.vars = c("depth",
               "biog", 
               "relief",
               "tpi",
-              "slope",
+              "roughness",
               "detrended") 
 
 # predictor variables Removed at first pass---

@@ -25,7 +25,6 @@ wgscrs <- CRS("+proj=longlat +datum=WGS84")
 sppcrs <- CRS("+proj=utm +zone=50 +south +datum=WGS84 +units=m +no_defs")     # crs for sp objects
 ab_npz <- st_transform(ab_npz, sppcrs)
 
-
 # read in outputs from 'R/habitat_fish_model_predict.R'
 # preddf <- readRDS("output/broad_habitat_predictions.rds")
 spreddf <- readRDS("output/site_fish_predictions.rds")                       # site predictions only
@@ -96,7 +95,6 @@ p2 <- ggplot() +
   theme_minimal() +
   labs(x = NULL, y = NULL, fill = "Species Richness") +
   scale_x_continuous(breaks = c(113,113.10,113.2,113.3))+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-
 p2
 
 # greater than legal size
