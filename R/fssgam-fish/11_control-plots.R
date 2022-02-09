@@ -44,7 +44,6 @@ Theme1 <-
     axis.line.y=element_line(colour="black", size=0.5,linetype='solid'),
     strip.background = element_blank())
 
-
 ## Set your working directory ----
 working.dir <- getwd()
 setwd(working.dir)
@@ -57,7 +56,7 @@ length <- readRDS("data/Tidy/dat.length.rds")%>%
   glimpse()
 
 #need to make a new dataframe - year, species richness (plus SE), greater than legal (plus SE)
-year <- c("2019","2019","2020","2020","2021","2021","2022","2022")
+year <- c("2018","2018","2019","2019","2020","2020","2021","2021","2022","2022")
 status <- c("Fished","No-take")
 dat <- data.frame(year,status)
 
@@ -122,6 +121,7 @@ gg.npz6.l <- ggplot(data = npz6, aes(x = year, y = legal, fill = status))+
   theme_classic()+
   scale_y_continuous(limits = c(0,8))+
   geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
+  geom_hline(yintercept = 0, linetype="dashed",color = "red", size=0.5,alpha = 1)+
   ylab("Greater than legal size")+
   xlab("Year")+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
@@ -154,12 +154,12 @@ gg.npz9.l <- ggplot(data = npz9%>%filter(!is.na(legal)), aes(x = year, y = legal
   theme_classic()+
   scale_y_continuous(limits = c(0,8))+
   geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
+  geom_hline(yintercept = 0, linetype="dashed",color = "red", size=0.5,alpha = 1)+
   ylab("Greater than legal size")+
   xlab("Year")+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
   Theme1
 gg.npz9.l
-
 
 # library(ggpubr)
 library(patchwork)
