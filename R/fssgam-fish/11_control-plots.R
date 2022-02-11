@@ -64,7 +64,7 @@ dat <- data.frame(year,status)
 spr.npz6.sr <- maxn %>%
   dplyr::filter(location%in%"NPZ6",scientific%in%"species.richness")%>%
   dplyr::group_by(status)%>%
-  summarise(species.richness = mean(maxn),species.richness.se=se(maxn))%>%
+  dplyr::summarise(species.richness = mean(maxn),species.richness.se=se(maxn))%>%
   dplyr::mutate(year="2021")
 
 spr.npz6.l <- length %>%
@@ -113,15 +113,16 @@ gg.npz6.sr
 #greater than legal
 gg.npz6.l <- ggplot(data = npz6, aes(x = year, y = legal, fill = status))+
   scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
-  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = 1.5),fill = "#ffeec7")+
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0.25, ymax = 1.5),fill = "#ffeec7")+
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 1.5, ymax = 2),fill = "#c7d6ff")+
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2, ymax = Inf),fill = "#caffc7")+
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = 0.25),fill = "#ffc7c7")+
   geom_errorbar(data = npz6,aes(ymin=legal-legal.se,ymax= legal+legal.se), width = 0.2,position=position_dodge(width=0.3))+
   geom_point(shape = 21,size = 2, position=position_dodge(width=0.3),stroke = 1, color = "black")+
   theme_classic()+
   scale_y_continuous(limits = c(0,8))+
   geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
-  geom_hline(yintercept = 0, linetype="dashed",color = "red", size=0.5,alpha = 1)+
+  #geom_hline(yintercept = 0, linetype="dashed",color = "red", size=0.5,alpha = 1)+
   ylab("Greater than legal size")+
   xlab("Year")+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
@@ -143,18 +144,19 @@ gg.npz9.sr <- ggplot(data = npz9%>%filter(status%in%"No-take"), aes(x = year, y 
   Theme1
 gg.npz9.sr
 
-#greater than legal
+  #greater than legal
 gg.npz9.l <- ggplot(data = npz9%>%filter(!is.na(legal)), aes(x = year, y = legal))+ # (data = npz9%>%filter(status%in%"No-take")
  scale_fill_manual(labels = c("National Park Zone"),values=c("#7bbc63"))+
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = 1.5),fill = "#ffeec7")+
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 1.5, ymax = 2),fill = "#c7d6ff")+
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2, ymax = Inf),fill = "#caffc7")+
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = 0.25),fill = "#ffc7c7")+
   geom_errorbar(data = npz9%>%filter(status%in%"No-take"),aes(ymin=legal-legal.se,ymax= legal+legal.se), width = 0.2,position=position_dodge(width=0.3))+
   geom_point(shape = 21,size = 2, position=position_dodge(width=0.3),stroke = 1, color = "black", aes(fill = status))+
   theme_classic()+
   scale_y_continuous(limits = c(0,8))+
   geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
-  geom_hline(yintercept = 0, linetype="dashed",color = "red", size=0.5,alpha = 1)+
+  #geom_hline(yintercept = 0, linetype="dashed",color = "red", size=0.5,alpha = 1)+
   ylab("Greater than legal size")+
   xlab("Year")+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
