@@ -14,11 +14,6 @@ library(GlobalArchive)
 library(tidyr)
 library(dplyr)
 library(ggplot2)
-library(stringr)
-library(ggmap)
-library(rgdal)
-library(raster)
-library(png)
 library(cowplot)
 library(googlesheets4)
 
@@ -59,7 +54,7 @@ bruv <- read.csv("data/Tidy/2021-05_Abrolhos_stereo-BRUVs.complete.maxn.csv")%>%
   dplyr::filter(maxn>0)%>%
   glimpse()
 
-maxn <- bind_rows(boss,bruv)
+full.maxn <- bind_rows(boss,bruv)
 
 length(unique(maxn$id))
 

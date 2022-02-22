@@ -14,12 +14,8 @@ library(GlobalArchive)
 library(tidyr)
 library(dplyr)
 library(ggplot2)
-library(stringr)
-library(ggmap)
-library(rgdal)
-library(raster)
-library(png)
 library(cowplot)
+library(patchwork)
 
 #standard error
 se <- function(x) sd(x)/sqrt(length(x))
@@ -48,11 +44,43 @@ Theme1 <-
 working.dir <- getwd()
 setwd(working.dir)
 #OR set manually once
-# read in maxn
+# read in maxn and lengths
 maxn <- readRDS("data/Tidy/dat.maxn.rds")%>%
   glimpse()
 
 length <- readRDS("data/Tidy/dat.length.rds")%>%
+  glimpse()
+
+# read in raw maxn data 
+boss <- read.csv("data/Tidy/2021-05_Abrolhos_BOSS.complete.maxn.csv")%>%
+  dplyr::filter(maxn>0)%>%
+  glimpse()
+
+bruv <- read.csv("data/Tidy/2021-05_Abrolhos_stereo-BRUVs.complete.maxn.csv")%>%
+  dplyr::filter(maxn>0)%>%
+  glimpse()
+
+full.maxn <- bind_rows(boss,bruv)
+
+length(unique(full.maxn$id))
+
+# get rls thermal niche values ----
+url <- "https://docs.google.com/spreadsheets/d/1SMLvR9t8_F-gXapR2EemQMEPSw_bUbPLcXd3lJ5g5Bo/edit?ts=5e6f36e2#gid=825736197"
+
+master<-googlesheets4::read_sheet(url)%>%
+  ga.clean.names()%>%
+  filter(grepl('Australia', global.region))%>% # Change country here
+  dplyr::select(family,genus,species,rls.thermal.niche)%>%
+  distinct()%>%
+  glimpse()
+
+cti <- full.maxn %>%
+  left_join(master)%>%
+  dplyr::filter(!is.na(rls.thermal.niche))%>%
+  dplyr::mutate(log.maxn=log1p(maxn),weightedSTI=log.maxn*rls.thermal.niche)%>%
+  dplyr::group_by(id,sample,location,status)%>%
+  dplyr::summarise(log.maxn=sum(log.maxn),w.STI = sum(weightedSTI),CTI=w.STI/log.maxn)%>%
+  dplyr::ungroup()%>%
   glimpse()
 
 #need to make a new dataframe - year, species richness (plus SE), greater than legal (plus SE)
@@ -61,39 +89,60 @@ status <- c("Fished","No-take")
 dat <- data.frame(year,status)
 
 #data for npz6
+#species richness
 spr.npz6.sr <- maxn %>%
   dplyr::filter(location%in%"NPZ6",scientific%in%"species.richness")%>%
   dplyr::group_by(status)%>%
   dplyr::summarise(species.richness = mean(maxn),species.richness.se=se(maxn))%>%
   dplyr::mutate(year="2021")
 
+#greater than legal
 spr.npz6.l <- length %>%
   dplyr::filter(location%in%"NPZ6",scientific%in%"greater than legal size")%>%
   dplyr::group_by(status)%>%
   summarise(legal = mean(number),legal.se=se(number))%>%
   dplyr::mutate(year="2021")
 
+#thermal index
+spr.npz6.cti <- cti %>%
+  dplyr::filter(location%in%"NPZ6")%>%
+  dplyr::group_by(status)%>%
+  summarise(cti = mean(CTI),cti.se=se(CTI))%>%
+  dplyr::mutate(year="2021")
+
 npz6 <- dat %>%
   left_join(spr.npz6.sr)%>%
-  left_join(spr.npz6.l)
+  left_join(spr.npz6.l)%>%
+  left_join(spr.npz6.cti)%>%
+  glimpse()
 
 #data for npz9
 #no data for status
+#species richness
 spr.npz9.sr <- maxn %>%
   dplyr::filter(location%in%"NPZ9",scientific%in%"species.richness")%>%
   dplyr::group_by(status)%>%
   summarise(species.richness = mean(maxn),species.richness.se=se(maxn))%>%
   dplyr::mutate(year="2021")
 
+#greater than legal
 spr.npz9.l <- length %>%
   dplyr::filter(location%in%"NPZ9",scientific%in%"greater than legal size")%>%
   dplyr::group_by(status)%>%
   summarise(legal = mean(number),legal.se=se(number))%>%
   dplyr::mutate(year="2021")
 
+#thermal index
+spr.npz9.cti <- cti %>%
+  dplyr::filter(location%in%"NPZ9")%>%
+  dplyr::group_by(status)%>%
+  summarise(cti = mean(CTI),cti.se=se(CTI))%>%
+  dplyr::mutate(year="2021")
+
 npz9 <- dat %>%
   left_join(spr.npz9.sr)%>%
-  left_join(spr.npz9.l)
+  left_join(spr.npz9.l)%>%
+  left_join(spr.npz9.cti)
 
 #NPZ6
 # plot year by species richness - plus a line for MPA gazetting time ---
@@ -110,7 +159,7 @@ gg.npz6.sr <- ggplot(data = npz6, aes(x = year, y = species.richness, fill = sta
   Theme1
 gg.npz6.sr
 
-#greater than legal
+#greater than legal - including traffic light bands
 gg.npz6.l <- ggplot(data = npz6, aes(x = year, y = legal, fill = status))+
   scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0.25, ymax = 1.5),fill = "#ffeec7")+
@@ -129,11 +178,27 @@ gg.npz6.l <- ggplot(data = npz6, aes(x = year, y = legal, fill = status))+
   Theme1
 gg.npz6.l
 
+# plot year by community thermal index - plus a line for MPA gazetting time ---
+gg.npz6.cti <- ggplot(data = npz6, aes(x = year, y = cti, fill = status))+
+  geom_errorbar(data = npz6,aes(ymin=cti-cti.se,ymax= cti+cti.se), width = 0.2,position=position_dodge(width=0.3))+
+  geom_point(shape = 21,size = 2, position=position_dodge(width=0.3),stroke = 1, color = "black")+
+  theme_classic()+
+  scale_y_continuous(limits = c(20,23))+
+  geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
+  ylab("Community Thermal Index")+
+  xlab("Year")+
+  scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
+  guides(fill=guide_legend(title = "Marine Park Zone"))+
+  Theme1
+gg.npz6.cti
+
 #NPZ9
 # plot year by species richness - plus a line for MPA gazetting time ---
-gg.npz9.sr <- ggplot(data = npz9%>%filter(status%in%"No-take"), aes(x = year, y = species.richness, fill = status))+
-  geom_errorbar(data = npz9%>%filter(status%in%"No-take"),aes(ymin=species.richness-species.richness.se,ymax= species.richness+species.richness.se), width = 0.2,position=position_dodge(width=0.3))+
-  geom_point(shape = 21,size = 2, position=position_dodge(width=0.3),stroke = 1, color = "black")+
+gg.npz9.sr <- npz9 %>%
+  dplyr::filter((status%in%"No-take"))%>%
+  ggplot(aes(x = year, y = species.richness, fill = status))+
+  geom_errorbar(aes(ymin=species.richness-species.richness.se,ymax= species.richness+species.richness.se), width = 0.1,position=position_dodge(width=0.3))+
+  geom_point(shape = 21,size = 2,stroke = 1, color = "black")+
   theme_classic()+
   scale_y_continuous(limits = c(0,8))+
   geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
@@ -144,15 +209,17 @@ gg.npz9.sr <- ggplot(data = npz9%>%filter(status%in%"No-take"), aes(x = year, y 
   Theme1
 gg.npz9.sr
 
-  #greater than legal
-gg.npz9.l <- ggplot(data = npz9%>%filter(!is.na(legal)), aes(x = year, y = legal))+ # (data = npz9%>%filter(status%in%"No-take")
- scale_fill_manual(labels = c("National Park Zone"),values=c("#7bbc63"))+
+#greater than legal - including traffic light bands
+gg.npz9.l <- npz9 %>%
+  dplyr::filter((status%in%"No-take"))%>%
+  ggplot(aes(x = year, y = legal))+ 
+  scale_fill_manual(labels = c("National Park Zone"),values=c("#7bbc63"))+
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = 1.5),fill = "#ffeec7")+
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 1.5, ymax = 2),fill = "#c7d6ff")+
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2, ymax = Inf),fill = "#caffc7")+
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = 0.25),fill = "#ffc7c7")+
-  geom_errorbar(data = npz9%>%filter(status%in%"No-take"),aes(ymin=legal-legal.se,ymax= legal+legal.se), width = 0.2,position=position_dodge(width=0.3))+
-  geom_point(shape = 21,size = 2, position=position_dodge(width=0.3),stroke = 1, color = "black", aes(fill = status))+
+  geom_errorbar(aes(ymin=legal-legal.se,ymax= legal+legal.se), width = 0.1,position=position_dodge(width=0.3))+
+  geom_point(shape = 21,size = 2,stroke = 1, color = "black", aes(fill = status))+
   theme_classic()+
   scale_y_continuous(limits = c(0,8))+
   geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
@@ -163,14 +230,28 @@ gg.npz9.l <- ggplot(data = npz9%>%filter(!is.na(legal)), aes(x = year, y = legal
   Theme1
 gg.npz9.l
 
-# library(ggpubr)
-library(patchwork)
-grid.npz6 <- gg.npz6.sr/gg.npz6.l+plot_layout(guides = 'collect')
+# plot year by community thermal index - plus a line for MPA gazetting time ---
+gg.npz9.cti <- npz9 %>%
+  dplyr::filter((status%in%"No-take"))%>%
+  ggplot(aes(x = year, y = cti, fill = status))+
+  geom_errorbar(aes(ymin=cti-cti.se,ymax= cti+cti.se), width = 0.1,position=position_dodge(width=0.3))+
+  geom_point(shape = 21,size = 2,stroke = 1, color = "black")+
+  theme_classic()+
+  scale_y_continuous(limits = c(20,23))+
+  geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
+  ylab("Community Thermal Index")+
+  xlab("Year")+
+  scale_fill_manual(labels = c("National Park Zone"),values=c( "#7bbc63"))+
+  guides(fill=guide_legend(title = "Marine Park Zone"))+
+  Theme1
+gg.npz9.cti
+
+grid.npz6 <- gg.npz6.sr/gg.npz6.l/gg.npz6.cti+plot_layout(guides = 'collect')
 grid.npz6
 
-grid.npz9 <- gg.npz9.sr/gg.npz9.l+plot_layout(guides = 'collect')
+grid.npz9 <- gg.npz9.sr/gg.npz9.l/gg.npz9.cti+plot_layout(guides = 'collect')
 grid.npz9
 
 #save out plot
-ggsave("plots/time-series.npz6.png",grid.npz6,dpi=600,width=6.0)
-ggsave("plots/time-series.npz9.png",grid.npz9,dpi=600,width=6.0)
+save_plot("plots/control-plots.npz6.png",grid.npz6,base_height = 6,base_width = 8)
+save_plot("plots/control-plots.npz9.png",grid.npz9,base_height = 6,base_width = 8)
