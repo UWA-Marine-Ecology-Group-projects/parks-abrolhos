@@ -77,7 +77,7 @@ sst_tss <- sst_ts %>% mutate(year = ifelse(month < 4, as.numeric(format(as.Date(
                                    month %in% c(3,4,5) ~ "Autumn", month %in% c(9,10,11) ~ "Spring" )) %>%
   group_by(year) %>%
   summarise(sst_mean = mean(mean_sst, na.rm = TRUE),sd_sst = mean(sd_sst, na.rm = TRUE)) %>%
-  #dplyr::mutate(year=as.character(year))%>%
+  dplyr::mutate(year=as.character(year))%>%
   glimpse()
 
 # get rls thermal niche values ----
@@ -190,7 +190,6 @@ gg.npz6.l <- ggplot(data = npz6, aes(x = year, y = legal, fill = status))+
   theme_classic()+
   scale_y_continuous(limits = c(0,8))+
   geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
-  #geom_hline(yintercept = 0, linetype="dashed",color = "red", size=0.5,alpha = 1)+
   ylab("Greater than legal size")+
   xlab("Year")+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
@@ -198,22 +197,20 @@ gg.npz6.l <- ggplot(data = npz6, aes(x = year, y = legal, fill = status))+
 gg.npz6.l
 
 # plot year by community thermal index - plus a line for MPA gazetting time ---
-gg.npz6.cti <- ggplot(data = npz6)+
-  geom_errorbar(aes(x = year, y = cti,ymin=cti-cti.se,ymax= cti+cti.se), width = 0.2,position=position_dodge(width=0.3))+
-  geom_point(shape = 21,size = 2, aes(x = year, y = cti, fill = status),position=position_dodge(width=0.3),stroke = 1, color = "black")+
+gg.npz6.cti <- npz6 %>%
+  ggplot(aes(x = year, y = cti, fill = status))+
+  geom_errorbar(aes(ymin=cti-cti.se,ymax= cti+cti.se), width = 0.2,position=position_dodge(width=0.3))+
+  geom_point(shape = 21,size = 2,stroke = 1, color = "black",position=position_dodge(width=0.3))+
   theme_classic()+
-  # scale_y_continuous(limits = c(20,23))+
+  scale_y_continuous(limits = c(20,23))+
   geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
   ylab("Community Thermal Index")+
   xlab("Year")+
   scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
-  geom_ribbon(aes(x = year, y = sst_mean,
-                                  ymin = sst_mean-sd_sst, 
-                                  ymax = sst_mean+sd_sst), 
-              alpha = 0.2, show.legend = F)+
   Theme1
 gg.npz6.cti
+
 
 #NPZ9
 # plot year by species richness - plus a line for MPA gazetting time ---
