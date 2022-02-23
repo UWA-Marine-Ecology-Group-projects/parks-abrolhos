@@ -1,3 +1,10 @@
+###
+# Project: Parks - Abrolhos
+# Data:    Oceanography - SST, SLA, currents & acidification
+# Task:    Plot oceanography trends
+# author:  Jess Kolbusz
+# date:    Feb 2022
+##
 
 #remotes::install_github("hvillalo/satin2") #for quiver plots in R
 
