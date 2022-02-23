@@ -6,6 +6,9 @@
 # date:    Feb 2022
 ##
 
+# Clear memory----
+rm(list=ls())
+
 #remotes::install_github("hvillalo/satin2") #for quiver plots in R
 
 library(sf)
@@ -91,7 +94,7 @@ p_1 <- ggplot() +
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_1
 
-dev.off()
+
 choose_month <- 2
 chose_month_text <- "Feb"
 # title_legend <- paste("SLA", chose_month_text)
@@ -114,7 +117,7 @@ p_2 <- ggplot() +
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_2
 
-dev.off()
+
 choose_month <- 3
 chose_month_text <- "Mar"
 # title_legend <- paste("SLA", chose_month_text)
@@ -137,7 +140,7 @@ p_3 <- ggplot() +
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_3
 
-dev.off()
+
 choose_month <- 4
 chose_month_text <- "Apr"
 # title_legend <- paste("SLA", chose_month_text)
@@ -160,7 +163,7 @@ p_4 <- ggplot() +
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_4
 
-dev.off()
+
 choose_month <- 5
 chose_month_text <- "May"
 # title_legend <- paste("SLA", chose_month_text)
@@ -183,7 +186,7 @@ p_5 <- ggplot() +
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_5
 
-dev.off()
+
 choose_month <- 6
 chose_month_text <- "Jun"
 # title_legend <- paste("SLA", chose_month_text)
@@ -206,7 +209,7 @@ p_6 <- ggplot() +
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_6
 
-dev.off()
+
 choose_month <- 7
 chose_month_text <- "Jul"
 # title_legend <- paste("SLA", chose_month_text)
@@ -229,7 +232,7 @@ p_7 <- ggplot() +
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_7
 
-dev.off()
+
 choose_month <- 8
 chose_month_text <- "Aug"
 # title_legend <- paste("SLA", chose_month_text)
@@ -252,7 +255,7 @@ p_8 <- ggplot() +
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_8
 
-dev.off()
+
 choose_month <- 9
 chose_month_text <- "Sep"
 # title_legend <- paste("SLA", chose_month_text)
@@ -275,7 +278,7 @@ p_9 <- ggplot() +
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_9
 
-dev.off()
+
 choose_month <- 10
 chose_month_text <- "Oct"
 # title_legend <- paste("SLA", chose_month_text)
@@ -298,7 +301,7 @@ p_10 <- ggplot() +
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_10
 
-dev.off()
+
 choose_month <- 11
 chose_month_text <- "Nov"
 
@@ -320,7 +323,7 @@ p_11 <- ggplot() +
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_11
 
-dev.off()
+
 choose_month <- 12
 chose_month_text <- "Dec"
 
@@ -376,10 +379,10 @@ melt_cur <- function(uu_monthly, vv_monthly, chose_month) {
 #gets only every split_size rows in current data so displayed better on map, 
 #if is every current vector it's too messy
 
-arrow_size <- 2.5
+arrow_size <- 1.5
 split_size <- 3 
 
-dev.off()
+
 choose_month <- 1
 chose_month_text <- "Jan"
 # title_l <- paste("Current", chose_month_text)
@@ -401,7 +404,7 @@ p_1 <-
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 p_1
 
-dev.off()
+
 choose_month <- 2
 chose_month_text <- "Feb"
 # title_l <- paste("Current", chose_month_text)
@@ -420,7 +423,7 @@ p_2 <-
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_2
 
-dev.off()
+
 choose_month <- 3
 chose_month_text <- "Mar"
 # title_l <- paste("Current", chose_month_text)
@@ -439,7 +442,7 @@ p_3 <-
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_3
 
-dev.off()
+
 choose_month <- 4
 chose_month_text <- "Apr"
 # title_l <- paste("Current", chose_month_text)
@@ -458,7 +461,7 @@ p_4 <-
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_4
 
-dev.off()
+
 choose_month <- 5
 chose_month_text <- "May"
 # title_l <- paste("Current", chose_month_text)
@@ -477,7 +480,7 @@ p_5 <-
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_5
 
-dev.off()
+
 choose_month <- 6
 chose_month_text <- "Jun"
 # title_l <- paste("Current", chose_month_text)
@@ -496,7 +499,7 @@ p_6 <-
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_6
 
-dev.off()
+
 choose_month <- 7
 chose_month_text <- "Jul"
 # title_l <- paste("Current", chose_month_text)
@@ -515,7 +518,7 @@ p_7 <-
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_7
 
-dev.off()
+
 choose_month <- 8
 chose_month_text <- "Aug"
 # title_l <- paste("Current", chose_month_text)
@@ -534,7 +537,7 @@ p_8 <-
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_8
 
-dev.off()
+
 choose_month <- 9
 chose_month_text <- "Sep"
 # title_l <- paste("Current", chose_month_text)
@@ -553,7 +556,7 @@ p_9 <-
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_9
 
-dev.off()
+
 choose_month <- 10
 chose_month_text <- "Oct"
 # title_l <- paste("Current", chose_month_text)
@@ -572,7 +575,7 @@ p_10 <-
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_10
 
-dev.off()
+
 choose_month <- 11
 chose_month_text <- "Nov"
 # title_l <- paste("Current", chose_month_text)
@@ -591,7 +594,7 @@ p_11 <-
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 #p_11
 
-dev.off()
+
 choose_month <- 12
 chose_month_text <- "Dec"
 # title_l <- paste("Current", chose_month_text)
@@ -636,10 +639,15 @@ melt_sst <- function(sst_monthly, chose_month) {
 }
 
 #### plot each month
-dev.off()
+
 choose_month <- 1
 chose_month_text <- "Jan"
-title_legend <- paste("SST", chose_month_text)
+title_legend <- "SST"
+
+curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+cur_month <- subset(curr, select = -c(longg, latt))
+curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+  filter(!is.na(uu)) %>% glimpse()
 
 msst <- melt_sst(sst_monthly,choose_month)
 
@@ -649,16 +657,24 @@ p_1 <- ggplot() +
                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
                        limits = c(min_sst, max_sst)) +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  labs(x = "Longitude", y = "Latitude", fill = "SLA",title = "January") +
+  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+              vecsize=arrow_size, color = "white")+
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend,title = "January") +
   coord_sf(xlim = xxlim, ylim = yylim) +
   theme_minimal()+
   scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_1
 
-dev.off()
+
 choose_month <- 2
 chose_month_text <- "Feb"
-title_legend <- paste("SST", chose_month_text)
+
+curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+cur_month <- subset(curr, select = -c(longg, latt))
+curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+  filter(!is.na(uu)) %>% glimpse()
 
 msst <- melt_sst(sst_monthly,choose_month)
 
@@ -668,15 +684,24 @@ p_2 <- ggplot() +
                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
                        limits = c(min_sst, max_sst)) +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+              vecsize=arrow_size, color = "white") +
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "February") +
   coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_2
 
-dev.off()
+
 choose_month <- 3
 chose_month_text <- "Mar"
-title_legend <- paste("SST", chose_month_text)
+
+curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+cur_month <- subset(curr, select = -c(longg, latt))
+curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+  filter(!is.na(uu)) %>% glimpse()
 
 msst <- melt_sst(sst_monthly,choose_month)
 
@@ -686,15 +711,24 @@ p_3 <- ggplot() +
                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
                        limits = c(min_sst, max_sst)) +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+              vecsize=arrow_size, color = "white")+
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "March") +
   coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_3
 
-dev.off()
+
 choose_month <- 4
 chose_month_text <- "Apr"
-title_legend <- paste("SST", chose_month_text)
+
+curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+cur_month <- subset(curr, select = -c(longg, latt))
+curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+  filter(!is.na(uu)) %>% glimpse()
 
 msst <- melt_sst(sst_monthly,choose_month)
 
@@ -704,15 +738,24 @@ p_4 <- ggplot() +
                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
                        limits = c(min_sst, max_sst)) +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+              vecsize=arrow_size, color = "white")+
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "April") +
   coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_4
 
-dev.off()
+
 choose_month <- 5
 chose_month_text <- "May"
-title_legend <- paste("SST", chose_month_text)
+
+curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+cur_month <- subset(curr, select = -c(longg, latt))
+curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+  filter(!is.na(uu)) %>% glimpse()
 
 msst <- melt_sst(sst_monthly,choose_month)
 
@@ -721,16 +764,25 @@ p_5 <- ggplot() +
   scale_fill_gradientn(colours = viridis(5),na.value = NA,
                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
                        limits = c(min_sst, max_sst)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1)+
+  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+              vecsize=arrow_size, color = "white") +
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "May") +
   coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_5
 
-dev.off()
+
 choose_month <- 6
 chose_month_text <- "Jun"
-title_legend <- paste("SST", chose_month_text)
+
+curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+cur_month <- subset(curr, select = -c(longg, latt))
+curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+  filter(!is.na(uu)) %>% glimpse()
 
 msst <- melt_sst(sst_monthly,choose_month)
 
@@ -740,15 +792,24 @@ p_6 <- ggplot() +
                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
                        limits = c(min_sst, max_sst)) +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+              vecsize=arrow_size, color = "white")+
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "June") +
   coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_6
 
-dev.off()
+
 choose_month <- 7
 chose_month_text <- "Jul"
-title_legend <- paste("SST", chose_month_text)
+
+curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+cur_month <- subset(curr, select = -c(longg, latt))
+curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+  filter(!is.na(uu)) %>% glimpse()
 
 msst <- melt_sst(sst_monthly,choose_month)
 
@@ -758,15 +819,24 @@ p_7 <- ggplot() +
                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
                        limits = c(min_sst, max_sst)) +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+              vecsize=arrow_size, color = "white")+
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "July") +
   coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_7
 
-dev.off()
+
 choose_month <- 8
 chose_month_text <- "Aug"
-title_legend <- paste("SST", chose_month_text)
+
+curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+cur_month <- subset(curr, select = -c(longg, latt))
+curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+  filter(!is.na(uu)) %>% glimpse()
 
 msst <- melt_sst(sst_monthly,choose_month)
 
@@ -776,15 +846,24 @@ p_8 <- ggplot() +
                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
                        limits = c(min_sst, max_sst)) +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+              vecsize=arrow_size, color = "white")+
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "August") +
   coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_8
 
-dev.off()
+
 choose_month <- 9
 chose_month_text <- "Sep"
-title_legend <- paste("SST", chose_month_text)
+
+curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+cur_month <- subset(curr, select = -c(longg, latt))
+curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+  filter(!is.na(uu)) %>% glimpse()
 
 msst <- melt_sst(sst_monthly,choose_month)
 
@@ -794,15 +873,24 @@ p_9 <- ggplot() +
                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
                        limits = c(min_sst, max_sst)) +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+              vecsize=arrow_size, color = "white")+
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "September") +
   coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_9
 
-dev.off()
+
 choose_month <- 10
 chose_month_text <- "Oct"
-title_legend <- paste("SST", chose_month_text)
+
+curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+cur_month <- subset(curr, select = -c(longg, latt))
+curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+  filter(!is.na(uu)) %>% glimpse()
 
 msst <- melt_sst(sst_monthly,choose_month)
 
@@ -812,15 +900,24 @@ p_10 <- ggplot() +
                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
                        limits = c(min_sst, max_sst)) +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+              vecsize=arrow_size, color = "white")+
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend, "October") +
   coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_10
 
-dev.off()
+
 choose_month <- 11
 chose_month_text <- "Nov"
-title_legend <- paste("SST", chose_month_text)
+
+curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+cur_month <- subset(curr, select = -c(longg, latt))
+curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+  filter(!is.na(uu)) %>% glimpse()
 
 msst <- melt_sst(sst_monthly,choose_month)
 
@@ -830,15 +927,24 @@ p_11 <- ggplot() +
                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
                        limits = c(min_sst, max_sst)) +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+              vecsize=arrow_size, color = "white")+
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "November") +
   coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_11
 
-dev.off()
+
 choose_month <- 12
 chose_month_text <- "Dec"
-title_legend <- paste("SST", chose_month_text)
+
+curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+cur_month <- subset(curr, select = -c(longg, latt))
+curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+  filter(!is.na(uu)) %>% glimpse()
 
 msst <- melt_sst(sst_monthly,choose_month)
 
@@ -848,9 +954,14 @@ p_12 <- ggplot() +
                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
                        limits = c(min_sst, max_sst)) +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+              vecsize=arrow_size, color = "white")+
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "December") +
   coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))
 # p_12
 
 p_1+p_3+p_5+p_7+p_9+p_11+
@@ -859,15 +970,13 @@ p_1+p_3+p_5+p_7+p_9+p_11+
 ggsave('plots/spatial/Abrolhos_SST_monthly_spatial.png', dpi = 300, width = 9, height = 9)
 
 ##### ACIDIFICATION #####
-setwd(data_dir)
-dir()
-load(paste(Zone,'acd_data.Rdata', sep = '_'))
+load('data/spatial/oceanography/Abrolhos_acd_data.Rdata')
 
 legend_title = "Season"
 acd_mean_plot <- ggplot(data = acd_ts_monthly, aes(x = year, y = acd_mean)) + 
   geom_line() +
-  geom_errorbar(aes(ymin = acd_mean-acd_sd, ymax = acd_mean+acd_sd), size = 0.2, width = 1, position = position_dodge(0.05)) +
-  theme_minimal() +
+  geom_ribbon(aes(ymin = acd_mean-acd_sd, ymax = acd_mean+acd_sd), fill = "black",alpha = 0.2) +
+  theme_classic() +
   labs(x = "Year", y = "pH", title = "NW")
 acd_mean_plot #plot with the other time series
 
@@ -890,11 +999,16 @@ sla_plot <- sla_tss %>% filter(grepl('Winter|Summer', season))
 
 #plot for sla, summer and winter mean
 legend_title = "Season"
-sla_mean_plot <- ggplot(data = sla_plot, aes(x = year, y = sla_mean_sea, color = season)) + 
-  geom_line() + geom_point()+
-  geom_errorbar(aes(ymin = sla_mean_sea-sla_sd_sea, ymax = sla_mean_sea+sla_sd_sea), size = 0.2, width = 1, position = position_dodge(0.05)) +
-  theme_minimal() +
-  labs(x = "Year", y = "SLA mean (m)", color = legend_title) 
+sla_mean_plot <- ggplot() + 
+  geom_line(data = sla_plot, aes(x = year, y = sla_mean_sea, color = season)) + 
+  geom_ribbon(data = sla_plot,aes(x = year, y = sla_mean_sea,
+                                  ymin = sla_mean_sea-sla_sd_sea, 
+                                  ymax = sla_mean_sea+sla_sd_sea, fill = season), 
+              alpha = 0.2, show.legend = F) +
+  theme_classic() +
+  labs(x = "Year", y = "SLA mean (m)", color = legend_title)+
+  scale_color_manual(labels = c("Summer","Winter"), values = c("#CAB435","#354BCA"))+
+  scale_fill_manual(labels = c("Summer","Winter"), values = c("#CAB435","#354BCA"))
 sla_mean_plot
 
 sst_ts <- as.data.frame(dates_sst)
@@ -913,19 +1027,19 @@ sst_plot <- sst_tss %>% filter(grepl('Winter|Summer', season))
 
 #plot for sst, summer and winter mean
 legend_title = "Season"
-sst_mean_plot <- ggplot(data = sst_plot, aes(x = year, y = sst_mean, color = season)) + 
-  geom_line() +geom_point()+
-  geom_errorbar(aes(ymin = sst_mean-sd_sst, ymax = sst_mean+sd_sst), size = 0.2, width = 1, position = position_dodge(0.05)) +
-  theme_minimal() +
-  labs(x = "Year", y = expression(paste("SST (",degree~C,")")), color = legend_title) 
+
+sst_mean_plot <- ggplot() + 
+  geom_line(data = sst_plot, aes(x = year, y = sst_mean, color = season)) + 
+  geom_ribbon(data = sst_plot,aes(x = year, y = sst_mean,
+                                  ymin = sst_mean-sd_sst, 
+                                  ymax = sst_mean+sd_sst, fill = season), 
+              alpha = 0.2, show.legend = F) +
+  theme_classic() +
+  labs(x = "Year", y = expression(paste("SST (",degree~C,")")), color = legend_title)+
+  scale_color_manual(labels = c("Summer","Winter"), values = c("#CAB435","#354BCA"))+
+  scale_fill_manual(labels = c("Summer","Winter"), values = c("#CAB435","#354BCA"))
 sst_mean_plot
 
 acd_mean_plot+sla_mean_plot+sst_mean_plot + plot_layout(ncol = 1, nrow = 3)#, widths = c(0.8, 2.2))
 
-setwd(plot_dir)
-ggsave(paste(Zone,'acd_sla_sst_ts.png',sep = "_"), dpi = 300, width = 18, height = 30)
-
-
-
-
-
+ggsave('plots/spatial/Abrolhos_acd_sla_sst_ts.png', dpi = 300, width = 5, height = 8)

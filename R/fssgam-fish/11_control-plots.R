@@ -6,7 +6,7 @@
 # date:    Nov-Dec 2021
 ##
 
-# Set directories----
+# Clear memory----
 rm(list=ls())
 
 # Libraries required
@@ -64,6 +64,22 @@ full.maxn <- bind_rows(boss,bruv)
 
 length(unique(full.maxn$id))
 
+#read in SST
+load("data/spatial/oceanography/Abrolhos_sst_data.Rdata")
+
+sst_ts <- as.data.frame(dates_sst)
+sst_ts$mean_sst <- apply(sst_all, 3, mean, na.rm = TRUE)
+sst_ts$sd_sst <- apply(sst_all, 3, sd, na.rm = TRUE)
+sst_ts$month <- as.numeric(format(as.Date(sst_ts$dates_sst), "%m"))
+
+sst_tss <- sst_ts %>% mutate(year = ifelse(month < 4, as.numeric(format(as.Date(dates_sst), "%Y"))-1, as.numeric(format(as.Date(dates_sst), "%Y")))) %>%
+  dplyr::mutate(season = case_when(month %in% c(6,7,8) ~ "Winter", month %in% c(12,1,2) ~ "Summer", 
+                                   month %in% c(3,4,5) ~ "Autumn", month %in% c(9,10,11) ~ "Spring" )) %>%
+  group_by(year) %>%
+  summarise(sst_mean = mean(mean_sst, na.rm = TRUE),sd_sst = mean(sd_sst, na.rm = TRUE)) %>%
+  #dplyr::mutate(year=as.character(year))%>%
+  glimpse()
+
 # get rls thermal niche values ----
 url <- "https://docs.google.com/spreadsheets/d/1SMLvR9t8_F-gXapR2EemQMEPSw_bUbPLcXd3lJ5g5Bo/edit?ts=5e6f36e2#gid=825736197"
 
@@ -114,6 +130,8 @@ npz6 <- dat %>%
   left_join(spr.npz6.sr)%>%
   left_join(spr.npz6.l)%>%
   left_join(spr.npz6.cti)%>%
+  left_join(sst_tss)%>%
+  dplyr::filter(!year=="2022")%>%
   glimpse()
 
 #data for npz9
@@ -142,7 +160,8 @@ spr.npz9.cti <- cti %>%
 npz9 <- dat %>%
   left_join(spr.npz9.sr)%>%
   left_join(spr.npz9.l)%>%
-  left_join(spr.npz9.cti)
+  left_join(spr.npz9.cti)%>%
+  left_join(sst_tss)
 
 #NPZ6
 # plot year by species richness - plus a line for MPA gazetting time ---
@@ -179,16 +198,20 @@ gg.npz6.l <- ggplot(data = npz6, aes(x = year, y = legal, fill = status))+
 gg.npz6.l
 
 # plot year by community thermal index - plus a line for MPA gazetting time ---
-gg.npz6.cti <- ggplot(data = npz6, aes(x = year, y = cti, fill = status))+
-  geom_errorbar(data = npz6,aes(ymin=cti-cti.se,ymax= cti+cti.se), width = 0.2,position=position_dodge(width=0.3))+
-  geom_point(shape = 21,size = 2, position=position_dodge(width=0.3),stroke = 1, color = "black")+
+gg.npz6.cti <- ggplot(data = npz6)+
+  geom_errorbar(aes(x = year, y = cti,ymin=cti-cti.se,ymax= cti+cti.se), width = 0.2,position=position_dodge(width=0.3))+
+  geom_point(shape = 21,size = 2, aes(x = year, y = cti, fill = status),position=position_dodge(width=0.3),stroke = 1, color = "black")+
   theme_classic()+
-  scale_y_continuous(limits = c(20,23))+
+  # scale_y_continuous(limits = c(20,23))+
   geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
   ylab("Community Thermal Index")+
   xlab("Year")+
   scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
+  geom_ribbon(aes(x = year, y = sst_mean,
+                                  ymin = sst_mean-sd_sst, 
+                                  ymax = sst_mean+sd_sst), 
+              alpha = 0.2, show.legend = F)+
   Theme1
 gg.npz6.cti
 
