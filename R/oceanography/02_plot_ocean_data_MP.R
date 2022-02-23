@@ -71,6 +71,33 @@ melt_sla <- function(sla_monthly, chose_month) {
   cbind(date = L$month, ret)
 }
 
+#experiment to try make this into a loop
+pList <- list()
+
+for (i in 1:12) {
+  choose_month <- i
+  msla <- melt_sla(sla_monthly,choose_month)
+  p <- ggplot() +
+           geom_tile( data = msla, aes(x = long, y = lat, fill = sla)) + 
+           scale_fill_gradientn(colours = viridis(5),na.value = NA,
+                                breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+                                limits = c(min_sla, max_sla)) +
+           geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+           geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+           geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+           labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+           coord_sf(xlim = xxlim, ylim = yylim) +
+           theme_minimal()+
+           ggtitle(i) +
+           theme(plot.title = element_text(hjust = 0))+
+           scale_x_continuous(breaks=c(113.0,114.0,115.0))
+  pList[[i]] <- p
+         #ggsave(temp_plot, file=paste0("plots/spatial/plot_", i,".png"), width = 14, height = 10, units = "cm")
+}
+
+library(patchwork)
+pList[[1]]+pList[[2]]+plot_layout(guides = 'collect')
+
 #plot each month
 choose_month <- 1
 chose_month_text <- "Jan"
