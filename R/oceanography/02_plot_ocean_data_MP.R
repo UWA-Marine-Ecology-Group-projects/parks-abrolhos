@@ -2,7 +2,7 @@
 # Project: Parks - Abrolhos
 # Data:    Oceanography - SST, SLA, currents & acidification
 # Task:    Plot oceanography trends
-# author:  Jess Kolbusz
+# author:  Jess Kolbusz & Claude
 # date:    Feb 2022
 ##
 
@@ -24,8 +24,6 @@ working.dir <- getwd()
 setwd(working.dir)
 
 Zone = "Abrolhos"
-# data_dir = paste('~/Desktop/MPA_work/data/Rdata',Zone, sep = '/')
-# plot_dir = paste('~/Desktop/MPA_work/plots',Zone, sep = '/')
 
 #lims of the spatial plots # change for each mp, bigger than you think because of arrrows #
 xxlim = c(112.8, 115) #all NW c(114, 117)#ABR c(112.8, 115) #long
@@ -71,12 +69,13 @@ melt_sla <- function(sla_monthly, chose_month) {
   cbind(date = L$month, ret)
 }
 
-#experiment to try make this into a loop
+#Loop through the plots for each month, saving as list
 pList <- list()
 
 for (i in 1:12) {
   choose_month <- i
   msla <- melt_sla(sla_monthly,choose_month)
+  title_legend <- "SLA"
   p <- ggplot() +
            geom_tile( data = msla, aes(x = long, y = lat, fill = sla)) + 
            scale_fill_gradientn(colours = viridis(5),na.value = NA,
@@ -88,303 +87,42 @@ for (i in 1:12) {
            labs(x = "Longitude", y = "Latitude", fill = title_legend) +
            coord_sf(xlim = xxlim, ylim = yylim) +
            theme_minimal()+
-           ggtitle(i) +
+           ggtitle(month.name[[i]]) +
            theme(plot.title = element_text(hjust = 0))+
            scale_x_continuous(breaks=c(113.0,114.0,115.0))
   pList[[i]] <- p
-         #ggsave(temp_plot, file=paste0("plots/spatial/plot_", i,".png"), width = 14, height = 10, units = "cm")
+         
 }
 
-library(patchwork)
-pList[[1]]+pList[[2]]+plot_layout(guides = 'collect')
+#save plots from list
+pList[[1]]+pList[[3]]+pList[[5]]+pList[[7]]+pList[[9]]+pList[[11]]+plot_layout(nrow = 3, ncol = 2,guides = 'collect')
 
-#plot each month
-choose_month <- 1
-chose_month_text <- "Jan"
-title_legend <- "SLA"
+#save out plots
+ggsave('plots/spatial/Abrolhos_sla_monthly_spatial.png', dpi = 300, width = 8, height = 9)
 
-msla <- melt_sla(sla_monthly,choose_month)
+dev.off()
 
-p_1 <- ggplot() +
-  geom_tile( data = msla, aes(x = long, y = lat, fill = sla)) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sla, to = max_sla, by = 0.02),
-                       limits = c(min_sla, max_sla)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  ggtitle("January") +
-  theme(plot.title = element_text(hjust = 0))+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_1
+######### SST #########
 
+load("data/spatial/oceanography/Abrolhos_sst_data.Rdata")
 
-choose_month <- 2
-chose_month_text <- "Feb"
-# title_legend <- paste("SLA", chose_month_text)
+#get min and max for whole spatial scales legend/colours
+min_sst =round(min(min(sst_monthly,na.rm = TRUE), na.rm = TRUE))
+max_sst= round(max(max(sst_monthly,na.rm = TRUE), na.rm = TRUE)) 
 
-msla <- melt_sla(sla_monthly,choose_month)
+#melts SST data to plot
+melt_sst <- function(sst_monthly, chose_month) {
+  L<- list()
+  L$lats <- lat_sst
+  L$lons <- lon_sst
+  L$month <- chose_month
+  L$sst <- sst_monthly[,,chose_month]
+  dimnames(L$sst) <- list(long = L$lons, lat = L$lats)
+  ret <- melt(L$sst, value.name = "sst")
+  cbind(date = L$month, ret, degF = ret$sst * 9/5 + 32)
+}
 
-p_2 <- ggplot() +
-  geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sla, to = max_sla, by = 0.02),
-                       limits = c(min_sla, max_sla)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  ggtitle("February") +
-  theme(plot.title = element_text(hjust = 0))+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_2
-
-
-choose_month <- 3
-chose_month_text <- "Mar"
-# title_legend <- paste("SLA", chose_month_text)
-
-msla <- melt_sla(sla_monthly,choose_month)
-
-p_3 <- ggplot() +
-  geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sla, to = max_sla, by = 0.02),
-                       limits = c(min_sla, max_sla)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  ggtitle("March") +
-  theme(plot.title = element_text(hjust = 0))+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_3
-
-
-choose_month <- 4
-chose_month_text <- "Apr"
-# title_legend <- paste("SLA", chose_month_text)
-
-msla <- melt_sla(sla_monthly,choose_month)
-
-p_4 <- ggplot() +
-  geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sla, to = max_sla, by = 0.02),
-                       limits = c(min_sla, max_sla)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  ggtitle("April") +
-  theme(plot.title = element_text(hjust = 0))+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_4
-
-
-choose_month <- 5
-chose_month_text <- "May"
-# title_legend <- paste("SLA", chose_month_text)
-
-msla <- melt_sla(sla_monthly,choose_month)
-
-p_5 <- ggplot() +
-  geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sla, to = max_sla, by = 0.02),
-                       limits = c(min_sla, max_sla)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  ggtitle("May") +
-  theme(plot.title = element_text(hjust = 0))+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_5
-
-
-choose_month <- 6
-chose_month_text <- "Jun"
-# title_legend <- paste("SLA", chose_month_text)
-
-msla <- melt_sla(sla_monthly,choose_month)
-
-p_6 <- ggplot() +
-  geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sla, to = max_sla, by = 0.02),
-                       limits = c(min_sla, max_sla)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  ggtitle("June") +
-  theme(plot.title = element_text(hjust = 0))+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_6
-
-
-choose_month <- 7
-chose_month_text <- "Jul"
-# title_legend <- paste("SLA", chose_month_text)
-
-msla <- melt_sla(sla_monthly,choose_month)
-
-p_7 <- ggplot() +
-  geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sla, to = max_sla, by = 0.02),
-                       limits = c(min_sla, max_sla)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  ggtitle("July") +
-  theme(plot.title = element_text(hjust = 0))+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_7
-
-
-choose_month <- 8
-chose_month_text <- "Aug"
-# title_legend <- paste("SLA", chose_month_text)
-
-msla <- melt_sla(sla_monthly,choose_month)
-
-p_8 <- ggplot() +
-  geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sla, to = max_sla, by = 0.02),
-                       limits = c(min_sla, max_sla)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  ggtitle("August") +
-  theme(plot.title = element_text(hjust = 0))+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_8
-
-
-choose_month <- 9
-chose_month_text <- "Sep"
-# title_legend <- paste("SLA", chose_month_text)
-
-msla <- melt_sla(sla_monthly,choose_month)
-
-p_9 <- ggplot() +
-  geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sla, to = max_sla, by = 0.02),
-                       limits = c(min_sla, max_sla)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  ggtitle("September") +
-  theme(plot.title = element_text(hjust = 0))+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_9
-
-
-choose_month <- 10
-chose_month_text <- "Oct"
-# title_legend <- paste("SLA", chose_month_text)
-
-msla <- melt_sla(sla_monthly,choose_month)
-
-p_10 <- ggplot() +
-  geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sla, to = max_sla, by = 0.02),
-                       limits = c(min_sla, max_sla)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  ggtitle("October") +
-  theme(plot.title = element_text(hjust = 0))+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_10
-
-
-choose_month <- 11
-chose_month_text <- "Nov"
-
-msla <- melt_sla(sla_monthly,choose_month)
-
-p_11 <- ggplot() +
-  geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sla, to = max_sla, by = 0.02),
-                       limits = c(min_sla, max_sla)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  ggtitle("November") +
-  theme(plot.title = element_text(hjust = 0))+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_11
-
-
-choose_month <- 12
-chose_month_text <- "Dec"
-
-msla <- melt_sla(sla_monthly,choose_month)
-
-p_12 <- ggplot() +
-  geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sla, to = max_sla, by = 0.02),
-                       limits = c(min_sla, max_sla)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  ggtitle("December") +
-  theme(plot.title = element_text(hjust = 0))+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_12
-
-# p_1+p_2+p_3+p_4+p_5+p_6+p_7+p_8+p_9+p_10+p_11+p_12 + 
-#   plot_layout(ncol = 3, nrow = 4,guides = 'collect')
-
-p_1+p_3+p_5+p_7+p_9+p_11+
-  plot_layout(ncol = 3, nrow = 2,guides = 'collect')
-
-ggsave('plots/spatial/Abrolhos_sla_monthly_spatial.png', dpi = 300, width = 9, height = 9)
-
-##### SURFACE CURRENTS ######
-
-#data should have loaded already above
-
-#function to melt the data so its plottable with ggplot
+#melts current data to plot
 melt_cur <- function(uu_monthly, vv_monthly, chose_month) {
   L<- list()
   L$lats <- lat_sla
@@ -402,599 +140,48 @@ melt_cur <- function(uu_monthly, vv_monthly, chose_month) {
   cbind(date = L$month, ret, ret1)
 }
 
-##### plotting current ####
-#gets only every split_size rows in current data so displayed better on map, 
-#if is every current vector it's too messy
+#empty list to store plots in
+pList <- list()
 
+#set how many values you want to store for current direction and how large arrows are
 arrow_size <- 1.5
-split_size <- 3 
+split_size <- 2
 
-
-choose_month <- 1
-chose_month_text <- "Jan"
-# title_l <- paste("Current", chose_month_text)
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
-  filter(!is.na(uu)) %>% glimpse()
-
-p_1 <-  
-  ggplot() +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size ) +
-  labs(x = "Longitude", y = "Latitude", title = "January") + 
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-p_1
-
-
-choose_month <- 2
-chose_month_text <- "Feb"
-# title_l <- paste("Current", chose_month_text)
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
-
-p_2 <-  
-  ggplot() +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
-  labs(x = "Longitude", y = "Latitude", title = "February") + 
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_2
-
-
-choose_month <- 3
-chose_month_text <- "Mar"
-# title_l <- paste("Current", chose_month_text)
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
-
-p_3 <-  
-  ggplot() +  
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
-  labs(x = "Longitude", y = "Latitude", title = "March") + 
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_3
-
-
-choose_month <- 4
-chose_month_text <- "Apr"
-# title_l <- paste("Current", chose_month_text)
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
-
-p_4 <-  
-  ggplot() +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
-  labs(x = "Longitude", y = "Latitude", title = "April") + 
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_4
-
-
-choose_month <- 5
-chose_month_text <- "May"
-# title_l <- paste("Current", chose_month_text)
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
-
-p_5 <-  
-  ggplot() +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
-  labs(x = "Longitude", y = "Latitude", title = "May") + 
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_5
-
-
-choose_month <- 6
-chose_month_text <- "Jun"
-# title_l <- paste("Current", chose_month_text)
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
-
-p_6 <-  
-  ggplot() +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
-  labs(x = "Longitude", y = "Latitude", title = "June") + 
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_6
-
-
-choose_month <- 7
-chose_month_text <- "Jul"
-# title_l <- paste("Current", chose_month_text)
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
-
-p_7 <-  
-  ggplot() +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
-  labs(x = "Longitude", y = "Latitude", title = "July") + 
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_7
-
-
-choose_month <- 8
-chose_month_text <- "Aug"
-# title_l <- paste("Current", chose_month_text)
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
-
-p_8 <-  
-  ggplot() +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
-  labs(x = "Longitude", y = "Latitude", title = "August") + 
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_8
-
-
-choose_month <- 9
-chose_month_text <- "Sep"
-# title_l <- paste("Current", chose_month_text)
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
-
-p_9 <-  
-  ggplot() +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
-  labs(x = "Longitude", y = "Latitude", title = "September") + 
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_9
-
-
-choose_month <- 10
-chose_month_text <- "Oct"
-# title_l <- paste("Current", chose_month_text)
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
-
-p_10 <-  
-  ggplot() +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
-  labs(x = "Longitude", y = "Latitude", title = "October") + 
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_10
-
-
-choose_month <- 11
-chose_month_text <- "Nov"
-# title_l <- paste("Current", chose_month_text)
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
-
-p_11 <-  
-  ggplot() +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
-  labs(x = "Longitude", y = "Latitude", title = "November") + 
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_11
-
-
-choose_month <- 12
-chose_month_text <- "Dec"
-# title_l <- paste("Current", chose_month_text)
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
-
-p_12 <-  
-  ggplot() +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
-  labs(x = "Longitude", y = "Latitude", title = "December") + 
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-#p_12
-
-p_1+p_3+p_5+p_7+p_9+p_11+
-  plot_layout(ncol = 3, nrow = 2)
-
-ggsave('plots/spatial/Abrolhos_current_monthly_spatial.png', dpi = 300, width = 9, height = 9)
-
-######### SST #########
-
-load("data/spatial/oceanography/Abrolhos_sst_data.Rdata")
-
-#get min and max for whole spatial scales legend/colours
-min_sst =round(min(min(sst_monthly,na.rm = TRUE), na.rm = TRUE))
-max_sst= round(max(max(sst_monthly,na.rm = TRUE), na.rm = TRUE)) 
-
-#melts data to easily plot it
-melt_sst <- function(sst_monthly, chose_month) {
-  L<- list()
-  L$lats <- lat_sst
-  L$lons <- lon_sst
-  L$month <- chose_month
-  L$sst <- sst_monthly[,,chose_month]
-  dimnames(L$sst) <- list(long = L$lons, lat = L$lats)
-  ret <- melt(L$sst, value.name = "sst")
-  cbind(date = L$month, ret, degF = ret$sst * 9/5 + 32)
+for (i in 1:12) {
+  choose_month <- i
+  curr <- melt_cur(uu_monthly,vv_monthly,choose_month)  
+  curr_month <- subset(curr, select = -c(longg, latt))    #changed name from cur_month!!!!
+  # curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>%
+  #   filter(!is.na(uu)) %>% glimpse()
+  
+  msst <- melt_sst(sst_monthly,choose_month)
+  
+  title_legend <- "SST"
+  p <- ggplot() +
+    geom_tile(data = msst, aes(x = long, y = lat, fill = sst))+#, interpolate = TRUE) + 
+    scale_fill_gradientn(colours = viridis(5),na.value = NA,
+                         breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+                         limits = c(min_sst, max_sst)) +
+    geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+    geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+                vecsize=arrow_size, color = "white")+
+    geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+    geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+    labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+    coord_sf(xlim = xxlim, ylim = yylim) +
+    theme_minimal()+
+    ggtitle(month.name[[i]])+
+    scale_x_continuous(breaks=c(113.0,114.0,115.0))
+  pList[[i]] <- p
+  
 }
 
-#### plot each month
+#save plots from list
+pList[[1]]+pList[[3]]+pList[[5]]+pList[[7]]+pList[[9]]+pList[[11]]+plot_layout(nrow = 3, ncol = 2,guides = 'collect')
 
-choose_month <- 1
-chose_month_text <- "Jan"
-title_legend <- "SST"
+ggsave('plots/spatial/Abrolhos_SST_monthly_spatial.png', dpi = 300, width = 8, height = 9)
 
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
-  filter(!is.na(uu)) %>% glimpse()
-
-msst <- melt_sst(sst_monthly,choose_month)
-
-p_1 <- ggplot() +
-  geom_tile(data = msst, aes(x = long, y = lat, fill = sst))+#, interpolate = TRUE) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sst, to = max_sst, by = 0.5),
-                       limits = c(min_sst, max_sst)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
-              vecsize=arrow_size, color = "white")+
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend,title = "January") +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_1
-
-
-choose_month <- 2
-chose_month_text <- "Feb"
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
-  filter(!is.na(uu)) %>% glimpse()
-
-msst <- melt_sst(sst_monthly,choose_month)
-
-p_2 <- ggplot() +
-  geom_tile(data = msst, aes(x = long, y = lat, fill = sst)) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sst, to = max_sst, by = 0.5),
-                       limits = c(min_sst, max_sst)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
-              vecsize=arrow_size, color = "white") +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "February") +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_2
-
-
-choose_month <- 3
-chose_month_text <- "Mar"
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
-  filter(!is.na(uu)) %>% glimpse()
-
-msst <- melt_sst(sst_monthly,choose_month)
-
-p_3 <- ggplot() +
-  geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sst, to = max_sst, by = 0.5),
-                       limits = c(min_sst, max_sst)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
-              vecsize=arrow_size, color = "white")+
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "March") +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_3
-
-
-choose_month <- 4
-chose_month_text <- "Apr"
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
-  filter(!is.na(uu)) %>% glimpse()
-
-msst <- melt_sst(sst_monthly,choose_month)
-
-p_4 <- ggplot() +
-  geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sst, to = max_sst, by = 0.5),
-                       limits = c(min_sst, max_sst)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
-              vecsize=arrow_size, color = "white")+
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "April") +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_4
-
-
-choose_month <- 5
-chose_month_text <- "May"
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
-  filter(!is.na(uu)) %>% glimpse()
-
-msst <- melt_sst(sst_monthly,choose_month)
-
-p_5 <- ggplot() +
-  geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sst, to = max_sst, by = 0.5),
-                       limits = c(min_sst, max_sst)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1)+
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
-              vecsize=arrow_size, color = "white") +
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "May") +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_5
-
-
-choose_month <- 6
-chose_month_text <- "Jun"
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
-  filter(!is.na(uu)) %>% glimpse()
-
-msst <- melt_sst(sst_monthly,choose_month)
-
-p_6 <- ggplot() +
-  geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sst, to = max_sst, by = 0.5),
-                       limits = c(min_sst, max_sst)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
-              vecsize=arrow_size, color = "white")+
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "June") +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_6
-
-
-choose_month <- 7
-chose_month_text <- "Jul"
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
-  filter(!is.na(uu)) %>% glimpse()
-
-msst <- melt_sst(sst_monthly,choose_month)
-
-p_7 <- ggplot() +
-  geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sst, to = max_sst, by = 0.5),
-                       limits = c(min_sst, max_sst)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
-              vecsize=arrow_size, color = "white")+
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "July") +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_7
-
-
-choose_month <- 8
-chose_month_text <- "Aug"
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
-  filter(!is.na(uu)) %>% glimpse()
-
-msst <- melt_sst(sst_monthly,choose_month)
-
-p_8 <- ggplot() +
-  geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sst, to = max_sst, by = 0.5),
-                       limits = c(min_sst, max_sst)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
-              vecsize=arrow_size, color = "white")+
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "August") +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_8
-
-
-choose_month <- 9
-chose_month_text <- "Sep"
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
-  filter(!is.na(uu)) %>% glimpse()
-
-msst <- melt_sst(sst_monthly,choose_month)
-
-p_9 <- ggplot() +
-  geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sst, to = max_sst, by = 0.5),
-                       limits = c(min_sst, max_sst)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
-              vecsize=arrow_size, color = "white")+
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "September") +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_9
-
-
-choose_month <- 10
-chose_month_text <- "Oct"
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
-  filter(!is.na(uu)) %>% glimpse()
-
-msst <- melt_sst(sst_monthly,choose_month)
-
-p_10 <- ggplot() +
-  geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sst, to = max_sst, by = 0.5),
-                       limits = c(min_sst, max_sst)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
-              vecsize=arrow_size, color = "white")+
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend, "October") +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_10
-
-
-choose_month <- 11
-chose_month_text <- "Nov"
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
-  filter(!is.na(uu)) %>% glimpse()
-
-msst <- melt_sst(sst_monthly,choose_month)
-
-p_11 <- ggplot() +
-  geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
-  scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                       breaks = seq(from = min_sst, to = max_sst, by = 0.5),
-                       limits = c(min_sst, max_sst)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
-              vecsize=arrow_size, color = "white")+
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "November") +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_11
-
-
-choose_month <- 12
-chose_month_text <- "Dec"
-
-curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
-cur_month <- subset(curr, select = -c(longg, latt))
-curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
-  filter(!is.na(uu)) %>% glimpse()
-
-msst <- melt_sst(sst_monthly,choose_month)
-
-p_12 <- ggplot() +
-  geom_tile(data = msst, aes(x = long, y = lat, fill = sst)) + 
-  scale_fill_gradientn(colours = rev(viridis(20)),na.value = NA,
-                       breaks = seq(from = min_sst, to = max_sst, by = 0.5),
-                       limits = c(min_sst, max_sst)) +
-  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
-              vecsize=arrow_size, color = "white")+
-  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-  labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "December") +
-  coord_sf(xlim = xxlim, ylim = yylim) +
-  theme_minimal()+
-  scale_x_continuous(breaks=c(113.0,114.0,115.0))
-# p_12
-
-p_1+p_3+p_5+p_7+p_9+p_11+
-  plot_layout(ncol = 3, nrow = 2, guides = 'collect')
-
-ggsave('plots/spatial/Abrolhos_SST_monthly_spatial.png', dpi = 300, width = 9, height = 9)
+dev.off()
 
 ##### ACIDIFICATION #####
 load('data/spatial/oceanography/Abrolhos_acd_data.Rdata')
@@ -1002,11 +189,10 @@ load('data/spatial/oceanography/Abrolhos_acd_data.Rdata')
 legend_title = "Season"
 acd_mean_plot <- ggplot(data = acd_ts_monthly, aes(x = year, y = acd_mean)) + 
   geom_line() +
-  geom_ribbon(aes(ymin = acd_mean-acd_sd, ymax = acd_mean+acd_sd), fill = "black",alpha = 0.2) +
+  geom_ribbon(aes(ymin = acd_mean-acd_sd, ymax = acd_mean+acd_sd), fill = "black",alpha = 0.15) +
   theme_classic() +
-  labs(x = "Year", y = "pH", title = "NW")
+  labs(x = "Year", y = "pH")
 acd_mean_plot #plot with the other time series
-
 
 ##### Average plots - time series ####
 sla_ts <- as.data.frame(dates_sla)
@@ -1014,7 +200,8 @@ sla_ts$mean_sla <- apply(sla_all, 3, mean, na.rm = TRUE)
 sla_ts$sd_sla <- apply(sla_all, 3, sd, na.rm = TRUE)
 sla_ts$month <- as.numeric(format(as.Date(sla_ts$dates_sla), "%m"))
 
-sla_tss <- sla_ts %>% dplyr::mutate(year = ifelse(month < 4, as.numeric(format(as.Date(dates_sla), "%Y"))-1, as.numeric(format(as.Date(dates_sla), "%Y")))) %>%
+sla_tss <- sla_ts %>% 
+  dplyr::mutate(year = ifelse(month < 4, as.numeric(format(as.Date(dates_sla), "%Y"))-1, as.numeric(format(as.Date(dates_sla), "%Y")))) %>%
   dplyr::mutate(season = case_when(month %in% c(6,7,8) ~ "Winter", month %in% c(12,1,2) ~ "Summer", 
                                    month %in% c(3,4,5) ~ "Autumn", month %in% c(9,10,11) ~ "Spring" )) %>%
   dplyr::group_by(year, season) %>%
@@ -1033,9 +220,9 @@ sla_mean_plot <- ggplot() +
                                   ymax = sla_mean_sea+sla_sd_sea, fill = season), 
               alpha = 0.2, show.legend = F) +
   theme_classic() +
-  labs(x = "Year", y = "SLA mean (m)", color = legend_title)+
-  scale_color_manual(labels = c("Summer","Winter"), values = c("#CAB435","#354BCA"))+
-  scale_fill_manual(labels = c("Summer","Winter"), values = c("#CAB435","#354BCA"))
+  labs(x = "Year", y = "SLA (m)", color = legend_title)+
+  scale_color_manual(labels = c("Summer","Winter"), values = c("#e1ad68","#256b61"))+
+  scale_fill_manual(labels = c("Summer","Winter"), values = c("#e1ad68","#256b61"))
 sla_mean_plot
 
 sst_ts <- as.data.frame(dates_sst)
@@ -1063,10 +250,870 @@ sst_mean_plot <- ggplot() +
               alpha = 0.2, show.legend = F) +
   theme_classic() +
   labs(x = "Year", y = expression(paste("SST (",degree~C,")")), color = legend_title)+
-  scale_color_manual(labels = c("Summer","Winter"), values = c("#CAB435","#354BCA"))+
-  scale_fill_manual(labels = c("Summer","Winter"), values = c("#CAB435","#354BCA"))
+  scale_color_manual(labels = c("Summer","Winter"), values = c("#e1ad68","#256b61"))+
+  scale_fill_manual(labels = c("Summer","Winter"), values = c("#e1ad68","#256b61"))
 sst_mean_plot
 
-acd_mean_plot+sla_mean_plot+sst_mean_plot + plot_layout(ncol = 1, nrow = 3)#, widths = c(0.8, 2.2))
+acd_mean_plot+sla_mean_plot+sst_mean_plot + plot_layout(ncol = 1, nrow = 3)
 
-ggsave('plots/spatial/Abrolhos_acd_sla_sst_ts.png', dpi = 300, width = 5, height = 8)
+ggsave('plots/spatial/Abrolhos_acd_sla_sst_ts.png', dpi = 300, width = 8, height = 9)
+
+###### ALL OLD CODE IN CASE I NEED IT
+
+# #plot each month
+# choose_month <- 1
+# chose_month_text <- "Jan"
+# title_legend <- "SLA"
+# 
+# msla <- melt_sla(sla_monthly,choose_month)
+# 
+# p_1 <- ggplot() +
+#   geom_tile( data = msla, aes(x = long, y = lat, fill = sla)) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+#                        limits = c(min_sla, max_sla)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   ggtitle("January") +
+#   theme(plot.title = element_text(hjust = 0))+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_1
+# 
+# 
+# choose_month <- 2
+# chose_month_text <- "Feb"
+# # title_legend <- paste("SLA", chose_month_text)
+# 
+# msla <- melt_sla(sla_monthly,choose_month)
+# 
+# p_2 <- ggplot() +
+#   geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+#                        limits = c(min_sla, max_sla)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   ggtitle("February") +
+#   theme(plot.title = element_text(hjust = 0))+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_2
+# 
+# 
+# choose_month <- 3
+# chose_month_text <- "Mar"
+# # title_legend <- paste("SLA", chose_month_text)
+# 
+# msla <- melt_sla(sla_monthly,choose_month)
+# 
+# p_3 <- ggplot() +
+#   geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+#                        limits = c(min_sla, max_sla)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   ggtitle("March") +
+#   theme(plot.title = element_text(hjust = 0))+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_3
+# 
+# 
+# choose_month <- 4
+# chose_month_text <- "Apr"
+# # title_legend <- paste("SLA", chose_month_text)
+# 
+# msla <- melt_sla(sla_monthly,choose_month)
+# 
+# p_4 <- ggplot() +
+#   geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+#                        limits = c(min_sla, max_sla)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   ggtitle("April") +
+#   theme(plot.title = element_text(hjust = 0))+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_4
+# 
+# 
+# choose_month <- 5
+# chose_month_text <- "May"
+# # title_legend <- paste("SLA", chose_month_text)
+# 
+# msla <- melt_sla(sla_monthly,choose_month)
+# 
+# p_5 <- ggplot() +
+#   geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+#                        limits = c(min_sla, max_sla)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   ggtitle("May") +
+#   theme(plot.title = element_text(hjust = 0))+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_5
+# 
+# 
+# choose_month <- 6
+# chose_month_text <- "Jun"
+# # title_legend <- paste("SLA", chose_month_text)
+# 
+# msla <- melt_sla(sla_monthly,choose_month)
+# 
+# p_6 <- ggplot() +
+#   geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+#                        limits = c(min_sla, max_sla)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   ggtitle("June") +
+#   theme(plot.title = element_text(hjust = 0))+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_6
+# 
+# 
+# choose_month <- 7
+# chose_month_text <- "Jul"
+# # title_legend <- paste("SLA", chose_month_text)
+# 
+# msla <- melt_sla(sla_monthly,choose_month)
+# 
+# p_7 <- ggplot() +
+#   geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+#                        limits = c(min_sla, max_sla)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   ggtitle("July") +
+#   theme(plot.title = element_text(hjust = 0))+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_7
+# 
+# 
+# choose_month <- 8
+# chose_month_text <- "Aug"
+# # title_legend <- paste("SLA", chose_month_text)
+# 
+# msla <- melt_sla(sla_monthly,choose_month)
+# 
+# p_8 <- ggplot() +
+#   geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+#                        limits = c(min_sla, max_sla)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   ggtitle("August") +
+#   theme(plot.title = element_text(hjust = 0))+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_8
+# 
+# 
+# choose_month <- 9
+# chose_month_text <- "Sep"
+# # title_legend <- paste("SLA", chose_month_text)
+# 
+# msla <- melt_sla(sla_monthly,choose_month)
+# 
+# p_9 <- ggplot() +
+#   geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+#                        limits = c(min_sla, max_sla)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   ggtitle("September") +
+#   theme(plot.title = element_text(hjust = 0))+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_9
+# 
+# 
+# choose_month <- 10
+# chose_month_text <- "Oct"
+# # title_legend <- paste("SLA", chose_month_text)
+# 
+# msla <- melt_sla(sla_monthly,choose_month)
+# 
+# p_10 <- ggplot() +
+#   geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+#                        limits = c(min_sla, max_sla)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   ggtitle("October") +
+#   theme(plot.title = element_text(hjust = 0))+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_10
+# 
+# 
+# choose_month <- 11
+# chose_month_text <- "Nov"
+# 
+# msla <- melt_sla(sla_monthly,choose_month)
+# 
+# p_11 <- ggplot() +
+#   geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+#                        limits = c(min_sla, max_sla)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   ggtitle("November") +
+#   theme(plot.title = element_text(hjust = 0))+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_11
+# 
+# 
+# choose_month <- 12
+# chose_month_text <- "Dec"
+# 
+# msla <- melt_sla(sla_monthly,choose_month)
+# 
+# p_12 <- ggplot() +
+#   geom_tile(data = msla, aes(x = long, y = lat, fill = sla)) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+#                        limits = c(min_sla, max_sla)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   ggtitle("December") +
+#   theme(plot.title = element_text(hjust = 0))+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_12
+# 
+# # p_1+p_2+p_3+p_4+p_5+p_6+p_7+p_8+p_9+p_10+p_11+p_12 + 
+# #   plot_layout(ncol = 3, nrow = 4,guides = 'collect')
+# 
+# p_1+p_3+p_5+p_7+p_9+p_11+
+#   plot_layout(ncol = 3, nrow = 2,guides = 'collect')
+# 
+# ggsave('plots/spatial/Abrolhos_sla_monthly_spatial.png', dpi = 300, width = 9, height = 9)
+
+##### SURFACE CURRENTS ######
+
+#data should have loaded already above
+
+# ##### plotting current ####
+# #gets only every split_size rows in current data so displayed better on map, 
+# #if is every current vector it's too messy
+# 
+# arrow_size <- 1.5
+# split_size <- 3 
+# 
+# choose_month <- 1
+# chose_month_text <- "Jan"
+# # title_l <- paste("Current", chose_month_text)
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+#   filter(!is.na(uu)) %>% glimpse()
+# 
+# p_1 <-  
+#   ggplot() +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size ) +
+#   labs(x = "Longitude", y = "Latitude", title = "January") + 
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# p_1
+# 
+# 
+# choose_month <- 2
+# chose_month_text <- "Feb"
+# # title_l <- paste("Current", chose_month_text)
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
+# 
+# p_2 <-  
+#   ggplot() +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
+#   labs(x = "Longitude", y = "Latitude", title = "February") + 
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_2
+# 
+# 
+# choose_month <- 3
+# chose_month_text <- "Mar"
+# # title_l <- paste("Current", chose_month_text)
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
+# 
+# p_3 <-  
+#   ggplot() +  
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
+#   labs(x = "Longitude", y = "Latitude", title = "March") + 
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_3
+# 
+# 
+# choose_month <- 4
+# chose_month_text <- "Apr"
+# # title_l <- paste("Current", chose_month_text)
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
+# 
+# p_4 <-  
+#   ggplot() +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
+#   labs(x = "Longitude", y = "Latitude", title = "April") + 
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_4
+# 
+# 
+# choose_month <- 5
+# chose_month_text <- "May"
+# # title_l <- paste("Current", chose_month_text)
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
+# 
+# p_5 <-  
+#   ggplot() +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
+#   labs(x = "Longitude", y = "Latitude", title = "May") + 
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_5
+# 
+# 
+# choose_month <- 6
+# chose_month_text <- "Jun"
+# # title_l <- paste("Current", chose_month_text)
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
+# 
+# p_6 <-  
+#   ggplot() +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
+#   labs(x = "Longitude", y = "Latitude", title = "June") + 
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_6
+# 
+# 
+# choose_month <- 7
+# chose_month_text <- "Jul"
+# # title_l <- paste("Current", chose_month_text)
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
+# 
+# p_7 <-  
+#   ggplot() +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
+#   labs(x = "Longitude", y = "Latitude", title = "July") + 
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_7
+# 
+# 
+# choose_month <- 8
+# chose_month_text <- "Aug"
+# # title_l <- paste("Current", chose_month_text)
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
+# 
+# p_8 <-  
+#   ggplot() +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
+#   labs(x = "Longitude", y = "Latitude", title = "August") + 
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_8
+# 
+# 
+# choose_month <- 9
+# chose_month_text <- "Sep"
+# # title_l <- paste("Current", chose_month_text)
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
+# 
+# p_9 <-  
+#   ggplot() +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
+#   labs(x = "Longitude", y = "Latitude", title = "September") + 
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_9
+# 
+# 
+# choose_month <- 10
+# chose_month_text <- "Oct"
+# # title_l <- paste("Current", chose_month_text)
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
+# 
+# p_10 <-  
+#   ggplot() +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
+#   labs(x = "Longitude", y = "Latitude", title = "October") + 
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_10
+# 
+# 
+# choose_month <- 11
+# chose_month_text <- "Nov"
+# # title_l <- paste("Current", chose_month_text)
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
+# 
+# p_11 <-  
+#   ggplot() +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
+#   labs(x = "Longitude", y = "Latitude", title = "November") + 
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_11
+# 
+# 
+# choose_month <- 12
+# chose_month_text <- "Dec"
+# # title_l <- paste("Current", chose_month_text)
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% glimpse()
+# 
+# p_12 <-  
+#   ggplot() +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), vecsize=arrow_size) +
+#   labs(x = "Longitude", y = "Latitude", title = "December") + 
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# #p_12
+# 
+# p_1+p_3+p_5+p_7+p_9+p_11+
+#   plot_layout(ncol = 3, nrow = 2)
+# 
+# ggsave('plots/spatial/Abrolhos_current_monthly_spatial.png', dpi = 300, width = 9, height = 9)
+
+# #### plot each month
+# 
+# choose_month <- 1
+# chose_month_text <- "Jan"
+# title_legend <- "SST"
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+#   filter(!is.na(uu)) %>% glimpse()
+# 
+# msst <- melt_sst(sst_monthly,choose_month)
+# 
+# p_1 <- ggplot() +
+#   geom_tile(data = msst, aes(x = long, y = lat, fill = sst))+#, interpolate = TRUE) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+#                        limits = c(min_sst, max_sst)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+#               vecsize=arrow_size, color = "white")+
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend,title = "January") +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_1
+# 
+# 
+# choose_month <- 2
+# chose_month_text <- "Feb"
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+#   filter(!is.na(uu)) %>% glimpse()
+# 
+# msst <- melt_sst(sst_monthly,choose_month)
+# 
+# p_2 <- ggplot() +
+#   geom_tile(data = msst, aes(x = long, y = lat, fill = sst)) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+#                        limits = c(min_sst, max_sst)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+#               vecsize=arrow_size, color = "white") +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "February") +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_2
+# 
+# 
+# choose_month <- 3
+# chose_month_text <- "Mar"
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+#   filter(!is.na(uu)) %>% glimpse()
+# 
+# msst <- melt_sst(sst_monthly,choose_month)
+# 
+# p_3 <- ggplot() +
+#   geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+#                        limits = c(min_sst, max_sst)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+#               vecsize=arrow_size, color = "white")+
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "March") +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_3
+# 
+# 
+# choose_month <- 4
+# chose_month_text <- "Apr"
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+#   filter(!is.na(uu)) %>% glimpse()
+# 
+# msst <- melt_sst(sst_monthly,choose_month)
+# 
+# p_4 <- ggplot() +
+#   geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+#                        limits = c(min_sst, max_sst)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+#               vecsize=arrow_size, color = "white")+
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "April") +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_4
+# 
+# 
+# choose_month <- 5
+# chose_month_text <- "May"
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+#   filter(!is.na(uu)) %>% glimpse()
+# 
+# msst <- melt_sst(sst_monthly,choose_month)
+# 
+# p_5 <- ggplot() +
+#   geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+#                        limits = c(min_sst, max_sst)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1)+
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+#               vecsize=arrow_size, color = "white") +
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "May") +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_5
+# 
+# 
+# choose_month <- 6
+# chose_month_text <- "Jun"
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+#   filter(!is.na(uu)) %>% glimpse()
+# 
+# msst <- melt_sst(sst_monthly,choose_month)
+# 
+# p_6 <- ggplot() +
+#   geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+#                        limits = c(min_sst, max_sst)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+#               vecsize=arrow_size, color = "white")+
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "June") +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_6
+# 
+# 
+# choose_month <- 7
+# chose_month_text <- "Jul"
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+#   filter(!is.na(uu)) %>% glimpse()
+# 
+# msst <- melt_sst(sst_monthly,choose_month)
+# 
+# p_7 <- ggplot() +
+#   geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+#                        limits = c(min_sst, max_sst)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+#               vecsize=arrow_size, color = "white")+
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "July") +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_7
+# 
+# 
+# choose_month <- 8
+# chose_month_text <- "Aug"
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+#   filter(!is.na(uu)) %>% glimpse()
+# 
+# msst <- melt_sst(sst_monthly,choose_month)
+# 
+# p_8 <- ggplot() +
+#   geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+#                        limits = c(min_sst, max_sst)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+#               vecsize=arrow_size, color = "white")+
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "August") +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_8
+# 
+# 
+# choose_month <- 9
+# chose_month_text <- "Sep"
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+#   filter(!is.na(uu)) %>% glimpse()
+# 
+# msst <- melt_sst(sst_monthly,choose_month)
+# 
+# p_9 <- ggplot() +
+#   geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+#                        limits = c(min_sst, max_sst)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+#               vecsize=arrow_size, color = "white")+
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "September") +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_9
+# 
+# 
+# choose_month <- 10
+# chose_month_text <- "Oct"
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+#   filter(!is.na(uu)) %>% glimpse()
+# 
+# msst <- melt_sst(sst_monthly,choose_month)
+# 
+# p_10 <- ggplot() +
+#   geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+#                        limits = c(min_sst, max_sst)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+#               vecsize=arrow_size, color = "white")+
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend, "October") +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_10
+# 
+# 
+# choose_month <- 11
+# chose_month_text <- "Nov"
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+#   filter(!is.na(uu)) %>% glimpse()
+# 
+# msst <- melt_sst(sst_monthly,choose_month)
+# 
+# p_11 <- ggplot() +
+#   geom_raster(data = msst, aes(x = long, y = lat, fill = sst), interpolate = TRUE) + 
+#   scale_fill_gradientn(colours = viridis(5),na.value = NA,
+#                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+#                        limits = c(min_sst, max_sst)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+#               vecsize=arrow_size, color = "white")+
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "November") +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_11
+# 
+# 
+# choose_month <- 12
+# chose_month_text <- "Dec"
+# 
+# curr <- melt_cur(uu_monthly,vv_monthly,choose_month)
+# cur_month <- subset(curr, select = -c(longg, latt))
+# curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>% 
+#   filter(!is.na(uu)) %>% glimpse()
+# 
+# msst <- melt_sst(sst_monthly,choose_month)
+# 
+# p_12 <- ggplot() +
+#   geom_tile(data = msst, aes(x = long, y = lat, fill = sst)) + 
+#   scale_fill_gradientn(colours = rev(viridis(20)),na.value = NA,
+#                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+#                        limits = c(min_sst, max_sst)) +
+#   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+#   geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+#               vecsize=arrow_size, color = "white")+
+#   geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+#   geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+#   labs(x = "Longitude", y = "Latitude", fill = title_legend, title = "December") +
+#   coord_sf(xlim = xxlim, ylim = yylim) +
+#   theme_minimal()+
+#   scale_x_continuous(breaks=c(113.0,114.0,115.0))
+# # p_12
+# 
+# p_1+p_3+p_5+p_7+p_9+p_11+
+#   plot_layout(ncol = 3, nrow = 2, guides = 'collect')
+
