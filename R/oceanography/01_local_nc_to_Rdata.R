@@ -1,18 +1,29 @@
+###
+# Project: Parks - Abrolhos
+# Data:    Oceanography - SST, SLA, currents & acidification
+# Task:    Load in netCDF files from local copy
+# author:  Jess Kolbusz & Claude
+# date:    Feb 2022
+##
+
+#### --- FILES ARE TOO BIG FOR GITHUB
+#### --- IN GITIGNORE
 
 library(dplyr)
 library(magrittr)
 library(RNetCDF)
-
-#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+library(weathermetrics)
 
 ## get data locations /limits that need from MPA
 ## do control F replace to replace names in the script for different locations
 
-wd_data_loc <- '~/Desktop/MPA_Work/data'
-wd_data_save <- '~/Desktop/MPA_work/data/Rdata'
+# wd_data_loc <- '~/Desktop/MPA_Work/data'
+# wd_data_save <- '~/Desktop/MPA_work/data/Rdata'
 
-setwd(wd_data_loc)
-locations <-   read.csv("network_scale_boundaries.csv", header = TRUE) %>%
+working.dir <- getwd()
+setwd(working.dir)
+
+locations <-   read.csv("data/spatial/oceanography/network_scale_boundaries.csv", header = TRUE) %>%
   glimpse()
 
 #i use the "zone" column for each since it distinguishes them all spatially
@@ -89,14 +100,11 @@ save(list = c("dates_sla","lat_sla","lon_sla","sla_all","sla_monthly","ucur_all"
      file = file_name)
 
 ######### SST #########
-setwd(paste(wd_data_loc,'oceanography/SST_IMOS', sep = '/'))
-dir()
-
 
 #IMOS - SRS - SST - L3S - Single Sensor - 1 month - day and night time - Australia
 #just got the monthly data file cause it was smaller and we only need the monthly
-filename_nc <- Sys.glob("*.nc")
-nc_file_to_get_sst <- open.nc(filename_nc,write = TRUE)
+# filename_nc <- Sys.glob("*.nc")
+nc_file_to_get_sst <- open.nc("data/spatial/oceanography/large/IMOS_aggregation_20220224T013630Z/IMOS_aggregation_20220224T013630Z.nc",write = TRUE)
 print.nc(nc_file_to_get_sst) #shows you all the file details
 
 time_nc<- var.get.nc(nc_file_to_get_sst, 'time')  #NC_CHAR time:units = "days since 1981-01-01 00:00:00" ;
@@ -122,6 +130,7 @@ sst_all <- var.get.nc(nc_file_to_get_sst,'sea_surface_temperature', start = c(lo
 sst_all <- kelvin.to.celsius(sst_all, round = 2) 
 
 #gets mean monthly value 
+
 size_matrix <- size(sst_all)
 R <- as.numeric(size_matrix[1])
 C <- as.numeric(size_matrix[2])
@@ -136,7 +145,6 @@ file_name <- paste(Zone,"sst_data.Rdata",sep = '_')
 setwd(paste(wd_data_save,Zone, sep = '/'))
 save(list = c("dates_sst","lat_sst","lon_sst","sst_all","sst_monthly"),
      file = file_name)
-
 
 ##### Acidification ####
 setwd(paste(wd_data_loc,'acidification', sep = '/'))
@@ -187,4 +195,50 @@ file_name <- paste(Zone,"acd_data.Rdata",sep = '_')
 setwd(paste(wd_data_save,Zone, sep = '/'))
 save(list = c("acd_ts_monthly","acd_ts_all"),
      file = file_name)
+
+
+###### -----DEGREE HEATING WEEKS
+nc_file_to_get_dhw <- open.nc("data/spatial/oceanography/large/DHW_2021/dhw_5km_82f1_a212_461c.nc",write = TRUE)
+print.nc(nc_file_to_get_dhw) #shows you all the file details
+
+time_nc<- var.get.nc(nc_file_to_get_sst, 'time')  #NC_CHAR time:units = "days since 1981-01-01 00:00:00" ;
+time_nc_dhw <- utcal.nc("seconds since 1970-01-01T00:00:00", time_nc,type = "c")
+dates_dhw <- as.Date(time_nc_dhw)
+
+lat <- var.get.nc(nc_file_to_get_dhw, 'latitude') #some latitude, some lat -> watch for spelling
+lon <- var.get.nc(nc_file_to_get_dhw, 'longitude')
+
+#get lats of sst file which correspond to the lats of the zone
+lat_i <- which(lat <= Lat_n & lat >= Lat_s)
+lon_i <- which(lon <= Lon_e & lon >= Lon_w)
+
+#check values that taken out
+check_lat <- lat[lat_i]
+check_lat
+check_lon <- lon[lon_i]
+check_lon
+
+#load only the subset of data
+#get all sst
+sst_all <- var.get.nc(nc_file_to_get_dhw,'CRW_DHW', start = c(lon_i[1], lat_i[1],1), count = c(length(lon_i), length(lat_i), length(dates_sst)));
+
+#gets mean monthly value 
+
+size_matrix <- size(sst_all)
+R <- as.numeric(size_matrix[1])
+C <- as.numeric(size_matrix[2])
+Z <- as.numeric(size_matrix[3])
+sst_monthly <- tapply(sst_all,list(rep(1:R,C*Z),rep(1:C,each=R,times=Z),rep(strftime(dates_sst,'%m'),each=R*C)),mean, na.rm = TRUE);
+
+#data to save is the time, lat, lon, whole sst, monthly sst
+lat_sst <- check_lat
+lon_sst <- check_lon
+file_name <- paste(Zone,"sst_data.Rdata",sep = '_')
+
+setwd(paste(wd_data_save,Zone, sep = '/'))
+save(list = c("dates_sst","lat_sst","lon_sst","sst_all","sst_monthly"),
+     file = file_name)
+
+
+
 
