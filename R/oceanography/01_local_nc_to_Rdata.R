@@ -9,17 +9,18 @@
 #### --- FILES ARE TOO BIG FOR GITHUB
 #### --- IN GITIGNORE
 
+# Clear memory----
+rm(list=ls())
+
 library(dplyr)
 library(magrittr)
 library(RNetCDF)
 library(weathermetrics)
+library(iemisc)
 
 ## get data locations /limits that need from MPA
-## do control F replace to replace names in the script for different locations
 
-# wd_data_loc <- '~/Desktop/MPA_Work/data'
-# wd_data_save <- '~/Desktop/MPA_work/data/Rdata'
-
+#set working directory
 working.dir <- getwd()
 setwd(working.dir)
 
@@ -38,8 +39,8 @@ Lat_s <- locs$lat_s
 
 ######### SEA LEVEL ANOMALY #########
 #location of netcdf sla data
-setwd(paste(wd_data_loc,'oceanography/OceanCurrent_IMOS', sep = '/'))
-dir()
+# setwd(paste(wd_data_loc,'oceanography/OceanCurrent_IMOS', sep = '/'))
+# dir()
 
 ## add in where data from etc. 
 #the numbers are just how the download from IMOS works - can rename the files if easier
@@ -101,6 +102,8 @@ save(list = c("dates_sla","lat_sla","lon_sla","sla_all","sla_monthly","ucur_all"
 
 ######### SST #########
 
+####----Claude re-doing with 6 day average temperature
+
 #IMOS - SRS - SST - L3S - Single Sensor - 1 month - day and night time - Australia
 #just got the monthly data file cause it was smaller and we only need the monthly
 # filename_nc <- Sys.glob("*.nc")
@@ -129,7 +132,26 @@ check_lon
 sst_all <- var.get.nc(nc_file_to_get_sst,'sea_surface_temperature', start = c(lon_i[1], lat_i[1],1), count = c(length(lon_i), length(lat_i), length(dates_sst)));
 sst_all <- kelvin.to.celsius(sst_all, round = 2) 
 
-#gets mean monthly value 
+# # gets mean monthly value
+# melt_sst_all <- function(chose_month) {
+#   L<- list()
+#   L$lats <- check_lat
+#   L$lons <- check_lon
+# 
+#   time_i <- which(time_data$month == chose_month)
+#   sst_month <- sst_all[,,time_i]
+#   L$month <- chose_month
+# 
+#   dimnames(sst_month)[[1]] <- L$lons
+#   dimnames(sst_month)[[2]] <- L$lats
+#   dimnames(sst_month)[[3]] <- rep(chose_month,length(time_i))
+# 
+#   L$sst_month <- sst_month
+# 
+#   ret <- melt(L$sst_month, value.name = "sst") %>% rename(Lon = Var1, Lat = Var2) %>% glimpse()
+# }
+# 
+# plot_sst <- ret %>% group_by(Lon, Lat) %>% summarise(sst = mean(sst,na.rm = TRUE)) %>% glimpse()
 
 size_matrix <- size(sst_all)
 R <- as.numeric(size_matrix[1])
@@ -142,14 +164,12 @@ lat_sst <- check_lat
 lon_sst <- check_lon
 file_name <- paste(Zone,"sst_data.Rdata",sep = '_')
 
-setwd(paste(wd_data_save,Zone, sep = '/'))
 save(list = c("dates_sst","lat_sst","lon_sst","sst_all","sst_monthly"),
      file = file_name)
 
 ##### Acidification ####
 setwd(paste(wd_data_loc,'acidification', sep = '/'))
 dir()
-
 
 #Ocean_acidification_historical_reconstructionfrom AODN portal
 filename_nc <- Sys.glob("*.nc")
@@ -201,8 +221,8 @@ save(list = c("acd_ts_monthly","acd_ts_all"),
 nc_file_to_get_dhw <- open.nc("data/spatial/oceanography/large/DHW_2021/dhw_5km_82f1_a212_461c.nc",write = TRUE)
 print.nc(nc_file_to_get_dhw) #shows you all the file details
 
-time_nc<- var.get.nc(nc_file_to_get_sst, 'time')  #NC_CHAR time:units = "days since 1981-01-01 00:00:00" ;
-time_nc_dhw <- utcal.nc("seconds since 1970-01-01T00:00:00", time_nc,type = "c")
+time_nc<- var.get.nc(nc_file_to_get_dhw, 'time')  #NC_CHAR time:units = "days since 1981-01-01 00:00:00" ;
+time_nc_dhw <- utcal.nc("seconds since 1970-01-01 00:00:00", time_nc,type = "c")
 dates_dhw <- as.Date(time_nc_dhw)
 
 lat <- var.get.nc(nc_file_to_get_dhw, 'latitude') #some latitude, some lat -> watch for spelling
@@ -220,15 +240,16 @@ check_lon
 
 #load only the subset of data
 #get all sst
-sst_all <- var.get.nc(nc_file_to_get_dhw,'CRW_DHW', start = c(lon_i[1], lat_i[1],1), count = c(length(lon_i), length(lat_i), length(dates_sst)));
+dhw_all <- var.get.nc(nc_file_to_get_dhw,'CRW_DHW', start = c(lon_i[1], lat_i[1],1), count = c(length(lon_i), length(lat_i), length(dates_dhw)));
+# dhw_all <- as.data.frame.table(dhw_all)
 
 #gets mean monthly value 
 
-size_matrix <- size(sst_all)
+size_matrix <- size(dhw_all)
 R <- as.numeric(size_matrix[1])
 C <- as.numeric(size_matrix[2])
 Z <- as.numeric(size_matrix[3])
-sst_monthly <- tapply(sst_all,list(rep(1:R,C*Z),rep(1:C,each=R,times=Z),rep(strftime(dates_sst,'%m'),each=R*C)),mean, na.rm = TRUE);
+dhw_monthly <- tapply(dhw_all,list(rep(1:R,C*Z),rep(1:C,each=R,times=Z),rep(strftime(dates_dhw,'%m'),each=R*C)),mean, na.rm = TRUE);
 
 #data to save is the time, lat, lon, whole sst, monthly sst
 lat_sst <- check_lat
