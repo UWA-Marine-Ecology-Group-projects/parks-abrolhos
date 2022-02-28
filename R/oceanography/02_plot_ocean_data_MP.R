@@ -104,41 +104,68 @@ dev.off()
 
 ######### SST #########
 
-load("data/spatial/oceanography/Abrolhos_sst_data.Rdata")
+# load("data/spatial/oceanography/Abrolhos_sst_data.Rdata")
+# 
+# #get min and max for whole spatial scales legend/colours
+# min_sst =round(min(min(sst_monthly,na.rm = TRUE), na.rm = TRUE))
+# max_sst= round(max(max(sst_monthly,na.rm = TRUE), na.rm = TRUE)) 
+# 
+# #melts SST data to plot
+# melt_sst <- function(sst_monthly, chose_month) {
+#   L<- list()
+#   L$lats <- lat_sst
+#   L$lons <- lon_sst
+#   L$month <- chose_month
+#   L$sst <- sst_monthly[,,chose_month]
+#   dimnames(L$sst) <- list(long = L$lons, lat = L$lats)
+#   ret <- melt(L$sst, value.name = "sst")
+#   cbind(date = L$month, ret, degF = ret$sst * 9/5 + 32)
+# }
+# 
+# #melts current data to plot
+# melt_cur <- function(uu_monthly, vv_monthly, chose_month) {
+#   L<- list()
+#   L$lats <- lat_sla
+#   L$lons <- lon_sla
+#   L$month <- chose_month
+#   L$uu <- uu_monthly[,,chose_month]
+#   L$vv <- vv_monthly[,,chose_month]
+#   
+#   dimnames(L$uu) <- list(long = L$lons, lat = L$lats)
+#   dimnames(L$vv) <- list(longg = L$lons, latt = L$lats)
+#   
+#   ret <- melt(L$uu, value.name = "uu")
+#   ret1 <- melt(L$vv, value.name = "vv")
+#   
+#   cbind(date = L$month, ret, ret1)
+# }
 
-#get min and max for whole spatial scales legend/colours
-min_sst =round(min(min(sst_monthly,na.rm = TRUE), na.rm = TRUE))
-max_sst= round(max(max(sst_monthly,na.rm = TRUE), na.rm = TRUE)) 
+sst.data <- readRDS("data/spatial/oceanography/Abrolhos_SST_month.rds")%>%
+  ungroup()%>%
+  glimpse()
 
-#melts SST data to plot
-melt_sst <- function(sst_monthly, chose_month) {
-  L<- list()
-  L$lats <- lat_sst
-  L$lons <- lon_sst
-  L$month <- chose_month
-  L$sst <- sst_monthly[,,chose_month]
-  dimnames(L$sst) <- list(long = L$lons, lat = L$lats)
-  ret <- melt(L$sst, value.name = "sst")
-  cbind(date = L$month, ret, degF = ret$sst * 9/5 + 32)
-}
+min_sst =round(min(min(sst.data$sst,na.rm = TRUE), na.rm = TRUE))
+max_sst= round(max(max(sst.data$sst,na.rm = TRUE), na.rm = TRUE))
 
-#melts current data to plot
-melt_cur <- function(uu_monthly, vv_monthly, chose_month) {
-  L<- list()
-  L$lats <- lat_sla
-  L$lons <- lon_sla
-  L$month <- chose_month
-  L$uu <- uu_monthly[,,chose_month]
-  L$vv <- vv_monthly[,,chose_month]
-  
-  dimnames(L$uu) <- list(long = L$lons, lat = L$lats)
-  dimnames(L$vv) <- list(longg = L$lons, latt = L$lats)
-  
-  ret <- melt(L$uu, value.name = "uu")
-  ret1 <- melt(L$vv, value.name = "vv")
-  
-  cbind(date = L$month, ret, ret1)
-}
+title_legend <- "SST"
+p <- ggplot() +
+  geom_tile(data = sst.data%>%filter(month%in%c("1","3","5","7","9","11")), 
+            aes(x = Lon, y = Lat, fill = sst))+#, interpolate = TRUE) + 
+  scale_fill_gradientn(colours = viridis(5),na.value = NA,
+                       breaks = seq(from = min_sst, to = max_sst, by = 0.5),
+                       limits = c(min_sst, max_sst)) +
+  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+  # geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
+  #             vecsize=arrow_size, color = "white")+
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  coord_sf(xlim = xxlim, ylim = yylim) +
+  theme_minimal()+
+  # ggtitle(month.name[[i]])+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))+
+  facet_wrap(~month, nrow = 4, ncol = 3)
+p
 
 #empty list to store plots in
 pList <- list()
