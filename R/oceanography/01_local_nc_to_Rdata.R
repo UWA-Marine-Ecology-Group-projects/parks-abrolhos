@@ -16,7 +16,11 @@ library(dplyr)
 library(magrittr)
 library(RNetCDF)
 library(weathermetrics)
-library(iemisc)
+# library(iemisc)
+library(lubridate)
+
+#standard error
+se <- function(x) sd(x)/sqrt(length(x))
 
 ## get data locations /limits that need from MPA
 
@@ -132,40 +136,37 @@ check_lon
 sst_all <- var.get.nc(nc_file_to_get_sst,'sea_surface_temperature', start = c(lon_i[1], lat_i[1],1), count = c(length(lon_i), length(lat_i), length(dates_sst)));
 sst_all <- kelvin.to.celsius(sst_all, round = 2) 
 
-# # gets mean monthly value
-# melt_sst_all <- function(chose_month) {
-#   L<- list()
-#   L$lats <- check_lat
-#   L$lons <- check_lon
-# 
-#   time_i <- which(time_data$month == chose_month)
-#   sst_month <- sst_all[,,time_i]
-#   L$month <- chose_month
-# 
-#   dimnames(sst_month)[[1]] <- L$lons
-#   dimnames(sst_month)[[2]] <- L$lats
-#   dimnames(sst_month)[[3]] <- rep(chose_month,length(time_i))
-# 
-#   L$sst_month <- sst_month
-# 
-#   ret <- melt(L$sst_month, value.name = "sst") %>% rename(Lon = Var1, Lat = Var2) %>% glimpse()
-# }
-# 
-# plot_sst <- ret %>% group_by(Lon, Lat) %>% summarise(sst = mean(sst,na.rm = TRUE)) %>% glimpse()
+time_data <- list()
+time_data$dates <- as.character(dates_sst)
+time_data$month <- lubridate::month(as.POSIXlt(time_data$dates, format="%Y-%m-%d"))
+time_data <- as.data.frame(time_data)
+str(time_data)
 
-size_matrix <- size(sst_all)
-R <- as.numeric(size_matrix[1])
-C <- as.numeric(size_matrix[2])
-Z <- as.numeric(size_matrix[3])
-sst_monthly <- tapply(sst_all,list(rep(1:R,C*Z),rep(1:C,each=R,times=Z),rep(strftime(dates_sst,'%m'),each=R*C)),mean, na.rm = TRUE);
-
-#data to save is the time, lat, lon, whole sst, monthly sst
 lat_sst <- check_lat
 lon_sst <- check_lon
-file_name <- paste(Zone,"sst_data.Rdata",sep = '_')
 
-save(list = c("dates_sst","lat_sst","lon_sst","sst_all","sst_monthly"),
-     file = file_name)
+arr = array(sst_all, dim=c(length(lon_i),length(lat_i),length(time_data$dates)),
+            dimnames = list(lon_sst, lat_sst,time_data$dates))
+
+arr_long <- arr %>%
+  reshape2::melt(varnames = c("Lon","Lat","Date"))
+
+arr_long <- arr_long %>%
+  dplyr::mutate(Date = as.Date(Date))%>%
+  dplyr::mutate(year = year(Date),month = month(Date))%>%
+  glimpse()
+
+plot_sst_year <- arr_long %>% 
+  group_by(year, Lon, Lat) %>% 
+  summarise(sst = mean(value,na.rm = TRUE)) %>% 
+  glimpse()
+
+plot_sst_month <- arr_long %>% 
+  group_by(month, Lon, Lat) %>% 
+  summarise(sst = mean(value,na.rm = TRUE)) %>% 
+  glimpse()
+
+write.csv(plot_sst_year,file = "data/spatial/oceanography/Abrolhos_SST_year.csv", row.names = F)
 
 ##### Acidification ####
 setwd(paste(wd_data_loc,'acidification', sep = '/'))
