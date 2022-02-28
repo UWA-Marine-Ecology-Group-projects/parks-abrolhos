@@ -167,6 +167,9 @@ plot_sst_month <- arr_long %>%
   glimpse()
 
 write.csv(plot_sst_year,file = "data/spatial/oceanography/Abrolhos_SST_year.csv", row.names = F)
+write.csv(plot_sst_month,file = "data/spatial/oceanography/Abrolhos_SST_month.csv", row.names = F)
+
+saveRDS(plot_sst_year,"data/spatial/oceanography/Abrolhos_SST_year.rds")
 
 ##### Acidification ####
 setwd(paste(wd_data_loc,'acidification', sep = '/'))
