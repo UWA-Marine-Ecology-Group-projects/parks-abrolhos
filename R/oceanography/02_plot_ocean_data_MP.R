@@ -142,14 +142,16 @@ dev.off()
 
 sst.data <- readRDS("data/spatial/oceanography/Abrolhos_SST_month.rds")%>%
   ungroup()%>%
+  dplyr::mutate(month=month.name[month])%>%
   glimpse()
 
 min_sst =round(min(min(sst.data$sst,na.rm = TRUE), na.rm = TRUE))
 max_sst= round(max(max(sst.data$sst,na.rm = TRUE), na.rm = TRUE))
 
 title_legend <- "SST"
-p <- ggplot() +
-  geom_tile(data = sst.data%>%filter(month%in%c("1","3","5","7","9","11")), 
+p_1 <- ggplot() +
+  geom_tile(data = sst.data%>%filter(month%in%c("January","March","May","July",
+                                                "September","November")), 
             aes(x = Lon, y = Lat, fill = sst))+#, interpolate = TRUE) + 
   scale_fill_gradientn(colours = viridis(5),na.value = NA,
                        breaks = seq(from = min_sst, to = max_sst, by = 0.5),
@@ -165,7 +167,9 @@ p <- ggplot() +
   # ggtitle(month.name[[i]])+
   scale_x_continuous(breaks=c(113.0,114.0,115.0))+
   facet_wrap(~month, nrow = 4, ncol = 3)
-p
+p_1
+
+ggsave('plots/spatial/Abrolhos_SST_monthly_spatial.png',p_1, dpi = 300, width = 8, height = 9)
 
 #empty list to store plots in
 pList <- list()

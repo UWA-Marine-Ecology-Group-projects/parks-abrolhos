@@ -19,9 +19,6 @@ library(weathermetrics)
 # library(iemisc)
 library(lubridate)
 
-#standard error
-se <- function(x) sd(x)/sqrt(length(x))
-
 ## get data locations /limits that need from MPA
 
 #set working directory
@@ -53,6 +50,58 @@ Lat_s <- locs$lat_s
 #IMOS - OceanCurrent - Gridded sea level anomaly - Delayed mode - DM01
 #There is also this one you could look at - IMOS - OceanCurrent - Gridded sea level anomaly - Near real time
 #but I looks like there is less QA/QC applied
+
+nc_file_to_get_sla <- open.nc("data/spatial/oceanography/large/IMOS_aggregation_20220224T013630Z/IMOS_aggregation_20220224T013630Z.nc",write = TRUE)
+print.nc(nc_file_to_get_sla) #shows you all the file details
+
+time_nc<- var.get.nc(nc_file_to_get_sla, 'TIME')  #NC_CHAR time:units = "days since 1981-01-01 00:00:00" ;
+time_nc_sla <- utcal.nc("seconds since 1981-01-01 00:00:00", time_nc,type = "c")
+dates_sla <- as.Date(time_nc_sla)
+
+lat <- var.get.nc(nc_file_to_get_sla, 'LATITUDE') #some latitude, some lat -> watch for spelling
+lon <- var.get.nc(nc_file_to_get_sla, 'LONGITUDE')
+
+#get lats of sst file which correspond to the lats of the zone
+lat_i <- which(lat <= Lat_n & lat >= Lat_s)
+lon_i <- which(lon <= Lon_e & lon >= Lon_w)
+
+#check values that taken out
+check_lat <- lat[lat_i]
+check_lat
+check_lon <- lon[lon_i]
+check_lon
+
+#load only the subset of data
+#get all sst
+sla_all <- var.get.nc(nc_file_to_get_sst,'GSLA', start = c(lon_i[1], lat_i[1],1), count = c(length(lon_i), length(lat_i), length(dates_sst)));
+sla_all <- kelvin.to.celsius(sst_all, round = 2) 
+
+time_data <- list()
+time_data$dates <- as.character(dates_sla)
+time_data$month <- lubridate::month(as.POSIXlt(time_data$dates, format="%Y-%m-%d"))
+time_data <- as.data.frame(time_data)
+str(time_data)
+
+lat_sst <- check_lat
+lon_sst <- check_lon
+
+arr = array(sst_all, dim=c(length(lon_i),length(lat_i),length(time_data$dates)),
+            dimnames = list(lon_sst, lat_sst,time_data$dates))
+
+arr_long <- arr %>%
+  reshape2::melt(varnames = c("Lon","Lat","Date"))
+
+arr_long <- arr_long %>%
+  dplyr::mutate(Date = as.Date(Date))%>%
+  dplyr::mutate(year = year(Date),month = month(Date))%>%
+  glimpse()
+
+plot_sla_month <- arr_long %>% 
+  group_by(month, Lon, Lat) %>% 
+  summarise(sla = mean(value,na.rm = TRUE)) %>% 
+  glimpse()
+
+saveRDS(plot_sla_month,"data/spatial/oceanography/Abrolhos_SLA_month.rds")
 
 #auto gets the nc file
 filename_nc <- Sys.glob("*.nc")
@@ -105,12 +154,7 @@ save(list = c("dates_sla","lat_sla","lon_sla","sla_all","sla_monthly","ucur_all"
      file = file_name)
 
 ######### SST #########
-
-####----Claude re-doing with 6 day average temperature
-
-#IMOS - SRS - SST - L3S - Single Sensor - 1 month - day and night time - Australia
-#just got the monthly data file cause it was smaller and we only need the monthly
-# filename_nc <- Sys.glob("*.nc")
+#IMOS - SRS - SST - L3S - Single Sensor - 6 day - day and night time - Australia
 nc_file_to_get_sst <- open.nc("data/spatial/oceanography/large/IMOS_aggregation_20220224T013630Z/IMOS_aggregation_20220224T013630Z.nc",write = TRUE)
 print.nc(nc_file_to_get_sst) #shows you all the file details
 
