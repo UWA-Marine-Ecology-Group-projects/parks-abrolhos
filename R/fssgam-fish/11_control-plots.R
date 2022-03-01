@@ -44,6 +44,10 @@ Theme1 <-
 working.dir <- getwd()
 setwd(working.dir)
 #OR set manually once
+
+#standard error function
+se <- function(x) sd(x)/sqrt(length(x))
+
 # read in maxn and lengths
 maxn <- readRDS("data/Tidy/dat.maxn.rds")%>%
   glimpse()
@@ -65,19 +69,19 @@ full.maxn <- bind_rows(boss,bruv)
 length(unique(full.maxn$id))
 
 #read in SST
-load("data/spatial/oceanography/Abrolhos_sst_data.Rdata")
-
-sst_ts <- as.data.frame(dates_sst)
-sst_ts$mean_sst <- apply(sst_all, 3, mean, na.rm = TRUE)
-sst_ts$sd_sst <- apply(sst_all, 3, sd, na.rm = TRUE)
-sst_ts$month <- as.numeric(format(as.Date(sst_ts$dates_sst), "%m"))
-
-sst_tss <- sst_ts %>% mutate(year = ifelse(month < 4, as.numeric(format(as.Date(dates_sst), "%Y"))-1, as.numeric(format(as.Date(dates_sst), "%Y")))) %>%
-  dplyr::mutate(season = case_when(month %in% c(6,7,8) ~ "Winter", month %in% c(12,1,2) ~ "Summer", 
-                                   month %in% c(3,4,5) ~ "Autumn", month %in% c(9,10,11) ~ "Spring" )) %>%
-  group_by(year) %>%
-  summarise(sst_mean = mean(mean_sst, na.rm = TRUE),sd_sst = mean(sd_sst, na.rm = TRUE)) %>%
+sst <- readRDS("data/spatial/oceanography/Abrolhos_SST_year.rds")%>%
+  ungroup()%>%
   dplyr::mutate(year=as.character(year))%>%
+  glimpse()
+
+locations <-  read.csv("data/spatial/oceanography/network_scale_boundaries.csv", 
+                       header = TRUE) %>%
+  glimpse()
+
+sst.npz6 <- sst %>%
+  dplyr::filter(Lat <= -27.916 & Lat >= -28.238,Lon <= 113.666 & Lon >= 113.112)%>%
+  dplyr::group_by(year)%>%
+  dplyr::summarise(sst.mean=mean(sst), se = se(sst))%>%
   glimpse()
 
 # get rls thermal niche values ----
@@ -130,7 +134,7 @@ npz6 <- dat %>%
   left_join(spr.npz6.sr)%>%
   left_join(spr.npz6.l)%>%
   left_join(spr.npz6.cti)%>%
-  left_join(sst_tss)%>%
+  left_join(sst.npz6)%>%
   dplyr::filter(!year=="2022")%>%
   glimpse()
 
@@ -197,20 +201,28 @@ gg.npz6.l <- ggplot(data = npz6, aes(x = year, y = legal, fill = status))+
 gg.npz6.l
 
 # plot year by community thermal index - plus a line for MPA gazetting time ---
-gg.npz6.cti <- npz6 %>%
-  ggplot(aes(x = year, y = cti, fill = status))+
-  geom_errorbar(aes(ymin=cti-cti.se,ymax= cti+cti.se), width = 0.2,position=position_dodge(width=0.3))+
-  geom_point(shape = 21,size = 2,stroke = 1, color = "black",position=position_dodge(width=0.3))+
+
+gg.npz6.cti <- ggplot()+ 
+  geom_errorbar(data = npz6,aes(x = year, y = cti,ymin=cti-cti.se,
+                                ymax= cti+cti.se, fill = status), 
+                width = 0.2, position = position_dodge(width = 0.3))+
+  geom_point(data = npz6, aes(x = year, y = cti, fill = status),shape = 21,size = 2,
+             stroke = 1, color = "black", position = position_dodge(width = 0.3))+
   theme_classic()+
   scale_y_continuous(limits = c(20,23))+
-  geom_vline(xintercept = 1, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
+  geom_vline(xintercept = 1, linetype="dashed",color = "black", 
+             size=0.5,alpha = 0.5)+
   ylab("Community Thermal Index")+
   xlab("Year")+
-  scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
+  scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),
+                    values=c("#6daff4", "#7bbc63"))+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
+  geom_line(data = npz6,aes(group = 1, x = year, y = sst.mean))+
+  geom_ribbon(data = npz6,aes(group = 1, x = year, y = sst.mean, 
+                              ymin = sst.mean - se, ymax = sst.mean+se), alpha = 0.2)+
   Theme1
-gg.npz6.cti
 
+gg.npz6.cti
 
 #NPZ9
 # plot year by species richness - plus a line for MPA gazetting time ---
