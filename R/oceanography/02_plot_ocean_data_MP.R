@@ -8,9 +8,8 @@
 
 # Clear memory----
 rm(list=ls())
-
+gc()
 #remotes::install_github("hvillalo/satin2") #for quiver plots in R
-
 library(sf)
 library(reshape2)
 library(dplyr)
@@ -50,95 +49,37 @@ st_crs(dirkh)       <- st_crs(aumpa)
 
 ## get data locations /limits that need from MPA
 ## do control F replace to replace names in the script 
-##### SLA and CURR data load ####
-load("data/spatial/oceanography/Abrolhos_sla_current_data.Rdata")
+##### SLA ####
+sla.data <- readRDS("data/spatial/oceanography/Abrolhos_SLA_month.rds")%>%
+  ungroup()%>%
+  dplyr::mutate(month=month.name[month])%>%
+  glimpse()
 
-#get min and max for spatial plot colours from loaded data
-min_sla =round(min(min(sla_monthly,na.rm = TRUE), na.rm = TRUE), digits = 2)
-max_sla= round(max(max(sla_monthly,na.rm = TRUE), na.rm = TRUE), digits = 2) 
+min_sla =round(min(min(sla.data$sla,na.rm = TRUE), na.rm = TRUE),digits = 2)
+max_sla= round(max(max(sla.data$sla,na.rm = TRUE), na.rm = TRUE), digits = 2)
 
-#function to melt data so ggplot can use it and plot 
-melt_sla <- function(sla_monthly, chose_month) {
-  L<- list()
-  L$lats <- lat_sla
-  L$lons <- lon_sla
-  L$month <- chose_month
-  L$sla <- sla_monthly[,,chose_month]
-  dimnames(L$sla) <- list(long = L$lons, lat = L$lats)
-  ret <- melt(L$sla, value.name = "sla")
-  cbind(date = L$month, ret)
-}
+title_legend <- "SLA"
+p_1 <- ggplot() +
+  geom_tile(data = sla.data%>%filter(month%in%c("January","March","May","July",
+                                                "September","November")), 
+            aes(x = Lon, y = Lat, fill = sla))+#, interpolate = TRUE) + 
+  scale_fill_gradientn(colours = viridis(5),na.value = NA,
+                       breaks = seq(from = min_sla, to = max_sla, by = 0.02),
+                       limits = c(min_sla, max_sla)) +
+  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  coord_sf(xlim = xxlim, ylim = yylim) +
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))+
+  facet_wrap(~month, nrow = 4, ncol = 3)
+p_1
 
-#Loop through the plots for each month, saving as list
-pList <- list()
-
-for (i in 1:12) {
-  choose_month <- i
-  msla <- melt_sla(sla_monthly,choose_month)
-  title_legend <- "SLA"
-  p <- ggplot() +
-           geom_tile( data = msla, aes(x = long, y = lat, fill = sla)) + 
-           scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                                breaks = seq(from = min_sla, to = max_sla, by = 0.02),
-                                limits = c(min_sla, max_sla)) +
-           geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-           geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-           geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-           labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-           coord_sf(xlim = xxlim, ylim = yylim) +
-           theme_minimal()+
-           ggtitle(month.name[[i]]) +
-           theme(plot.title = element_text(hjust = 0))+
-           scale_x_continuous(breaks=c(113.0,114.0,115.0))
-  pList[[i]] <- p
-         
-}
-
-#save plots from list
-pList[[1]]+pList[[3]]+pList[[5]]+pList[[7]]+pList[[9]]+pList[[11]]+plot_layout(nrow = 3, ncol = 2,guides = 'collect')
-
-#save out plots
-ggsave('plots/spatial/Abrolhos_sla_monthly_spatial.png', dpi = 300, width = 8, height = 9)
-
+ggsave('plots/spatial/Abrolhos_SLA_monthly_spatial.png',p_1, dpi = 300, width = 8, height = 9)
 dev.off()
 
 ######### SST #########
-
-# load("data/spatial/oceanography/Abrolhos_sst_data.Rdata")
-# 
-# #get min and max for whole spatial scales legend/colours
-# min_sst =round(min(min(sst_monthly,na.rm = TRUE), na.rm = TRUE))
-# max_sst= round(max(max(sst_monthly,na.rm = TRUE), na.rm = TRUE)) 
-# 
-# #melts SST data to plot
-# melt_sst <- function(sst_monthly, chose_month) {
-#   L<- list()
-#   L$lats <- lat_sst
-#   L$lons <- lon_sst
-#   L$month <- chose_month
-#   L$sst <- sst_monthly[,,chose_month]
-#   dimnames(L$sst) <- list(long = L$lons, lat = L$lats)
-#   ret <- melt(L$sst, value.name = "sst")
-#   cbind(date = L$month, ret, degF = ret$sst * 9/5 + 32)
-# }
-# 
-# #melts current data to plot
-# melt_cur <- function(uu_monthly, vv_monthly, chose_month) {
-#   L<- list()
-#   L$lats <- lat_sla
-#   L$lons <- lon_sla
-#   L$month <- chose_month
-#   L$uu <- uu_monthly[,,chose_month]
-#   L$vv <- vv_monthly[,,chose_month]
-#   
-#   dimnames(L$uu) <- list(long = L$lons, lat = L$lats)
-#   dimnames(L$vv) <- list(longg = L$lons, latt = L$lats)
-#   
-#   ret <- melt(L$uu, value.name = "uu")
-#   ret1 <- melt(L$vv, value.name = "vv")
-#   
-#   cbind(date = L$month, ret, ret1)
-# }
 
 sst.data <- readRDS("data/spatial/oceanography/Abrolhos_SST_month.rds")%>%
   ungroup()%>%
@@ -149,7 +90,7 @@ min_sst =round(min(min(sst.data$sst,na.rm = TRUE), na.rm = TRUE))
 max_sst= round(max(max(sst.data$sst,na.rm = TRUE), na.rm = TRUE))
 
 title_legend <- "SST"
-p_1 <- ggplot() +
+p_2 <- ggplot() +
   geom_tile(data = sst.data%>%filter(month%in%c("January","March","May","July",
                                                 "September","November")), 
             aes(x = Lon, y = Lat, fill = sst))+#, interpolate = TRUE) + 
@@ -167,55 +108,15 @@ p_1 <- ggplot() +
   # ggtitle(month.name[[i]])+
   scale_x_continuous(breaks=c(113.0,114.0,115.0))+
   facet_wrap(~month, nrow = 4, ncol = 3)
-p_1
+p_2
 
-ggsave('plots/spatial/Abrolhos_SST_monthly_spatial.png',p_1, dpi = 300, width = 8, height = 9)
-
-#empty list to store plots in
-pList <- list()
-
-#set how many values you want to store for current direction and how large arrows are
-arrow_size <- 1.5
-split_size <- 2
-
-for (i in 1:12) {
-  choose_month <- i
-  curr <- melt_cur(uu_monthly,vv_monthly,choose_month)  
-  curr_month <- subset(curr, select = -c(longg, latt))    #changed name from cur_month!!!!
-  # curr_month <- cur_month %>% slice(which(row_number() %% split_size == 1)) %>%
-  #   filter(!is.na(uu)) %>% glimpse()
-  
-  msst <- melt_sst(sst_monthly,choose_month)
-  
-  title_legend <- "SST"
-  p <- ggplot() +
-    geom_tile(data = msst, aes(x = long, y = lat, fill = sst))+#, interpolate = TRUE) + 
-    scale_fill_gradientn(colours = viridis(5),na.value = NA,
-                         breaks = seq(from = min_sst, to = max_sst, by = 0.5),
-                         limits = c(min_sst, max_sst)) +
-    geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-    geom_quiver(data = curr_month, aes(x=long,y=lat,u=uu,v=vv), 
-                vecsize=arrow_size, color = "white")+
-    geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
-    geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
-    labs(x = "Longitude", y = "Latitude", fill = title_legend) +
-    coord_sf(xlim = xxlim, ylim = yylim) +
-    theme_minimal()+
-    ggtitle(month.name[[i]])+
-    scale_x_continuous(breaks=c(113.0,114.0,115.0))
-  pList[[i]] <- p
-  
-}
-
-#save plots from list
-pList[[1]]+pList[[3]]+pList[[5]]+pList[[7]]+pList[[9]]+pList[[11]]+plot_layout(nrow = 3, ncol = 2,guides = 'collect')
-
-ggsave('plots/spatial/Abrolhos_SST_monthly_spatial.png', dpi = 300, width = 8, height = 9)
+ggsave('plots/spatial/Abrolhos_SST_monthly_spatial.png',p_2, dpi = 300, width = 8, height = 9)
 
 dev.off()
 
 ##### ACIDIFICATION #####
-load('data/spatial/oceanography/Abrolhos_acd_data.Rdata')
+acd_ts_monthly <- readRDS("data/spatial/oceanography/Abrolhos_acidification.rds")%>%
+  glimpse()
 
 legend_title = "Season"
 acd_mean_plot <- ggplot(data = acd_ts_monthly, aes(x = year, y = acd_mean)) + 
