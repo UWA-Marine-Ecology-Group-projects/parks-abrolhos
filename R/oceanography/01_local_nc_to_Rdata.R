@@ -20,12 +20,11 @@ library(RNetCDF)
 library(weathermetrics)
 library(lubridate)
 
-## get data locations /limits that need from MPA
-
 #set working directory
 working.dir <- getwd()
 setwd(working.dir)
 
+## get data locations /limits that need from MPA
 locations <-   read.csv("data/spatial/oceanography/network_scale_boundaries.csv", header = TRUE) %>%
   glimpse()
 
@@ -40,11 +39,6 @@ Lat_n <- locs$lat_n
 Lat_s <- locs$lat_s
 
 ######### SEA LEVEL ANOMALY #########
-#location of netcdf sla data
-# setwd(paste(wd_data_loc,'oceanography/OceanCurrent_IMOS', sep = '/'))
-# dir()
-
-## add in where data from etc. 
 #the numbers are just how the download from IMOS works - can rename the files if easier
 #Altimeter and tidegauge estimates of adjusted sea level anomaly mapped onto a grid using optimal interpolation (OI)
 #print.nc also shows reference for the data 
@@ -75,8 +69,8 @@ check_lon
 #load only the subset of data
 #get all sst
 sla_all <- var.get.nc(nc_file_to_get_sla,'GSLA', start = c(lon_i[1], lat_i[1],1), count = c(length(lon_i), length(lat_i), length(dates_sla)));
-ucur_all <- var.get.nc(nc_file_to_get_sla,'UCUR', start = c(lon_i[1], lat_i[1],1), count = c(length(lon_i), length(lat_i), length(dates_sla))); #sea level anomaly
-vcur_all <- var.get.nc(nc_file_to_get_sla,'VCUR', start = c(lon_i[1], lat_i[1],1), count = c(length(lon_i), length(lat_i), length(dates_sla))); #sea level anomaly
+# ucur_all <- var.get.nc(nc_file_to_get_sla,'UCUR', start = c(lon_i[1], lat_i[1],1), count = c(length(lon_i), length(lat_i), length(dates_sla))); #sea level anomaly
+# vcur_all <- var.get.nc(nc_file_to_get_sla,'VCUR', start = c(lon_i[1], lat_i[1],1), count = c(length(lon_i), length(lat_i), length(dates_sla))); #sea level anomaly
 
 time_data <- list()
 time_data$dates <- as.character(dates_sla)
@@ -99,16 +93,17 @@ arr_long <- arr_long %>%
 
 plot_sla_month <- arr_long %>% 
   group_by(month, Lon, Lat) %>% 
-  summarise(sla = mean(value,na.rm = TRUE)) %>% 
+  summarise(sla = mean(value,na.rm = TRUE), sd = sd(value,na.rm = TRUE)) %>% 
   ungroup()%>%
   glimpse()
 
 plot_sla_year <- arr_long %>% 
   group_by(year, Lon, Lat) %>% 
-  summarise(sla = mean(value,na.rm = TRUE)) %>% 
+  summarise(sla = mean(value,na.rm = TRUE), sd = sd(value,na.rm = TRUE)) %>% 
   ungroup()%>%
   glimpse()
 
+saveRDS(arr_long, "data/spatial/oceanography/Abrolhos_SLA_ts.rds")
 saveRDS(plot_sla_month,"data/spatial/oceanography/Abrolhos_SLA_month.rds")
 saveRDS(plot_sla_year,"data/spatial/oceanography/Abrolhos_SLA_year.rds")
 
@@ -166,6 +161,7 @@ arr_long <- arr %>%
 rm(list=setdiff(ls(), "arr_long"))
 gc() #free unused memory
 
+#split into 2 halves as to not cook the memory
 arr_long_1 <- arr_long %>%
   slice(1:50000000)%>%
   dplyr::mutate(Date = as.Date(Date))%>%
@@ -194,12 +190,12 @@ plot_sst_winter <- arr_long %>%
 
 plot_sst_year <- arr_long %>% 
   group_by(year, Lon, Lat) %>% 
-  summarise(sst = mean(value,na.rm = TRUE)) %>% 
+  summarise(sst = mean(value,na.rm = TRUE), sd = sd(value,na.rm = TRUE)) %>% 
   glimpse()
 
 plot_sst_month <- arr_long %>% 
   group_by(month, Lon, Lat) %>% 
-  summarise(sst = mean(value,na.rm = TRUE)) %>% 
+  summarise(sst = mean(value,na.rm = TRUE), sd = sd(value,na.rm = TRUE)) %>% 
   glimpse()
 
 saveRDS(plot_sst_winter,"data/spatial/oceanography/Abrolhos_SST_winter.rds")
