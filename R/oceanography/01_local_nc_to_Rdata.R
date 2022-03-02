@@ -103,7 +103,13 @@ plot_sla_year <- arr_long %>%
   ungroup()%>%
   glimpse()
 
-saveRDS(arr_long, "data/spatial/oceanography/Abrolhos_SLA_ts.rds")
+plot_sla_ts <- arr_long %>% 
+  group_by(year,month, Lon, Lat) %>% 
+  summarise(sla = mean(value,na.rm = TRUE), sd = sd(value,na.rm = TRUE)) %>% 
+  ungroup()%>%
+  glimpse()
+
+saveRDS(plot_sla_ts, "data/spatial/oceanography/Abrolhos_SLA_ts.rds")
 saveRDS(plot_sla_month,"data/spatial/oceanography/Abrolhos_SLA_month.rds")
 saveRDS(plot_sla_year,"data/spatial/oceanography/Abrolhos_SLA_year.rds")
 
@@ -254,7 +260,10 @@ acd_ts_monthly <- acd_ts_all %>%
 ## save acidification, don't need to get lat and lon for acd since is only time series 
 saveRDS(acd_ts_monthly,"data/spatial/oceanography/Abrolhos_acidification.rds")
 
-###### -----DEGREE HEATING WEEKS
+##### -----DEGREE HEATING WEEKS ####
+#download from
+#https://coastwatch.pfeg.noaa.gov/erddap/griddap/NOAA_DHW.html
+#input bounds and times
 nc_file_to_get_dhw <- open.nc("data/spatial/oceanography/large/DHW_2021/dhw_5km_82f1_a212_461c.nc",write = TRUE)
 print.nc(nc_file_to_get_dhw) #shows you all the file details
 

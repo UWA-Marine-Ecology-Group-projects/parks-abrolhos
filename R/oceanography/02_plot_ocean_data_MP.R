@@ -54,6 +54,9 @@ st_crs(dirkh)       <- st_crs(aumpa)
 sla.data <- readRDS("data/spatial/oceanography/Abrolhos_SLA_month.rds")%>%
   ungroup()%>%
   dplyr::mutate(month=month.name[month])%>%
+  dplyr::mutate(month = forcats::fct_relevel(month,c("January","February","March","April","May",
+                               "June","July","August","September","October",
+                               "November","December")))%>%
   glimpse()
 
 min_sla =round(min(min(sla.data$sla,na.rm = TRUE), na.rm = TRUE),digits = 2)
@@ -85,6 +88,9 @@ dev.off()
 sst.data <- readRDS("data/spatial/oceanography/Abrolhos_SST_month.rds")%>%
   ungroup()%>%
   dplyr::mutate(month=month.name[month])%>%
+  dplyr::mutate(month = forcats::fct_relevel(month,c("January","February","March","April","May",
+                                                     "June","July","August","September","October",
+                                                     "November","December")))%>%
   glimpse()
 
 min_sst =round(min(min(sst.data$sst,na.rm = TRUE), na.rm = TRUE))
@@ -115,6 +121,42 @@ ggsave('plots/spatial/Abrolhos_SST_monthly_spatial.png',p_2, dpi = 300, width = 
 
 dev.off()
 
+
+##### DEGREE HEATING WEEKS ####
+
+dhw.data <- readRDS("data/spatial/oceanography/Abrolhos_DHW_month.rds")%>%
+  ungroup()%>%
+  dplyr::mutate(month=month.name[month])%>%
+  dplyr::mutate(month = forcats::fct_relevel(month,c("January","February","March","April","May",
+                                                     "June","July","August","September","October",
+                                                     "November","December")))%>%
+  glimpse()
+
+min_dhw = round(min(min(dhw.data$dhw,na.rm = TRUE), na.rm = TRUE))
+max_dhw = round(max(max(dhw.data$dhw,na.rm = TRUE), na.rm = TRUE))
+
+title_legend <- "DHW"
+p_3 <- ggplot() +
+  geom_tile(data = dhw.data%>%filter(month%in%c("January","March","May","July",
+                                                "September","November")), 
+            aes(x = Lon, y = Lat, fill = dhw))+
+  scale_fill_gradientn(colours = viridis(5),na.value = NA,
+                       breaks = seq(from = min_dhw, to = max_dhw, by = 2),
+                       limits = c(min_dhw, max_dhw)) +
+  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  coord_sf(xlim = xxlim, ylim = yylim) +
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))+
+  facet_wrap(~month, nrow = 4, ncol = 3)
+p_3
+
+ggsave('plots/spatial/Abrolhos_DHW_monthly_spatial.png',p_3, dpi = 300, width = 8, height = 9)
+
+dev.off()
+
 ##### ACIDIFICATION #####
 acd_ts_monthly <- readRDS("data/spatial/oceanography/Abrolhos_acidification.rds")%>%
   glimpse()
@@ -128,33 +170,18 @@ acd_mean_plot <- ggplot(data = acd_ts_monthly, aes(x = year, y = acd_mean)) +
 acd_mean_plot #plot with the other time series
 
 ##### Average plots - time series ####
-sla_ts <- as.data.frame(dates_sla)
-sla_ts$mean_sla <- apply(sla_all, 3, mean, na.rm = TRUE)
-sla_ts$sd_sla <- apply(sla_all, 3, sd, na.rm = TRUE)
-sla_ts$month <- as.numeric(format(as.Date(sla_ts$dates_sla), "%m"))
-
-sla_tss <- sla_ts %>% 
-  dplyr::mutate(year = ifelse(month < 4, as.numeric(format(as.Date(dates_sla), "%Y"))-1, as.numeric(format(as.Date(dates_sla), "%Y")))) %>%
-  dplyr::mutate(season = case_when(month %in% c(6,7,8) ~ "Winter", month %in% c(12,1,2) ~ "Summer", 
-                                   month %in% c(3,4,5) ~ "Autumn", month %in% c(9,10,11) ~ "Spring" )) %>%
-  dplyr::group_by(year, season) %>%
-  dplyr::summarise(sla_mean_sea = mean(mean_sla, na.rm = TRUE), sla_sd_sea = mean(sd_sla, na.rm = TRUE)) %>%
-  glimpse()
-
-#get only winter and summer to plot
-sla_plot <- sla_tss %>% filter(grepl('Winter|Summer', season))
-
 #plot for sla, summer and winter mean
-sla.monthly <- readRDS("data/spatial/oceanography/Abrolhos_SLA_month.rds")%>%
+sla.monthly <- readRDS("data/spatial/oceanography/Abrolhos_SLA_ts.rds")%>%
   dplyr::mutate(season = case_when(month %in% c(6,7,8) ~ "Winter", 
                                    month %in% c(12,1,2) ~ "Summer", 
                                   month %in% c(3,4,5) ~ "Autumn", 
                                   month %in% c(9,10,11) ~ "Spring" )) %>%
   dplyr::group_by(year, season) %>%
-  dplyr::summarise(sla_mean_sea = mean(mean_sla, na.rm = TRUE), sla_sd_sea = mean(sd, na.rm = TRUE)) %>%
+  dplyr::summarise(sla_mean_sea = mean(sla, na.rm = TRUE), sla_sd_sea = mean(sd, na.rm = TRUE)) %>%
   glimpse()
 
-legend_title = "Season"
+sla_plot <- sla.monthly %>% filter(grepl('Winter|Summer', season))
+
 sla_mean_plot <- ggplot() + 
   geom_line(data = sla_plot, aes(x = year, y = sla_mean_sea, color = season)) + 
   geom_ribbon(data = sla_plot,aes(x = year, y = sla_mean_sea,
@@ -167,23 +194,18 @@ sla_mean_plot <- ggplot() +
   scale_fill_manual(labels = c("Summer","Winter"), values = c("#e1ad68","#256b61"))
 sla_mean_plot
 
-sst_ts <- as.data.frame(dates_sst)
-sst_ts$mean_sst <- apply(sst_all, 3, mean, na.rm = TRUE)
-sst_ts$sd_sst <- apply(sst_all, 3, sd, na.rm = TRUE)
-sst_ts$month <- as.numeric(format(as.Date(sst_ts$dates_sst), "%m"))
 
-sst_tss <- sst_ts %>% mutate(year = ifelse(month < 4, as.numeric(format(as.Date(dates_sst), "%Y"))-1, as.numeric(format(as.Date(dates_sst), "%Y")))) %>%
+#plot for sst summer and winter mean
+sst_tss <- readRDS("data/spatial/oceanography/Abrolhos_SST_ts.rds")%>%
   dplyr::mutate(season = case_when(month %in% c(6,7,8) ~ "Winter", month %in% c(12,1,2) ~ "Summer", 
                                    month %in% c(3,4,5) ~ "Autumn", month %in% c(9,10,11) ~ "Spring" )) %>%
   group_by(year, season) %>%
-  summarise(sst_mean = mean(mean_sst, na.rm = TRUE),sd_sst = mean(sd_sst, na.rm = TRUE)) %>%
+  summarise(sst_mean = mean(sst, na.rm = TRUE),sd_sst = mean(sd, na.rm = TRUE)) %>%
   glimpse()
 
 sst_plot <- sst_tss %>% filter(grepl('Winter|Summer', season))
 
 #plot for sst, summer and winter mean
-legend_title = "Season"
-
 sst_mean_plot <- ggplot() + 
   geom_line(data = sst_plot, aes(x = year, y = sst_mean, color = season)) + 
   geom_ribbon(data = sst_plot,aes(x = year, y = sst_mean,
