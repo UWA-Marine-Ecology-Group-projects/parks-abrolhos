@@ -198,9 +198,15 @@ plot_sst_month <- arr_long %>%
   summarise(sst = mean(value,na.rm = TRUE), sd = sd(value,na.rm = TRUE)) %>% 
   glimpse()
 
+plot_sst_ts <- arr_long %>% 
+  group_by(year,month, Lon, Lat) %>% 
+  summarise(sst = mean(value,na.rm = TRUE), sd = sd(value,na.rm = TRUE)) %>% 
+  glimpse()
+
 saveRDS(plot_sst_winter,"data/spatial/oceanography/Abrolhos_SST_winter.rds")
 saveRDS(plot_sst_year,"data/spatial/oceanography/Abrolhos_SST_year.rds")
 saveRDS(plot_sst_month,"data/spatial/oceanography/Abrolhos_SST_month.rds")
+saveRDS(plot_sst_ts,"data/spatial/oceanography/Abrolhos_SST_ts.rds")
 
 #clear out the memory
 rm(list= ls()[!(ls() %in% c('working.dir','locations', 'Zone','locs','Lon_w',
