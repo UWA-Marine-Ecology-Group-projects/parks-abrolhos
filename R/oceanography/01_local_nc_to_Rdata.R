@@ -162,6 +162,7 @@ gc() #free unused memory
 
 arr_long <- arr %>%
   reshape2::melt(varnames = c("Lon","Lat","Date"))
+saveRDS(arr_long,"data/spatial/oceanography/Ningaloo_SST.rds")
 
 #careful - running out of memory
 rm(list=setdiff(ls(), "arr_long"))
@@ -169,13 +170,13 @@ gc() #free unused memory
 
 #split into 2 halves as to not cook the memory
 arr_long_1 <- arr_long %>%
-  slice(1:50000000)%>%
+  slice(1:50000000)%>% 
   dplyr::mutate(Date = as.Date(Date))%>%
   dplyr::mutate(year = year(Date),month = month(Date))%>%
   glimpse()
 
 arr_long_2 <- arr_long %>%
-  slice(50000001:98008680)%>%
+  slice(50000001:98008680)%>% 
   dplyr::mutate(Date = as.Date(Date))%>%
   dplyr::mutate(year = year(Date),month = month(Date))%>%
   glimpse()
@@ -264,7 +265,7 @@ saveRDS(acd_ts_monthly,"data/spatial/oceanography/Abrolhos_acidification.rds")
 #download from
 #https://coastwatch.pfeg.noaa.gov/erddap/griddap/NOAA_DHW.html
 #input bounds and times
-nc_file_to_get_dhw <- open.nc("data/spatial/oceanography/large/DHW_2021/dhw_5km_82f1_a212_461c.nc",write = TRUE)
+nc_file_to_get_dhw <- open.nc("data/spatial/oceanography/large/DHW_2021/dhw_5km_Abrolhos_weekly_2002-2022.nc",write = TRUE)
 print.nc(nc_file_to_get_dhw) #shows you all the file details
 
 time_nc<- var.get.nc(nc_file_to_get_dhw, 'time')  #NC_CHAR time:units = "days since 1981-01-01 00:00:00" ;
@@ -319,5 +320,13 @@ plot_dhw_year <- arr_long %>%
   ungroup()%>%
   glimpse()
 
+plot_dhw_heatwave <- arr_long %>% 
+  dplyr::filter(year%in%c("2011"))%>%
+  group_by(month, Lon, Lat) %>% 
+  summarise(dhw = mean(value,na.rm = TRUE)) %>% 
+  ungroup()%>%
+  glimpse()
+
 saveRDS(plot_dhw_month,"data/spatial/oceanography/Abrolhos_DHW_month.rds")
 saveRDS(plot_dhw_year,"data/spatial/oceanography/Abrolhos_DHW_year.rds")
+saveRDS(plot_dhw_heatwave,"data/spatial/oceanography/Abrolhos_DHW_heatwave.rds")

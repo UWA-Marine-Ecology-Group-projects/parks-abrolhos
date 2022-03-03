@@ -123,8 +123,15 @@ dev.off()
 
 
 ##### DEGREE HEATING WEEKS ####
-
 dhw.data <- readRDS("data/spatial/oceanography/Abrolhos_DHW_month.rds")%>%
+  ungroup()%>%
+  dplyr::mutate(month=month.name[month])%>%
+  dplyr::mutate(month = forcats::fct_relevel(month,c("January","February","March","April","May",
+                                                     "June","July","August","September","October",
+                                                     "November","December")))%>%
+  glimpse()
+
+dhw.heatwave <- readRDS("data/spatial/oceanography/Abrolhos_DHW_heatwave.rds")%>%
   ungroup()%>%
   dplyr::mutate(month=month.name[month])%>%
   dplyr::mutate(month = forcats::fct_relevel(month,c("January","February","March","April","May",
@@ -152,6 +159,23 @@ p_3 <- ggplot() +
   scale_x_continuous(breaks=c(113.0,114.0,115.0))+
   facet_wrap(~month, nrow = 4, ncol = 3)
 p_3
+
+p_4 <- ggplot() +
+  geom_tile(data = dhw.heatwave%>%filter(month%in%c("January","March","May","July",
+                                                "September","November")), 
+            aes(x = Lon, y = Lat, fill = dhw))+
+  scale_fill_gradientn(colours = viridis(5),na.value = NA,
+                       breaks = seq(from = min_dhw, to = max_dhw, by = 2),
+                       limits = c(min_dhw, max_dhw)) +
+  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+  geom_sf(data = aumpa,fill = NA, color = alpha("grey",0.5))+
+  geom_sf(data = wampa,fill = NA, color = alpha("grey",0.5))+
+  labs(x = "Longitude", y = "Latitude", fill = title_legend) +
+  coord_sf(xlim = xxlim, ylim = yylim) +
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))+
+  facet_wrap(~month, nrow = 4, ncol = 3)
+p_4
 
 ggsave('plots/spatial/Abrolhos_DHW_monthly_spatial.png',p_3, dpi = 300, width = 8, height = 9)
 
