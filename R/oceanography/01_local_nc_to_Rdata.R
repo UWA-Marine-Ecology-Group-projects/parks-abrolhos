@@ -320,13 +320,11 @@ plot_dhw_year <- arr_long %>%
   ungroup()%>%
   glimpse()
 
-plot_dhw_heatwave <- arr_long %>% 
-  dplyr::filter(year%in%c("2011"))%>%
-  group_by(month, Lon, Lat) %>% 
-  summarise(dhw = mean(value,na.rm = TRUE)) %>% 
-  ungroup()%>%
+plot_dhw_ts <- arr_long %>% 
+  group_by(year,month, Lon, Lat) %>% 
+  summarise(sst = mean(value,na.rm = TRUE), sd = sd(value,na.rm = TRUE)) %>% 
   glimpse()
 
 saveRDS(plot_dhw_month,"data/spatial/oceanography/Abrolhos_DHW_month.rds")
 saveRDS(plot_dhw_year,"data/spatial/oceanography/Abrolhos_DHW_year.rds")
-saveRDS(plot_dhw_heatwave,"data/spatial/oceanography/Abrolhos_DHW_heatwave.rds")
+saveRDS(plot_dhw_ts,"data/spatial/oceanography/Abrolhos_DHW_ts.rds")

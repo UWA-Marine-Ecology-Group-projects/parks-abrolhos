@@ -242,6 +242,16 @@ sst_mean_plot <- ggplot() +
   scale_fill_manual(labels = c("Summer","Winter"), values = c("#e1ad68","#256b61"))
 sst_mean_plot
 
+dhw.monthly <- readRDS("data/spatial/oceanography/Abrolhos_SLA_ts.rds")%>%
+  dplyr::mutate(season = case_when(month %in% c(6,7,8) ~ "Winter", 
+                                   month %in% c(12,1,2) ~ "Summer", 
+                                   month %in% c(3,4,5) ~ "Autumn", 
+                                   month %in% c(9,10,11) ~ "Spring" )) %>%
+  dplyr::group_by(year, season) %>%
+  dplyr::summarise(sla_mean_sea = mean(sla, na.rm = TRUE), sla_sd_sea = mean(sd, na.rm = TRUE)) %>%
+  glimpse()
+
+
 acd_mean_plot+sla_mean_plot+sst_mean_plot + plot_layout(ncol = 1, nrow = 3)
 
 ggsave('plots/spatial/Abrolhos_acd_sla_sst_ts.png', dpi = 300, width = 8, height = 9)
