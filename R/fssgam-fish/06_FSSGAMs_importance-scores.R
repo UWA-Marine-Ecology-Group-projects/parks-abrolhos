@@ -79,7 +79,7 @@ gg.importance.npz6 <- ggplot(dat.taxa.npz6,
    scale_fill_gradientn(legend_title, colours=c(re), na.value = "grey98",
                          limits = c(-1, 1))+
      scale_y_discrete(labels=c("Smaller than legal size","Greater than legal size","Species richness","Total abundance"))+
-  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Macroalgae", "Relief","Slope","Status", 'TPI'))+
+  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Macroalgae", "Relief","Roughness","Status", 'TPI'))+
     xlab(NULL)+
    ylab(NULL)+
    theme_classic()+
@@ -108,10 +108,11 @@ dat.taxa.npz9 <- datnpz9 %>%
   mutate(label=NA)%>%
   mutate(resp.var=factor(resp.var, levels = c("smaller than legal size","greater than legal size","species.richness","total.abundance")))%>%
   mutate(label=ifelse(predictor=="relief"&resp.var=="total.abundance","X",label))%>%
-  mutate(label=ifelse(predictor=="slope"&resp.var=="total.abundance","X",label))%>%
+  mutate(label=ifelse(predictor=="roughness"&resp.var=="total.abundance","X",label))%>%
   mutate(label=ifelse(predictor=="depth"&resp.var=="species.richness","X",label))%>%
-  mutate(label=ifelse(predictor=="slope"&resp.var=="greater than legal size","X",label))%>%
+  mutate(label=ifelse(predictor=="roughness"&resp.var=="greater than legal size","X",label))%>%
   mutate(label=ifelse(predictor=="depth"&resp.var=="smaller than legal size","X",label))%>%
+  mutate(label=ifelse(predictor=="roughness"&resp.var=="smaller than legal size","X",label))%>%
   glimpse()
 
 # Plot gg.importance.scores ----
@@ -121,7 +122,7 @@ gg.importance.npz9 <- ggplot(dat.taxa.npz9,
   scale_fill_gradientn(legend_title, colours=c(re), na.value = "grey98",
                        limits = c(-1, 1))+
   scale_y_discrete(labels=c("Smaller than legal size","Greater than legal size","Species richness","Total abundance"))+
-  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Relief","Slope", 'TPI'))+
+  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Relief","Roughness", 'TPI'))+
   xlab(NULL)+
   ylab(NULL)+
   theme_classic()+

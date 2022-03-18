@@ -46,7 +46,7 @@ pred.vars = c("depth",
               "biog", 
               "relief",
               "tpi",
-              "slope",
+              "roughness",
               "detrended")
 
 # Check to make sure Response vector has not more than 80% zeros----

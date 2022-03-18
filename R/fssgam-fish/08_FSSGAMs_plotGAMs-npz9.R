@@ -68,14 +68,14 @@ dat <- bind_rows(dat.maxn,dat.length)
 #### Abrolhos MaxN ####
 unique(dat$scientific)
 
-# MODEL Total abundance (relief + slope) ----
+# MODEL Total abundance (relief + roughness) ----
 dat.total <- dat %>% filter(scientific=="total.abundance")
 
-mod=gam(number~s(relief,k=3,bs='cr')+s(slope,k=3,bs='cr'), family=tw,data=dat.total)
+mod=gam(number~s(relief,k=3,bs='cr')+s(roughness,k=3,bs='cr'), family=tw,data=dat.total)
 
 # predict - relief ----
 testdata <- expand.grid(relief=seq(min(dat$relief),max(dat$relief),length.out = 20),
-                        slope=mean(mod$model$slope)) %>%
+                        roughness=mean(mod$model$roughness)) %>%
   distinct()%>%
   glimpse()
 
@@ -86,16 +86,16 @@ predicts.total.relief = testdata%>%data.frame(fits)%>%
   summarise(number=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
 
-# predict - slope ----
-testdata <- expand.grid(slope=seq(min(dat$slope),max(dat$slope),length.out = 20),
+# predict - roughness ----
+testdata <- expand.grid(roughness=seq(min(dat$roughness),max(dat$roughness),length.out = 20),
                         relief=mean(mod$model$relief)) %>%
   distinct()%>%
   glimpse()
 
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
-predicts.total.slope = testdata%>%data.frame(fits)%>%
-  group_by(slope)%>% #only change here
+predicts.total.roughness = testdata%>%data.frame(fits)%>%
+  group_by(roughness)%>% #only change here
   summarise(number=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
 
@@ -114,24 +114,24 @@ ggmod.total.relief<- ggplot() +
   theme(plot.title = element_text(hjust = 0))
 ggmod.total.relief
 
-# slope ----
-ggmod.total.slope<- ggplot() +
+# roughness ----
+ggmod.total.roughness<- ggplot() +
   ylab("")+
-  xlab("Slope")+
-  geom_point(data=dat.total,aes(x=slope,y=number),  alpha=0.2, size=1,show.legend=F)+
-  geom_line(data=predicts.total.slope,aes(x=slope,y=number),alpha=0.5)+
-  geom_line(data=predicts.total.slope,aes(x=slope,y=number - se.fit),linetype="dashed",alpha=0.5)+
-  geom_line(data=predicts.total.slope,aes(x=slope,y=number + se.fit),linetype="dashed",alpha=0.5)+
+  xlab("Roughness")+
+  geom_point(data=dat.total,aes(x=roughness,y=number),  alpha=0.2, size=1,show.legend=F)+
+  geom_line(data=predicts.total.roughness,aes(x=roughness,y=number),alpha=0.5)+
+  geom_line(data=predicts.total.roughness,aes(x=roughness,y=number - se.fit),linetype="dashed",alpha=0.5)+
+  geom_line(data=predicts.total.roughness,aes(x=roughness,y=number + se.fit),linetype="dashed",alpha=0.5)+
   theme_classic()+
   Theme1
-ggmod.total.slope
+ggmod.total.roughness
 
 # MODEL species richness (depth) ----
 dat.species <- dat %>% filter(scientific=="species.richness")
 
 mod=gam(number~s(depth,k=3,bs='cr'), family=tw,data=dat.species)
 
-# predict - slope ----
+# predict - depth ----
 testdata <- expand.grid(depth=seq(min(dat$depth),max(dat$depth),length.out = 20)) %>%
   distinct()%>%
   glimpse()
@@ -158,45 +158,46 @@ ggmod.species.depth<- ggplot() +
   theme(plot.title = element_text(hjust = 0))
 ggmod.species.depth
 
-# MODEL Greater than legal size (slope) ----
+# MODEL Greater than legal size (roughness) ----
 dat.legal <- dat %>% filter(scientific=="greater than legal size")
 
-mod=gam(number~s(slope,k=3,bs='cr'), family=tw,data=dat.legal)
+mod=gam(number~s(roughness,k=3,bs='cr'), family=tw,data=dat.legal)
 
-# predict - slope ----
-testdata <- expand.grid(slope=seq(min(dat$slope),max(dat$slope),length.out = 20)) %>%
+# predict - roughness ----
+testdata <- expand.grid(roughness=seq(min(dat$roughness),max(dat$roughness),length.out = 20)) %>%
   distinct()%>%
   glimpse()
 
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
-predicts.legal.slope = testdata%>%data.frame(fits)%>%
-  group_by(slope)%>% #only change here
+predicts.legal.roughness = testdata%>%data.frame(fits)%>%
+  group_by(roughness)%>% #only change here
   summarise(number=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
 
 # PLOTS for Greater than legal size ----
 # slope ----
-ggmod.legal.slope<- ggplot() +
+ggmod.legal.roughness<- ggplot() +
   ylab("")+
-  xlab("Slope")+
-  geom_point(data=dat.legal,aes(x=slope,y=number),  alpha=0.2, size=1,show.legend=F)+
-  geom_line(data=predicts.legal.slope,aes(x=slope,y=number),alpha=0.5)+
-  geom_line(data=predicts.legal.slope,aes(x=slope,y=number - se.fit),linetype="dashed",alpha=0.5)+
-  geom_line(data=predicts.legal.slope,aes(x=slope,y=number + se.fit),linetype="dashed",alpha=0.5)+
+  xlab("Roughness")+
+  geom_point(data=dat.legal,aes(x=roughness,y=number),  alpha=0.2, size=1,show.legend=F)+
+  geom_line(data=predicts.legal.roughness,aes(x=roughness,y=number),alpha=0.5)+
+  geom_line(data=predicts.legal.roughness,aes(x=roughness,y=number - se.fit),linetype="dashed",alpha=0.5)+
+  geom_line(data=predicts.legal.roughness,aes(x=roughness,y=number + se.fit),linetype="dashed",alpha=0.5)+
   theme_classic()+
   Theme1+
   ggtitle("Greater than legal size") +
   theme(plot.title = element_text(hjust = 0))
-ggmod.legal.slope
+ggmod.legal.roughness
 
-# MODEL Smaller than legal size (depth) ----
+# MODEL Smaller than legal size (depth + roughness) ----
 dat.sublegal <- dat %>% filter(scientific=="smaller than legal size")
 
-mod=gam(number~s(depth,k=3,bs='cr'), family=tw,data=dat.sublegal)
+mod=gam(number~s(depth,k=3,bs='cr')+s(roughness,k=3,bs='cr'), family=tw,data=dat.sublegal)
 
 # predict - depth ----
-testdata <- expand.grid(depth=seq(min(dat$depth),max(dat$depth),length.out = 20)) %>%
+testdata <- expand.grid(depth=seq(min(dat$depth),max(dat$depth),length.out = 20),
+                        roughness=mean(mod$model$roughness)) %>%
   distinct()%>%
   glimpse()
 
@@ -207,8 +208,21 @@ predicts.sublegal.depth = testdata%>%data.frame(fits)%>%
   summarise(number=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
 
-# PLOTS for Smaller than legal size ----
-# slope ----
+# predict - roughness ----
+testdata <- expand.grid(roughness=seq(min(dat$roughness),max(dat$roughness),length.out = 20),
+                        depth=mean(mod$model$depth)) %>%
+  distinct()%>%
+  glimpse()
+
+fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
+
+predicts.sublegal.roughness = testdata%>%data.frame(fits)%>%
+  group_by(roughness)%>% #only change here
+  summarise(number=mean(fit),se.fit=mean(se.fit))%>%
+  ungroup()
+
+# PLOTS for smaller than legal size ----
+# depth ----
 ggmod.sublegal.depth<- ggplot() +
   ylab("")+
   xlab("Depth")+
@@ -222,15 +236,27 @@ ggmod.sublegal.depth<- ggplot() +
   theme(plot.title = element_text(hjust = 0))
 ggmod.sublegal.depth
 
+# roughness ----
+ggmod.sublegal.roughness<- ggplot() +
+  ylab("")+
+  xlab("Roughness")+
+  geom_point(data=dat.sublegal,aes(x=roughness,y=number),  alpha=0.2, size=1,show.legend=F)+
+  geom_line(data=predicts.sublegal.roughness,aes(x=roughness,y=number),alpha=0.5)+
+  geom_line(data=predicts.sublegal.roughness,aes(x=roughness,y=number - se.fit),linetype="dashed",alpha=0.5)+
+  geom_line(data=predicts.sublegal.roughness,aes(x=roughness,y=number + se.fit),linetype="dashed",alpha=0.5)+
+  theme_classic()+
+  Theme1
+ggmod.sublegal.roughness
+
 # Combine with cowplot
 library(cowplot)
 
 # view plots
-plot.grid.npz9 <- plot_grid(ggmod.total.relief, ggmod.total.slope,
+plot.grid.npz9 <- plot_grid(ggmod.total.relief, ggmod.total.roughness,
                             ggmod.species.depth,NULL,
-                            ggmod.legal.slope, NULL,
-                            ggmod.sublegal.depth, NULL,
-                            ncol = 2, labels = c('a','b','c','','d',''),align = "vh")
+                            ggmod.legal.roughness, NULL,
+                            ggmod.sublegal.depth, ggmod.sublegal.roughness,
+                            ncol = 2, labels = c('a','b','c','','d','','e','f'),align = "vh")
 plot.grid.npz9
 
 #Save plots
