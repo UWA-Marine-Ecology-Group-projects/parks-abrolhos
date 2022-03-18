@@ -25,7 +25,6 @@ ab_npz <- st_transform(ab_npz, sppcrs)
 jacmap <- raster("data/spatial/raster/ecosystem-types-19class-naland.tif")      # jac's aus habitat map
 cropex <- extent(112, 116, -30, -27)
 jacmap <- crop(jacmap, cropex)
-jacmap <- projectRaster(jacmap, crs = sppcrs, method = "ngb")
 habi   <- readRDS("data/tidy/merged_habitat.rds")
 habi$ns <- ifelse(habi$Latitude.1 > 6940000, 1, 0)
 habi$method <- dplyr::recode(habi$method,
@@ -287,7 +286,7 @@ ggsave("plots/site_relief_spatialeffect.png",
 
 # jac's map, eh
 # sort out the classes
-jlevs <- ratify(jacmap)
+jlevs  <- ratify(jacmap)
 jclass <- levels(jlevs)[[1]]
 jclass[["class"]] <- c("shelf.unvegetated.soft.sediments",
                        "Upper.slope.unvegetated.soft.sediments", 
@@ -301,28 +300,36 @@ jclass[["class"]] <- c("shelf.unvegetated.soft.sediments",
                        "Rariophotic.shelf.reefs", 
                        "Upper.slope.rocky.reefs.shelf.break.to.700.m.depth", 
                        "Mid.slope.reef", 
-                       "Artificial.reefs.pipelines.and.cables") # the class names
+                       "Artificial.reefs.pipelines.and.cables")                 # the class names
 levels(jacmap) <- jclass
-jmap_df <- as.data.frame(jacmap, xy = TRUE)
-colnames(jmap_df)[3] <- "class"
+
+jmap_df <- as.data.frame(jacmap, xy = TRUE, na.rm = TRUE)
+colnames(jmap_df)[3] <- "classname"
+jmap_df$classname <- gsub("\\.", " ", jmap_df$classname)                            # replace . with space in names
+
+jacmap_utm <- projectRaster(jacmap, crs = sppcrs, method = "ngb")
+levels(jacmap_utm) <- jclass
+
+jmap_df_utm <- as.data.frame(jacmap_utm, xy = TRUE, na.rm = TRUE)
+colnames(jmap_df_utm)[3] <- "classname"
+jmap_df_utm$classname <- gsub("\\.", " ", jmap_df_utm$classname)                # replace . with space in names
 
 # set up dfs
-jmap_nth <- jmap_df[(jmap_df$y > 6985000 & jmap_df$y < 7000000) & 
-                      (jmap_df$x > 100000 & jmap_df$x < 140000), ]
+jmap_nth <- jmap_df_utm[(jmap_df_utm$y > 6985000 & jmap_df_utm$y < 7000000) & 
+                      (jmap_df_utm$x > 100000 & jmap_df_utm$x < 140000), ]
 
-jmap_sth <- jmap_df[(jmap_df$y > 6880000 & jmap_df$y < 6900000) & 
-                      (jmap_df$x > 125000 & jmap_df$x < 170000), ]
+jmap_sth <- jmap_df_utm[(jmap_df_utm$y > 6880000 & jmap_df_utm$y < 6900000) & 
+                      (jmap_df_utm$x > 125000 & jmap_df_utm$x < 170000), ]
 
 # plot
-
-jcls_cols <- scale_fill_manual(values = c("Upper.slope.unvegetated.soft.sediments" = "wheat4", 
-                                          "shelf.unvegetated.soft.sediments" = "wheat2",
-                                          "Shallow.coral.reefs.less.than.30.m.depth" = "coral2", 
-                                          "Mesophotic.coral.reefs" = "darkorange3",
-                                          "Rariophotic.shelf.reefs" = "steelblue2"))
+jcls_cols <- scale_fill_manual(values = c("Upper slope unvegetated soft sediments" = "wheat4", 
+                                          "shelf unvegetated soft sediments" = "wheat2",
+                                          "Shallow coral reefs less than 30 m depth" = "coral2", 
+                                          "Mesophotic coral reefs" = "darkorange3",
+                                          "Rariophotic shelf reefs" = "steelblue2"))
 
 p6 <- ggplot() + 
-  geom_tile(data = jmap_nth, aes(x, y, fill = class)) +
+  geom_tile(data = jmap_nth, aes(x, y, fill = classname)) +
   jcls_cols +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
   labs(x= NULL, y = NULL, fill = NULL) +
@@ -330,12 +337,51 @@ p6 <- ggplot() +
   theme_minimal()
 
 p62 <- ggplot() + 
-  geom_tile(data = jmap_sth, aes(x, y, fill = class)) +
+  geom_tile(data = jmap_sth, aes(x, y, fill = classname)) +
   jcls_cols +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   labs(x= NULL, y = NULL, fill = NULL) +
   theme_minimal()
 
 p6 + p62 + plot_layout(widths = c(0.5, 0.44))
-ggsave("plots/site_jmonk_natmap.png", 
-       width = 10, height = 6, dpi = 160)
+ggsave("plots/npz_jmonk_natmap.png", width = 10, height = 6, dpi = 160)
+
+jcls_cols <- scale_fill_manual(values = c(
+  "Shallow coral reefs less than 30 m depth" = "coral2", 
+  "shelf unvegetated soft sediments" = "wheat2",
+  "Shelf vegetated sediments" = "springgreen4",
+  "Mesophotic coral reefs" = "darkorange3",
+  "Rariophotic shelf reefs" = "steelblue2",
+  "Upper slope unvegetated soft sediments" = "wheat4",
+  "Mid slope sediments" = "khaki"))
+
+waterr_cols <- scale_fill_manual(values = c("National Park" = "#c4cea6",
+                                            "Nature Reserve" = "#e4d0bb"),
+                                 guide = "none")
+
+p7 <- ggplot() +
+  geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+  geom_sf(data = terrnp, aes(fill = leg_catego), alpha = 4/5, colour = NA) +
+  waterr_cols +
+  new_scale_fill() +  
+  geom_tile(data = jmap_df, aes(x, y, fill = classname)) +
+  jcls_cols +
+  geom_sf(data = ab_npz, fill = NA, colour = "#7bbc63") +
+  geom_sf(data = cwatr, colour = "firebrick", alpha = 4/5, size = 0.2) +
+  scale_colour_manual(values = c("BRUV" = "indianred4",
+                                 "Drop Camera" = "seagreen4")) +
+  annotate("rect", xmin = 113.02, xmax = 113.29, ymin = -27.19, ymax = -27.08,
+           colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
+  annotate("text", x = 113.15, y = -27.05, size = 3, 
+           colour = "grey20", label = "swabrnpz09") +
+  annotate("rect", xmin = 113.24, xmax = 113.58, ymin = -28.13, ymax = -28.02,
+           colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
+  annotate("text", x = 113.42, y = -27.99, size = 3,
+           colour = "grey20", label = "swabrnpz06") +
+  coord_sf(xlim = c(112.8, 114.2), ylim = c(-28.1, -27.05)) +
+  labs(fill = "Habitat classification", x = NULL, y = NULL) +
+  theme_minimal()
+p7
+
+ggsave("plots/site_jmonk_natmap.png", dpi = 200, width = 8, height = 6)
+

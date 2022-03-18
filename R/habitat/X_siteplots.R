@@ -29,6 +29,8 @@ sw_mpa <- aumpa[aumpa$NetName %in% c("South-west", "North-west"), ]             
 ab_nmp <- sw_mpa[sw_mpa$ResName %in% c("Abrolhos", "Jurien", "Shark Bay"), ]    # just nat parks nearby
 cwatr  <- readRDS('output/coastal_waters_limit_trimmed.rds')                    # coastal waters line trimmed in 'R/GA_coast_trim.R'
 bathdf <- readRDS("output/ga_bathy_trim.rds")                                   # bathymetry trimmed in 'R/GA_coast_trim.R'
+terrnp <- st_read("data/spatial/shp/Legislated_Lands_and_Waters_DBCA_011.shp")  # terrestrial reserves
+
 colnames(bathdf)[3] <- "Depth"
 st_crs(aus)         <- st_crs(aumpa)
 st_crs(dirkh)       <- st_crs(aumpa) 
@@ -46,39 +48,27 @@ ab_mpa$waname[ab_mpa$NAME == "Abrolhos Islands"] <- "Fish Habitat Protection Are
 
 ab_mpa$waname <- dplyr::recode(ab_mpa$waname, 
                                "General Use" = "General Use Zone",
-                               # "MMA" = "Marine Management Area",
-                               # "Recreation Area" = "Recreation Zone",
-                               # "Conservation Area" = "Sanctuary Zone",
                                "Special Purpose Zone (Shore Based Activities)" = 
                                  "Special Purpose Zone\n(Shore Based Activities)")
 
+# reduce terrestrial parks
+terrnp <- terrnp[terrnp$leg_catego %in% c("Nature Reserve", "National Park"), ] # exclude state forests etc
+terrnp <- st_crop(terrnp, xmin = 113, ymin = -30, xmax = 116, ymax = -26)       # just abrolhos area
+plot(terrnp["leg_catego"])
 
-# assign mpa colours
+# assign mpa colours - full levels are saved at end of script for future ref
 nmpa_cols <- scale_fill_manual(values = c("National Park Zone" = "#7bbc63",
-                                          "Habitat Protection Zone" = "#fff8a3",# Commonwealth MPA colours
-                                          # "Habitat Protection Zone (Reefs)" = "#fbff85",
                                           "Multiple Use Zone" = "#b9e6fb",
-                                          # "Recreational Use Zone" = "#ffb36b",
-                                          # "Sanctuary Zone" = "#f7c0d8",
-                                          # "Special Purpose Zone (Mining Exclusion)" = "#368ac1",
-                                          # "Special Purpose Zone (Trawl)" = "#3e8ec4",
                                           "Special Purpose Zone" = "#6daff4"
 ))
 
-wampa_cols <- scale_fill_manual(values = c("Sanctuary Zone" = "#bfd054",
-                                           "Marine Nature Reserve" = "#bfd054",
-                                           "Conservation Area" = "#b3a63d",
-                                           # "Habitat Protection Zone" = "#fffbcc",# State MPA colours
-                                           "Fish Habitat Protection Area" = "#fbff85",
-                                           # "National Park Zone" = "#a4d194",
-                                           "General Use Zone" = "#bddde1",
-                                           "Recreation Zone" = "#f4e952",
-                                           "Special Purpose Zone" = "#c5bcc9",
-                                           # "Special Purpose Zone\n(Shore Based Activities)" = "#ba3030"
-                                           # "Special Purpose Zone\n(Habitat Protection)" = "#f0ac41",
-                                           "Reef Observation Area" = "#ddccff",
-                                           "Marine Management Area" = "#b7cfe1"
+wampa_cols <- scale_fill_manual(values = c("Fish Habitat Protection Area" = "#fbff85",
+                                           "Reef Observation Area" = "#ddccff"
 ))
+
+# WA terrestrial parks colours
+waterr_cols <- scale_fill_manual(values = c("National Park" = "#c4cea6",
+                                            "Nature Reserve" = "#e4d0bb"))
 
 # build basic plot elements
 p1 <- ggplot() +
@@ -97,6 +87,10 @@ p1 <- ggplot() +
   geom_sf(data = roas, aes(fill = Type), alpha = 3/5, colour = NA) +
   wampa_cols + 
   labs(fill = "State Marine Parks") +
+  new_scale_fill() +  
+  geom_sf(data = terrnp, aes(fill = leg_catego), alpha = 4/5, colour = NA) +
+  labs(fill = "State Managed Areas") +
+  waterr_cols +
   new_scale_fill() +
   geom_sf(data = ab_nmp, aes(fill = ZoneName), alpha = 4/5, colour = NA) +
   nmpa_cols + 
@@ -106,9 +100,9 @@ p1 <- ggplot() +
                alpha = 1, size = 0.1) +
   labs(x = NULL, y = NULL, fill = "Australian Marine Parks") +
   guides(fill = guide_legend(order = 1)) +
-  annotate("rect", xmin = 112.5, xmax = 114.5, ymin = -28.3, ymax = -27, 
+  annotate("rect", xmin = 112.8, xmax = 114.2, ymin = -28.1, ymax = -27.05, 
            colour = "grey15", fill = "white", alpha = 0.1, size = 0.1) +
-  coord_sf(xlim = c(108.8, 115.5), ylim = c(-29.3, -24.5)) +
+  coord_sf(xlim = c(111.5, 115.2), ylim = c(-29.3, -26.9)) +
   theme_minimal()
 p1
 
@@ -118,7 +112,7 @@ p2 <- ggplot(data = aus) +
   geom_sf(data = sw_mpa, alpha = 5/6, colour = "grey85", size = 0.02) +
   # geom_sf(data = ab_mpa, alpha = 4/5, colour = "grey85") +
   coord_sf(xlim = c(108, 125), ylim = c(-37, -13)) +
-  annotate("rect", xmin = 108.8, xmax = 115.5, ymin = -29.3, ymax = -24, 
+  annotate("rect", xmin = 111.5, xmax = 115.2, ymin = -29.3, ymax = -26.9, 
            colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
   theme_bw() +
   theme(axis.text = element_blank(), 
@@ -160,6 +154,10 @@ p3 <- ggplot() +
   geom_raster(data = sitebathy, aes(x, y, fill = Depth), alpha = 4/5) +
   scale_fill_gradient(low = "black", high = "grey70", guide = "none") +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+  new_scale_fill() +  
+  geom_sf(data = terrnp, aes(fill = leg_catego), alpha = 4/5, colour = NA) +
+  labs(fill = "State Managed Areas") +
+  waterr_cols +
   new_scale_fill() +
   geom_sf(data = ab_nmp, aes(fill = ZoneName), alpha = 3/5, colour = NA) +
   snmpa_cols + labs(x = NULL, y = NULL, fill = "Australian Marine Park") +
@@ -258,3 +256,33 @@ p5
 ggsave("plots/sthsite.png", dpi = 200, width = 7, height = 4)
 
 
+
+## saving all colours for later
+
+# 
+# # assign mpa colours
+# nmpa_cols <- scale_fill_manual(values = c("National Park Zone" = "#7bbc63",
+#                                           "Habitat Protection Zone" = "#fff8a3",# Commonwealth MPA colours
+#                                           # "Habitat Protection Zone (Reefs)" = "#fbff85",
+#                                           "Multiple Use Zone" = "#b9e6fb",
+#                                           # "Recreational Use Zone" = "#ffb36b",
+#                                           # "Sanctuary Zone" = "#f7c0d8",
+#                                           # "Special Purpose Zone (Mining Exclusion)" = "#368ac1",
+#                                           # "Special Purpose Zone (Trawl)" = "#3e8ec4",
+#                                           "Special Purpose Zone" = "#6daff4"
+# ))
+# 
+# wampa_cols <- scale_fill_manual(values = c("Fish Habitat Protection Area" = "#fbff85",
+#                                            # "Sanctuary Zone" = "#bfd054",
+#                                            # "Marine Nature Reserve" = "#bfd054",
+#                                            # "Conservation Area" = "#b3a63d",
+#                                            # "Habitat Protection Zone" = "#fffbcc",# State MPA colours
+#                                            # "National Park Zone" = "#a4d194",
+#                                            # "General Use Zone" = "#bddde1",
+#                                            # "Recreation Zone" = "#f4e952",
+#                                            # "Special Purpose Zone" = "#c5bcc9",
+#                                            # "Special Purpose Zone\n(Shore Based Activities)" = "#ba3030"
+#                                            # "Special Purpose Zone\n(Habitat Protection)" = "#f0ac41",
+#                                            # "Marine Management Area" = "#b7cfe1",
+#                                            "Reef Observation Area" = "#ddccff"
+# ))
