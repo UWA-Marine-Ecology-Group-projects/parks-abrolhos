@@ -322,9 +322,33 @@ plot_dhw_year <- arr_long %>%
 
 plot_dhw_ts <- arr_long %>% 
   group_by(year,month, Lon, Lat) %>% 
-  summarise(sst = mean(value,na.rm = TRUE), sd = sd(value,na.rm = TRUE)) %>% 
+  summarise(dhw = mean(value,na.rm = TRUE), sd = sd(value,na.rm = TRUE)) %>% 
   glimpse()
+
+plot_dhw_heatwave <- arr_long %>% 
+  dplyr::filter(month%in%"5"&year%in%"2011"|month%in%"5"&year%in%"2021")%>%
+  group_by(year,month, Lon, Lat) %>% 
+  summarise(dhw = mean(value,na.rm = TRUE), sd = sd(value,na.rm = TRUE)) %>% 
+  glimpse()
+
+min_dhw = round(min(min(plot_dhw_heatwave$dhw,na.rm = TRUE), na.rm = TRUE))
+max_dhw = round(max(max(plot_dhw_heatwave$dhw,na.rm = TRUE), na.rm = TRUE))
+
+title_legend <- "DHW"
+p_3 <- ggplot() +
+  geom_tile(data = plot_dhw_heatwave, 
+            aes(x = Lon, y = Lat, fill = dhw))+
+  scale_fill_gradientn(colours = viridis(5),na.value = NA,
+                       breaks = seq(from = min_dhw, to = max_dhw, by = 2),
+                       limits = c(min_dhw, max_dhw)) +
+  labs(x = "Longitude", y = "Latitude") +
+  # coord_sf(xlim = xxlim, ylim = yylim) +
+  theme_minimal()+
+  scale_x_continuous(breaks=c(113.0,114.0,115.0))+
+  facet_wrap(~year)
+p_3
 
 saveRDS(plot_dhw_month,"data/spatial/oceanography/Abrolhos_DHW_month.rds")
 saveRDS(plot_dhw_year,"data/spatial/oceanography/Abrolhos_DHW_year.rds")
 saveRDS(plot_dhw_ts,"data/spatial/oceanography/Abrolhos_DHW_ts.rds")
+saveRDS(plot_dhw_heatwave,"data/spatial/oceanography/Abrolhos_DHW_heatwave.rds")
