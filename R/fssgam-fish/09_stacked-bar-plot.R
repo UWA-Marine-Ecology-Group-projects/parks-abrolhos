@@ -244,3 +244,12 @@ bar.npz9.top.10
 
 #save out plot
 ggsave("plots/stacked.bar.plot.npz9.png",bar.npz9.top.10,dpi=600,width=6.0)
+
+#Recreationally targeted species
+
+
+
+
+
+
+

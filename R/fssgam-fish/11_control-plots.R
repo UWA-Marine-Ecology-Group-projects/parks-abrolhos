@@ -197,10 +197,10 @@ gg.npz6.sr
 #greater than legal - including traffic light bands
 gg.npz6.l <- ggplot(data = npz6, aes(x = year, y = legal, fill = status))+
   scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
-  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0.25, ymax = 1.5),fill = "#ffeec7")+
-  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 1.5, ymax = 2),fill = "#c7d6ff")+
-  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2, ymax = Inf),fill = "#caffc7")+
-  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = 0.25),fill = "#ffc7c7")+
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0.25, ymax = 1.5),fill = "#ffeec7")+
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 1.5, ymax = 2),fill = "#c7d6ff")+
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2, ymax = Inf),fill = "#caffc7")+
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = 0.25),fill = "#ffc7c7")+
   geom_errorbar(data = npz6,aes(ymin=legal-legal.se,ymax= legal+legal.se), width = 0.2,position=position_dodge(width=0.1))+
   geom_point(shape = 21,size = 2, position=position_dodge(width=0.1),stroke = 1, color = "black")+
   theme_classic()+
@@ -265,10 +265,10 @@ gg.npz9.l <- npz9 %>%
   dplyr::filter((status%in%"No-take"))%>%
   ggplot(aes(x = year, y = legal))+ 
   scale_fill_manual(labels = c("National Park Zone"),values=c("#7bbc63"))+
-  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = 1.5),fill = "#ffeec7")+
-  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 1.5, ymax = 2),fill = "#c7d6ff")+
-  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2, ymax = Inf),fill = "#caffc7")+
-  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = 0.25),fill = "#ffc7c7")+
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = 1.5),fill = "#ffeec7")+
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 1.5, ymax = 2),fill = "#c7d6ff")+
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2, ymax = Inf),fill = "#caffc7")+
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0, ymax = 0.25),fill = "#ffc7c7")+
   geom_errorbar(aes(ymin=legal-legal.se,ymax= legal+legal.se), width = 0.1,position=position_dodge(width=0.3))+
   geom_point(shape = 21,size = 2,stroke = 1, color = "black", aes(fill = status))+
   theme_classic()+
@@ -315,3 +315,5 @@ grid.npz9
 #save out plot
 save_plot("plots/fish/control-plots.npz6.png",grid.npz6,base_height = 6,base_width = 8)
 save_plot("plots/fish/control-plots.npz9.png",grid.npz9,base_height = 6,base_width = 8)
+
+
