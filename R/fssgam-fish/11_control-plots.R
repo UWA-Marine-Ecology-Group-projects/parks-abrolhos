@@ -188,6 +188,7 @@ gg.npz6.sr <- ggplot(data = npz6, aes(x = year, y = species.richness, fill = sta
   geom_vline(xintercept = 2018, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
   ylab("Species richness")+
   xlab("Year")+
+  labs(title = "a)")+
   scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
   Theme1
@@ -208,6 +209,7 @@ gg.npz6.l <- ggplot(data = npz6, aes(x = year, y = legal, fill = status))+
   geom_vline(xintercept = 2018, linetype="dashed",color = "black", size=0.5,alpha = 0.5)+
   ylab("Greater than legal size")+
   xlab("Year")+
+  labs(title = "b)")+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
   Theme1
 gg.npz6.l
@@ -234,6 +236,7 @@ gg.npz6.cti <- ggplot()+
   scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),
                     values=c("#6daff4", "#7bbc63"))+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
+  labs(title = "c)")+
   Theme1
 
 gg.npz6.cti
@@ -253,6 +256,7 @@ gg.npz9.sr <- npz9 %>%
   xlab("Year")+
   scale_fill_manual(labels = c("National Park Zone"),values=c( "#7bbc63"))+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
+  labs(title = "a)")+
   Theme1
 gg.npz9.sr
 
@@ -274,6 +278,7 @@ gg.npz9.l <- npz9 %>%
   ylab("Greater than legal size")+
   xlab("Year")+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
+  labs(title = "b)")+
   Theme1
 gg.npz9.l
 
@@ -296,6 +301,7 @@ gg.npz9.cti <- ggplot(data = npz9%>%filter((status%in%"No-take")))+
   xlab("Year")+
   scale_fill_manual(labels = c("National Park Zone"),values=c( "#7bbc63"))+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
+  labs(title = "c)")+
   Theme1
 
 gg.npz9.cti
