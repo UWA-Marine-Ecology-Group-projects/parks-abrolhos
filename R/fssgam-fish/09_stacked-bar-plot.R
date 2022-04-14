@@ -333,43 +333,22 @@ bar.npz9
 #already loaded
 
 #5 Seriola hippos
+s.h <- as.raster(readPNG("data/images/Seriola_hippos_nb_HQ_TAYLOR.png"))
 
 #6 Scomberomorus spp
+s.spp <- as.raster(readPNG("data/images/Scombridae-Dark.png"))
 
 #7 Lethrinus spp
+l.spp <- as.raster(readPNG("data/images/Lethrinidae-Dark.png"))
 
 #8 Lethrinus ravus
+#as above
 
 #9 Epinephelus rivulatus
+e.r <- as.raster(readPNG("data/images/Serranidae-Dark.png"))
 
 #10 Carcharhinus plumbeus
-
-#NPZ9
-#1 Lethrinus miniatus
-#already loaded
-
-#2 Chrysophrus auratus
-#already loaded
-
-#3 Pristipomoides multidens
-#already loaded
-
-#4 Gymnocranius grandoculis
-
-#5 Seriola hippos
-#already loaded
-
-#6 Pristipomoides typus
-
-#7 Lethrinus nebulosus
-#already loaded
-
-#8 Gymnocranius spp
-
-#9 Carcharhinus plumbeus
-#already loaded
-
-#10 Glaucosoma buergeri
+c.p <- as.raster(readPNG("data/images/Carcharinus plumbeus 5cmL adapt.png"))
 
 
 
@@ -377,49 +356,81 @@ bar.npz9
 #npz6
 bar.fished.npz6<-ggplot(maxn.fished.npz6, aes(x=reorder(scientific,maxn), y=maxn)) +   
   geom_bar(stat="identity",colour="black",fill="lightgrey",position=position_dodge())+
-  ylim (0, 100)+
+  ylim (0, 110)+
   coord_flip()+
   xlab("Species")+
   ylab(expression(Overall~abundance~(Sigma~MaxN)))+
   theme_bw()+
   theme(axis.text.y = element_text(face="italic"))+
   theme_collapse+
-  theme.larger.text
-  # annotation_raster(c.spp, xmin=9.8,xmax=10.2,ymin=2450, ymax=2750)+          
-  # annotation_raster(p.spp, xmin=8.8,xmax=9.2,ymin=475, ymax=800)+               
-  # annotation_raster(c.spp, xmin=7.75, xmax=8.25, ymin=375, ymax=800)+         
-  # annotation_raster(c.a, xmin=6.55,xmax=7.45,ymin=350, ymax=1000)+               
-  # annotation_raster(s.h, xmin=5.6,xmax=6.3,ymin=230, ymax=1000)+                
-  # annotation_raster(n.v, xmin=4.6,xmax=5.4,ymin=180, ymax=800)+               
-  # annotation_raster(e.a, xmin=3.7,xmax=4.3,ymin=130, ymax=600)+                 
-  # annotation_raster(s.l, xmin=2.55,xmax=3.45,ymin=130, ymax=1000)+            
-  # annotation_raster(p.s, xmin=1.75,xmax=2.25,ymin=75, ymax=620)+                
-  # annotation_raster(g.h, xmin=0.55,xmax=1.45,ymin=75, ymax=800)                 
+  theme.larger.text+
+  annotation_raster(l.m, xmin=9.8,xmax=10.2,ymin=90, ymax=110)+
+  annotation_raster(c.au, xmin=8.8,xmax=9.2,ymin=80, ymax=100)+
+  annotation_raster(c.r, xmin=7.75, xmax=8.25, ymin=50, ymax=70)+
+  annotation_raster(l.n, xmin=6.55,xmax=7.45,ymin=28, ymax=50)+
+  annotation_raster(s.h, xmin=5.6,xmax=6.3,ymin=20, ymax=40)+
+  annotation_raster(s.spp, xmin=4.6,xmax=5.4,ymin=10, ymax=30)+
+  annotation_raster(l.spp, xmin=3.7,xmax=4.3,ymin=7, ymax=25)+
+  annotation_raster(l.spp, xmin=2.7,xmax=3.3,ymin=7, ymax=25)+
+  annotation_raster(e.r, xmin=1.75,xmax=2.25,ymin=5, ymax=20)+
+  annotation_raster(c.p, xmin=0.5,xmax=1.5,ymin=3, ymax=40)
 # ggtitle("10 most abundant species") +
 # theme(plot.title = element_text(hjust = 0))
 bar.fished.npz6
+  
+#NPZ9
+#1 Lethrinus miniatus
+#already loaded
+  
+#2 Chrysophrus auratus
+#already loaded
+  
+#3 Pristipomoides multidens
+#already loaded
+  
+#4 Gymnocranius grandoculis
+g.g <- as.raster(readPNG("data/images/Gymnocranius_grandoculis_nb_TAYLOR.png"))
 
-#npz6
+#5 Seriola hippos
+#already loaded
+  
+#6 Pristipomoides typus
+p.t <- as.raster(readPNG("data/images/Pristipomoides typus 3cm.png"))
+  
+#7 Lethrinus nebulosus
+ #already loaded
+  
+#8 Gymnocranius spp
+#same as g.g
+  
+#9 Carcharhinus plumbeus
+#already loaded
+  
+#10 Glaucosoma buergeri
+g.b <- as.raster(readPNG("data/images/glaucosoma_buergeri_nb.png"))
+  
+
+#npz9
 bar.fished.npz9<-ggplot(maxn.fished.npz9, aes(x=reorder(scientific,maxn), y=maxn)) +   
   geom_bar(stat="identity",colour="black",fill="lightgrey",position=position_dodge())+
-  ylim (0, 80)+
+  ylim (0, 90)+
   coord_flip()+
   xlab("Species")+
   ylab(expression(Overall~abundance~(Sigma~MaxN)))+
   theme_bw()+
   theme(axis.text.y = element_text(face="italic"))+
   theme_collapse+
-  theme.larger.text
-  # annotation_raster(c.spp, xmin=9.8,xmax=10.2,ymin=2450, ymax=2750)+          #1
-  # annotation_raster(p.spp, xmin=8.8,xmax=9.2,ymin=475, ymax=800)+               #2
-  # annotation_raster(c.spp, xmin=7.75, xmax=8.25, ymin=375, ymax=800)+         #3
-  # annotation_raster(c.a, xmin=6.55,xmax=7.45,ymin=350, ymax=1000)+               #4
-  # annotation_raster(s.h, xmin=5.6,xmax=6.3,ymin=230, ymax=1000)+                #5
-  # annotation_raster(n.v, xmin=4.6,xmax=5.4,ymin=180, ymax=800)+                 #6
-  # annotation_raster(e.a, xmin=3.7,xmax=4.3,ymin=130, ymax=600)+                 #7
-  # annotation_raster(s.l, xmin=2.55,xmax=3.45,ymin=130, ymax=1000)+              #8
-  # annotation_raster(p.s, xmin=1.75,xmax=2.25,ymin=75, ymax=620)+                #9
-  # annotation_raster(g.h, xmin=0.55,xmax=1.45,ymin=75, ymax=800)                 #10
+  theme.larger.text+
+  annotation_raster(l.m, xmin=9.55,xmax=10.45,ymin=73, ymax=93)+          #1
+  annotation_raster(c.au, xmin=8.55,xmax=9.45,ymin=73, ymax=90)+               #2
+  annotation_raster(p.m, xmin=7.65, xmax=8.35, ymin=30, ymax=55)+         #3
+  annotation_raster(g.g, xmin=6.55,xmax=7.45,ymin=8, ymax=25)+               #4
+  annotation_raster(s.h, xmin=5.6,xmax=6.3,ymin=7, ymax=33)+                #5
+  annotation_raster(p.t, xmin=4.6,xmax=5.4,ymin=7, ymax=25)+                 #6
+  annotation_raster(l.n, xmin=3.7,xmax=4.3,ymin=5, ymax=20)+                 #7
+  annotation_raster(g.g, xmin=2.55,xmax=3.45,ymin=5, ymax=20)+              #8
+  annotation_raster(c.p, xmin=1.5,xmax=2.5,ymin=5, ymax=30)+                #9
+  annotation_raster(g.b, xmin=0.55,xmax=1.45,ymin=4, ymax=20)                 #10
 # ggtitle("10 most abundant species") +
 # theme(plot.title = element_text(hjust = 0))
 bar.fished.npz9
