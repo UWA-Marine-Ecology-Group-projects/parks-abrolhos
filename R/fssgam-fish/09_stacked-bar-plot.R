@@ -15,7 +15,6 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 library(stringr)
-library(ggmap)
 library(rgdal)
 library(raster)
 library(png)
@@ -244,3 +243,204 @@ bar.npz9.top.10
 
 #save out plot
 ggsave("plots/stacked.bar.plot.npz9.png",bar.npz9.top.10,dpi=600,width=6.0)
+
+#Recreationally targeted species
+#targeted species top 10 abundance
+# Read in life history
+url <- "https://docs.google.com/spreadsheets/d/1SMLvR9t8_F-gXapR2EemQMEPSw_bUbPLcXd3lJ5g5Bo/edit?ts=5e6f36e2#gid=825736197"
+
+master <- googlesheets4::read_sheet(url)%>%
+  ga.clean.names()%>%
+  filter(grepl('Australia', global.region))%>%
+  # filter(grepl('NW', marine.region))%>%
+  dplyr::select(family,genus,species,iucn.ranking,fishing.mortality,fishing.type,australian.common.name,minlegal.wa)%>% 
+  distinct()%>%
+  glimpse()
+
+fished.species <- maxn %>%
+  dplyr::left_join(master) %>%
+  dplyr::mutate(fishing.type = ifelse(scientific %in%c("Serranidae Plectropomus spp","Scombridae Scomberomorus spp","Lethrinidae Gymnocranius spp",
+                                                       "Lethrinidae Lethrinus spp","Lethrinidae Unknown spp","Platycephalidae Platycephalus spp")
+                                      ,"R",fishing.type))%>%
+  dplyr::mutate(minlegal.wa = ifelse(scientific %in% c("Serranidae Plectropomus spp"), "450", minlegal.wa))%>%
+  dplyr::mutate(minlegal.wa = ifelse(scientific %in% c("Scombridae Scomberomorus spp"), "900", minlegal.wa))%>%
+  dplyr::mutate(minlegal.wa = ifelse(scientific %in% c("Lethrinidae Gymnocranius spp"), "280", minlegal.wa))%>%
+  dplyr::mutate(minlegal.wa = ifelse(scientific %in% c("Lethrinidae Lethrinus spp"), "280", minlegal.wa))%>%
+  dplyr::mutate(minlegal.wa = ifelse(scientific %in% c("Lethrinidae Unknown spp"), "280", minlegal.wa))%>%
+  dplyr::mutate(minlegal.wa = ifelse(scientific %in% c("Platycephalidae Platycephalus spp"), "280", minlegal.wa))%>%
+  dplyr::filter(fishing.type %in% c("B/R","B/C/R","R","C/R","C"))%>%
+  dplyr::filter(!family%in%c("Monacanthidae", "Scorpididae", "Mullidae"))%>%    # Brooke removed leatherjackets, sea sweeps and goat fish
+  dplyr::filter(!species%in%c("albimarginatus","longimanus"))%>%
+  glimpse()
+
+# workout total maxn for each species ---
+#npz6
+maxn.fished.npz6<-fished.species %>%
+  dplyr::filter(location%in%"NPZ6")%>%
+  mutate(scientific=paste(genus,species,sep=" "))%>%
+  group_by(scientific)%>%
+  dplyr::summarise(maxn=sum(maxn))%>%
+  # dplyr::filter(!scientific%in%"Lethrinus spp")%>%
+  ungroup()%>%
+  top_n(10)%>%
+  glimpse()
+
+#npz9
+maxn.fished.npz9<-fished.species %>%
+  dplyr::filter(location%in%"NPZ9")%>%
+  mutate(scientific=paste(genus,species,sep=" "))%>%
+  group_by(scientific)%>%
+  dplyr::summarise(maxn=sum(maxn))%>%
+  ungroup()%>%
+  top_n(10)%>%
+  glimpse()
+
+#have a look
+#npz6
+bar.npz6<-ggplot(maxn.fished.npz6, aes(x=reorder(scientific,maxn), y=maxn)) +   
+  geom_bar(stat="identity",position=position_dodge())+
+  coord_flip()+
+  xlab("Species")+
+  ylab(expression(Overall~abundance~(Sigma~MaxN)))+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  theme_collapse
+bar.npz6
+
+#npz9
+bar.npz9<-ggplot(maxn.fished.npz9, aes(x=reorder(scientific,maxn), y=maxn)) +   
+  geom_bar(stat="identity",position=position_dodge())+
+  coord_flip()+
+  xlab("Species")+
+  ylab(expression(Overall~abundance~(Sigma~MaxN)))+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  theme_collapse
+bar.npz9
+
+#load fish pics
+#NPZ6
+#1 Lethrinus miniatus
+#already loaded
+
+#2 Chrysophrys auratus
+#already loaded
+
+#3 Choerodon rubescens
+#already loaded
+
+#4 Lethrinus nebulosus
+#already loaded
+
+#5 Seriola hippos
+s.h <- as.raster(readPNG("data/images/Seriola_hippos_nb_HQ_TAYLOR.png"))
+
+#6 Scomberomorus spp
+s.spp <- as.raster(readPNG("data/images/Scombridae-Dark.png"))
+
+#7 Lethrinus spp
+l.spp <- as.raster(readPNG("data/images/Lethrinidae-Dark.png"))
+
+#8 Lethrinus ravus
+#as above
+
+#9 Epinephelus rivulatus
+e.r <- as.raster(readPNG("data/images/Serranidae-Dark.png"))
+
+#10 Carcharhinus plumbeus
+c.p <- as.raster(readPNG("data/images/Carcharinus plumbeus 5cmL adapt.png"))
+
+
+
+#plot final bar plot
+#npz6
+bar.fished.npz6<-ggplot(maxn.fished.npz6, aes(x=reorder(scientific,maxn), y=maxn)) +   
+  geom_bar(stat="identity",colour="black",fill="lightgrey",position=position_dodge())+
+  ylim (0, 110)+
+  coord_flip()+
+  xlab("Species")+
+  ylab(expression(Overall~abundance~(Sigma~MaxN)))+
+  theme_bw()+
+  theme(axis.text.y = element_text(face="italic"))+
+  theme_collapse+
+  theme.larger.text+
+  annotation_raster(l.m, xmin=9.8,xmax=10.2,ymin=90, ymax=110)+
+  annotation_raster(c.au, xmin=8.8,xmax=9.2,ymin=80, ymax=100)+
+  annotation_raster(c.r, xmin=7.75, xmax=8.25, ymin=50, ymax=70)+
+  annotation_raster(l.n, xmin=6.55,xmax=7.45,ymin=28, ymax=50)+
+  annotation_raster(s.h, xmin=5.6,xmax=6.3,ymin=20, ymax=40)+
+  annotation_raster(s.spp, xmin=4.6,xmax=5.4,ymin=10, ymax=30)+
+  annotation_raster(l.spp, xmin=3.7,xmax=4.3,ymin=7, ymax=25)+
+  annotation_raster(l.spp, xmin=2.7,xmax=3.3,ymin=7, ymax=25)+
+  annotation_raster(e.r, xmin=1.75,xmax=2.25,ymin=5, ymax=20)+
+  annotation_raster(c.p, xmin=0.5,xmax=1.5,ymin=3, ymax=40)
+# ggtitle("10 most abundant species") +
+# theme(plot.title = element_text(hjust = 0))
+bar.fished.npz6
+  
+#NPZ9
+#1 Lethrinus miniatus
+#already loaded
+  
+#2 Chrysophrus auratus
+#already loaded
+  
+#3 Pristipomoides multidens
+#already loaded
+  
+#4 Gymnocranius grandoculis
+g.g <- as.raster(readPNG("data/images/Gymnocranius_grandoculis_nb_TAYLOR.png"))
+
+#5 Seriola hippos
+#already loaded
+  
+#6 Pristipomoides typus
+p.t <- as.raster(readPNG("data/images/Pristipomoides typus 3cm.png"))
+  
+#7 Lethrinus nebulosus
+ #already loaded
+  
+#8 Gymnocranius spp
+#same as g.g
+  
+#9 Carcharhinus plumbeus
+#already loaded
+  
+#10 Glaucosoma buergeri
+g.b <- as.raster(readPNG("data/images/glaucosoma_buergeri_nb.png"))
+  
+
+#npz9
+bar.fished.npz9<-ggplot(maxn.fished.npz9, aes(x=reorder(scientific,maxn), y=maxn)) +   
+  geom_bar(stat="identity",colour="black",fill="lightgrey",position=position_dodge())+
+  ylim (0, 90)+
+  coord_flip()+
+  xlab("Species")+
+  ylab(expression(Overall~abundance~(Sigma~MaxN)))+
+  theme_bw()+
+  theme(axis.text.y = element_text(face="italic"))+
+  theme_collapse+
+  theme.larger.text+
+  annotation_raster(l.m, xmin=9.55,xmax=10.45,ymin=73, ymax=93)+          #1
+  annotation_raster(c.au, xmin=8.55,xmax=9.45,ymin=73, ymax=90)+               #2
+  annotation_raster(p.m, xmin=7.65, xmax=8.35, ymin=30, ymax=55)+         #3
+  annotation_raster(g.g, xmin=6.55,xmax=7.45,ymin=8, ymax=25)+               #4
+  annotation_raster(s.h, xmin=5.6,xmax=6.3,ymin=7, ymax=33)+                #5
+  annotation_raster(p.t, xmin=4.6,xmax=5.4,ymin=7, ymax=25)+                 #6
+  annotation_raster(l.n, xmin=3.7,xmax=4.3,ymin=5, ymax=20)+                 #7
+  annotation_raster(g.g, xmin=2.55,xmax=3.45,ymin=5, ymax=20)+              #8
+  annotation_raster(c.p, xmin=1.5,xmax=2.5,ymin=5, ymax=30)+                #9
+  annotation_raster(g.b, xmin=0.55,xmax=1.45,ymin=4, ymax=20)                 #10
+# ggtitle("10 most abundant species") +
+# theme(plot.title = element_text(hjust = 0))
+bar.fished.npz9
+
+#save out plot
+ggsave("plots/fish/abundant.targets.npz6.png",bar.fished.npz6,dpi=600,width=6.0, height = 6.0)
+ggsave("plots/fish/abundant.targets.npz9.png",bar.fished.npz9,dpi=600,width=6.0, height = 6.0)
+
+
+
+
+
+
