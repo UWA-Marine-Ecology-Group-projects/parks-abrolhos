@@ -52,6 +52,10 @@ points <- read.delim("2021-05_Abrolhos_BOSS_Dot Point Measurements.txt",header=T
   mutate(sample=str_replace_all(.$filename,c(".png"="",".jpg"="",".JPG"=""))) %>%
   mutate(sample=as.character(sample)) %>% 
   select(sample,image.row,image.col,broad,morphology,type,fieldofview) %>% # select only these columns to keep
+  dplyr::mutate(direction = ifelse(image.row < 1080 & image.col < 1920, "N", 
+                                   ifelse(image.row < 1080 & image.col >= 1920, "E", 
+                                          ifelse(image.row >= 1080 & image.col >= 1920, "S", "W")))) %>% # Add this in for Kingsley test
+  dplyr::select(sample, direction, everything()) %>%
   glimpse() # preview
 
 length(unique(points$sample)) # 75 samples
@@ -59,7 +63,6 @@ length(unique(points$sample)) # 75 samples
 no.annotations <- points%>%
   group_by(sample)%>%
   summarise(points.annotated=n()) # 3 have 81
-
 
 relief <- read.delim("2021-05_Abrolhos_BOSS_Relief_Dot Point Measurements.txt",header=T,skip=4,stringsAsFactors=FALSE) %>% # read in the file
   ga.clean.names() %>% # tidy the column names using GlobalArchive function
@@ -96,7 +99,7 @@ missing.habitat <- anti_join(metadata,habitat, by = c("sample")) # samples in th
 
 # Create %fov----
 fov.points <- habitat%>%
-  dplyr::select(-c(broad,morphology,type,relief))%>%
+  dplyr::select(-c(broad,morphology,type,relief, direction))%>%
   dplyr::filter(!fieldofview=="")%>%
   dplyr::filter(!is.na(fieldofview))%>%
   dplyr::mutate(fieldofview=paste("fov",fieldofview,sep = "."))%>%
@@ -114,20 +117,21 @@ fov.percent.cover<-fov.points %>%
   dplyr::select(-c(fov.total.points.annotated))%>%
   glimpse()
 
-
 # CREATE catami_broad------
+# Only ran this one with direction, other ones won't run
 broad.points <- habitat%>%
   dplyr::select(-c(fieldofview,morphology,type,relief))%>%
-  filter(!broad%in%c("",NA,"Unknown","Open.Water","Open Water"))%>%
-  dplyr::mutate(broad=paste("broad",broad,sep = "."))%>%
-  dplyr::mutate(count=1)%>%
-  dplyr::group_by(sample)%>%
-  tidyr::spread(key=broad,value=count,fill=0)%>%
-  dplyr::select(-c(image.row,image.col))%>%
-  dplyr::group_by(sample)%>%
-  dplyr::summarise_all(funs(sum))%>%
-  dplyr::mutate(broad.total.points.annotated=rowSums(.[,2:(ncol(.))],na.rm = TRUE ))%>%
-  ga.clean.names()%>%
+  filter(!broad%in%c("",NA,"Unknown","Open.Water","Open Water")) %>%
+  dplyr::mutate(broad=paste("broad",broad,sep = ".")) %>%
+  dplyr::mutate(count=1) %>%
+  dplyr::group_by(sample) %>%
+  tidyr::spread(key=broad,value=count,fill=0) %>%
+  dplyr::select(-c(image.row,image.col)) %>%
+  dplyr::group_by(sample, direction) %>%
+  dplyr::summarise_all(funs(sum)) %>%
+  ungroup() %>%
+  dplyr::mutate(broad.total.points.annotated=rowSums(.[,3:(ncol(.))],na.rm = TRUE )) %>%
+  ga.clean.names() %>%
   glimpse
 
 broad.percent.cover<-broad.points %>%
@@ -210,3 +214,5 @@ write.csv(habitat.detailed.points,file=paste(study,"random-points_detailed.habit
 
 write.csv(habitat.broad.percent,file=paste(study,"random-points_percent-cover_broad.habitat.csv",sep = "_"), row.names=FALSE)
 write.csv(habitat.detailed.percent,file=paste(study,"random-points_percent-cover_detailed.habitat.csv",sep = "_"), row.names=FALSE)
+
+setwd(working.dir)
