@@ -164,13 +164,16 @@ swampa_cols <- scale_fill_manual(values = c(
 # closer plot
 sitebathy <- readRDS('output/ga_bathy_fine.rds')                                # finer bathy
 colnames(sitebathy)[3] <- "Depth"
-sitebathy <- sitebathy[sitebathy$Depth > -1000, ]                               # trim to reduce legend
-sitebathy <- sitebathy[sitebathy$x > 112.5 & sitebathy$x < 114.4, ]
-sitebathy <- sitebathy[sitebathy$y > -28.4 & sitebathy$y < -26.8, ]
+# sitebathy <- sitebathy[sitebathy$Depth > -1000, ]                               # trim to reduce legend
+sitebathy <- sitebathy[sitebathy$x > 112.7 & sitebathy$x < 114.4, ] 
+sitebathy <- sitebathy[sitebathy$y > -28.4 & sitebathy$y < -26.6, ]
 
 p3 <- ggplot() +
-  geom_raster(data = sitebathy, aes(x, y, fill = Depth), alpha = 4/5) +
-  scale_fill_gradient(low = "black", high = "grey70", guide = "none") +
+  # geom_raster(data = sitebathy, aes(x, y, fill = Depth), alpha = 4/5) +
+  geom_contour_filled(data = sitebathy, aes(x = x, y = y, z = Depth,
+                                             fill = after_stat(level)),
+                      breaks = c(0, -30, -70, -200, -700, -2000, -4000, -10000), alpha = 4/5) +
+  scale_fill_grey(start = 1, end = 0.5 , guide = "none") +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
   new_scale_fill() +  
   geom_sf(data = terrnp, aes(fill = leg_catego), alpha = 4/5, colour = NA) +
@@ -178,11 +181,10 @@ p3 <- ggplot() +
   waterr_cols +
   new_scale_fill() +
   geom_sf(data = ab_nmp, aes(fill = ZoneName), alpha = 3/5, colour = NA) +
-  snmpa_cols + labs(x = NULL, y = NULL, fill = "Australian Marine Park") +
+  snmpa_cols +
+  labs(x = NULL, y = NULL, fill = "Australian Marine Park") +
   geom_contour(data = sitebathy, aes(x = x, y = y, z = Depth), 
-               binwidth = 50, colour = "white", alpha = 4/5, size = 0.1) +
-  geom_text_contour(data = sitebathy, aes(x = x, y = y, z = Depth), 
-                    binwidth = 100, size = 2.5, label.placer = label_placer_n(1)) +
+               breaks = c(0, -30, -70, -200, - 700, - 9000), colour = "white", alpha = 1, size = 0.2) +
   geom_point(data = bruvd, aes(Longitude, Latitude, colour = "BRUV"), 
              alpha = 3/5, shape = 10) +
   geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"), 
@@ -198,12 +200,21 @@ p3 <- ggplot() +
            colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
   annotate("text", x = 113.42, y = -27.99, size = 3,
            colour = "grey20", label = "swabrnpz06") +
-  coord_sf(xlim = c(112.8, 114.2), ylim = c(-28.1, -27.05)) +
+  coord_sf(xlim = c(112.8, 114.3), ylim = c(-28.25, -26.7)) +
+  annotate("text", y = c(-27.875,-27.875,-27.875,-27.875, -26.87), 
+           x = c(114.07,113.32, 113.15, 112.79, 113.167), 
+           label = c("30m", "70m", "200m", "700m", "70m"), size = 2) +
+  annotate("point", y = c(-27.7115), x = c(114.1714), size = 0.75) +
+  annotate("text", y = c(-27.7115), x = c(114.275),
+           label = c("Kalbarri"), size = 3) +
   labs(colour = "Sample", x = NULL, y = NULL) +
   theme_minimal()
-p3
 
-ggsave("plots/siteplot.png", dpi = 200, width = 8, height = 6)
+png(filename = "plots/spatial/siteplot.png", units = "in", res = 200, width = 8, height = 6)
+p3
+dev.off()
+
+ggsave("plots/spatial/siteplot.png", dpi = 200, width = 8, height = 6)
 
 ## single site zoom plots
 snmpa_cols <- scale_colour_manual(values = c("National Park Zone" = "#7bbc63"))

@@ -49,7 +49,7 @@ spreddf$dom_tag <- dplyr::recode(spreddf$dom_tag,
                           pmacroalg = "Macroalgae",
                           prock = "Rock",
                           psand = "Sand",
-                          pbiogenic = "Biogenic Reef")
+                          pbiogenic = "Sessile invertebrates")
   
 spreddf$sitens <- ifelse(spreddf$y > 6940000, 1, 0)
 
@@ -59,19 +59,19 @@ hab_cols <- scale_fill_manual(values = c("Kelp" = "goldenrod1",
                                          "Macroalgae" = "darkgoldenrod4",
                                          "Rock" = "grey40",
                                          "Sand" = "wheat",
-                                         "Biogenic Reef" = "plum"
+                                         "Sessile invertebrates" = "plum"
 ))
 
 p1 <- ggplot() +
   geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = dom_tag)) +
   hab_cols +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
-  geom_point(data = habi[habi$ns == 1, ], 
-             aes(Longitude.1, Latitude.1, colour = method), 
-             shape = 10, size = 1, alpha = 3/5) +
-  scale_colour_manual(values = c("BRUV" = "indianred4", 
-                                 "Drop Camera" = "navyblue")) +
-  labs(x = NULL, y = NULL) +
+  # geom_point(data = habi[habi$ns == 1, ], 
+  #            aes(Longitude.1, Latitude.1, colour = method), 
+  #            shape = 10, size = 1, alpha = 3/5) +
+  # scale_colour_manual(values = c("BRUV" = "indianred4", 
+  #                                "Drop Camera" = "navyblue")) +
+  labs(x = NULL, y = NULL, title = "Big Bank") +
   guides(fill = "none", colour = "none") +
   coord_sf() +
   theme_minimal()
@@ -80,16 +80,16 @@ p11 <- ggplot() +
   geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = dom_tag)) +
   hab_cols +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
-  geom_point(data = habi[habi$ns == 0, ], 
-             aes(Longitude.1, Latitude.1, colour = method), 
-             shape = 10, size = 1, alpha = 3/5) +
-  scale_colour_manual(values = c("BRUV" = "indianred4", 
-                                 "Drop Camera" = "navyblue")) +
-  labs(x = NULL, y = NULL, fill = "Habitat", colour = NULL) +
+  # geom_point(data = habi[habi$ns == 0, ], 
+  #            aes(Longitude.1, Latitude.1, colour = method), 
+  #            shape = 10, size = 1, alpha = 3/5) +
+  # scale_colour_manual(values = c("BRUV" = "indianred4", 
+  #                                "Drop Camera" = "navyblue")) +
+  labs(x = NULL, y = NULL, fill = "Habitat", colour = NULL,title = "Shallow Bank") +
   theme_minimal()
 
 p1 + p11
-ggsave("plots/site_dominant_habitat.png", width = 12, height = 8, dpi = 160)
+ggsave("plots/spatial/site_dominant_habitat.png", width = 12, height = 8, dpi = 160)
 
 # fig 2: habitat multiplot
 # melt classes for faceting
