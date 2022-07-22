@@ -37,11 +37,12 @@ datnpz6 <- bind_rows(dat1,dat2)%>%
 
 dat.taxa.npz6 <- datnpz6 %>%
   mutate(label=NA)%>%
+  dplyr::filter(!predictor %in% "status") %>%
   mutate(resp.var=factor(resp.var, levels = c("smaller than legal size","greater than legal size","species.richness","total.abundance")))%>%
   mutate(label=ifelse(predictor=="relief"&resp.var=="total.abundance","X",label))%>%
   mutate(label=ifelse(predictor=="depth"&resp.var=="species.richness","X",label))%>%
   mutate(label=ifelse(predictor=="detrended"&resp.var=="greater than legal size","X",label))%>%
-  mutate(label=ifelse(predictor=="status"&resp.var=="greater than legal size","X",label))%>%
+  # mutate(label=ifelse(predictor=="status"&resp.var=="greater than legal size","X",label))%>%
   mutate(label=ifelse(predictor=="tpi"&resp.var=="smaller than legal size","X",label))%>%
   glimpse()
 
@@ -78,8 +79,8 @@ gg.importance.npz6 <- ggplot(dat.taxa.npz6,
    geom_tile(show.legend=T) +
    scale_fill_gradientn(legend_title, colours=c(re), na.value = "grey98",
                          limits = c(-1, 1))+
-     scale_y_discrete(labels=c("Smaller than legal size","Greater than legal size","Species richness","Total abundance"))+
-  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Macroalgae", "Relief","Roughness","Status", 'TPI'))+
+     scale_y_discrete(labels=c("Smaller than legal size*","Greater than legal size*","Species richness","Total abundance"))+
+  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Macroalgae", "Relief","Roughness", 'TPI'))+
     xlab(NULL)+
    ylab(NULL)+
    theme_classic()+
@@ -88,7 +89,7 @@ gg.importance.npz6 <- ggplot(dat.taxa.npz6,
 gg.importance.npz6
 
 #save output - changed dimensions for larger text in report
-save_plot("plots/abrolhos.fish.importance.npz6.png", gg.importance.npz6,base_height = 4,base_width = 6.275)
+save_plot("plots/fish/abrolhos.fish.importance.npz6.png", gg.importance.npz6,base_height = 4,base_width = 6.275)
 
 #read in data - negative values manually added
 dat3 <- read.csv("output/fssgam - fish/2021-05_Abrolhos_npz9_all.var.imp.csv")%>% #from local copy
@@ -106,6 +107,7 @@ datnpz9 <- bind_rows(dat3,dat4)%>%
 
 dat.taxa.npz9 <- datnpz9 %>%
   mutate(label=NA)%>%
+  dplyr::filter(!predictor %in% "status") %>%
   mutate(resp.var=factor(resp.var, levels = c("smaller than legal size","greater than legal size","species.richness","total.abundance")))%>%
   mutate(label=ifelse(predictor=="relief"&resp.var=="total.abundance","X",label))%>%
   mutate(label=ifelse(predictor=="roughness"&resp.var=="total.abundance","X",label))%>%
@@ -121,7 +123,7 @@ gg.importance.npz9 <- ggplot(dat.taxa.npz9,
   geom_tile(show.legend=T) +
   scale_fill_gradientn(legend_title, colours=c(re), na.value = "grey98",
                        limits = c(-1, 1))+
-  scale_y_discrete(labels=c("Smaller than legal size","Greater than legal size","Species richness","Total abundance"))+
+  scale_y_discrete(labels=c("Smaller than legal size*","Greater than legal size*","Species richness","Total abundance"))+
   scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Relief","Roughness", 'TPI'))+
   xlab(NULL)+
   ylab(NULL)+
@@ -131,4 +133,4 @@ gg.importance.npz9 <- ggplot(dat.taxa.npz9,
 gg.importance.npz9
 
 #save output - changed dimensions for larger text in report
-save_plot("plots/abrolhos.fish.importance.npz9.png", gg.importance.npz9,base_height = 4,base_width = 6.275)
+save_plot("plots/fish/abrolhos.fish.importance.npz9.png", gg.importance.npz9,base_height = 4,base_width = 6.275)

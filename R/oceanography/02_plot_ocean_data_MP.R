@@ -17,7 +17,6 @@ library(dplyr)
 library(ggplot2)
 library(patchwork)
 library(viridis)
-library(ggquiver)
 
 #set working directory
 working.dir <- getwd()
@@ -154,7 +153,8 @@ ggsave('plots/spatial/Abrolhos_DHW_monthly_spatial.png',p_3, dpi = 300, width = 
 dev.off()
 
 ##### ACIDIFICATION #####
-acd_ts_monthly <- readRDS("data/spatial/oceanography/Abrolhos_acidification.rds")%>%
+acd_ts_monthly <- readRDS("data/spatial/oceanography/Abrolhos_acidification.rds") %>%
+  dplyr::filter(!year %in% c(1870, 2013)) %>%
   glimpse()
 
 legend_title = "Season"

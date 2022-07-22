@@ -14,22 +14,32 @@ library(patchwork)
 library(sf)
 
 # bring in spatial layers
+aus    <- st_read("data/spatial/shp/cstauscd_r.mif")                            # geodata 100k coastline available: https://data.gov.au/dataset/ds-ga-a05f7892-eae3-7506-e044-00144fdd4fa6/
+aus    <- aus[aus$FEAT_CODE == "mainland", ]
 aumpa  <- st_read("data/spatial/shp/AustraliaNetworkMarineParks.shp")           # all aus mpas
 sw_mpa <- aumpa[aumpa$ResName %in% c("Abrolhos"), ]                             # just Abrolhos Aus MP
 ab_npz <- sw_mpa[sw_mpa$ZoneName == "National Park Zone", ]
-ab_npz$parkid <- c(1:3)                                                         # for easy subsetting later 
+ab_npz$parkid <- c(1:3)   
+ab_nmp <- sw_mpa[sw_mpa$ResName %in% c("Abrolhos", "Jurien", "Shark Bay"), ]    # just nat parks nearby# for easy subsetting later 
 wgscrs <- CRS("+proj=longlat +datum=WGS84")
 sppcrs <- CRS("+proj=utm +zone=50 +south +datum=WGS84 +units=m +no_defs")       # crs for sp objects
 abnpza <- ab_npz
 ab_npz <- st_transform(ab_npz, sppcrs)
 jacmap <- raster("data/spatial/raster/ecosystem-types-19class-naland.tif")      # jac's aus habitat map
-cropex <- extent(112, 116, -30, -27)
+cropex <- extent(112, 116, -30, -26)
 jacmap <- crop(jacmap, cropex)
 habi   <- readRDS("data/tidy/merged_habitat.rds")
 habi$ns <- ifelse(habi$Latitude.1 > 6940000, 1, 0)
 habi$method <- dplyr::recode(habi$method,
                              BOSS = "Drop Camera")
-
+st_crs(aus)         <- st_crs(aumpa)
+terrnp <- st_read("data/spatial/shp/Legislated_Lands_and_Waters_DBCA_011.shp") %>%  # terrestrial reserves
+  dplyr::filter(leg_catego %in% c("Nature Reserve", "National Park"))
+# reduce terrestrial parks
+terrnp <- st_crop(terrnp, xmin = 113, ymin = -30, xmax = 116, ymax = -26)       # just abrolhos area
+cwatr  <- readRDS('output/coastal_waters_limit_trimmed.rds')                    # coastal waters line trimmed in 'R/GA_coast_trim.R'
+bathdf <- readRDS("output/ga_bathy_trim.rds")                                   # bathymetry trimmed in 'R/GA_coast_trim.R'
+colnames(bathdf)[3] <- "Depth"
 # read in outputs from 'R/4_habitat_model.R'
 # preddf <- readRDS("output/broad_habitat_predictions.rds")
 spreddf <- readRDS("output/site_habitat_predictions.rds")                       # site predictions only
@@ -288,7 +298,7 @@ ggsave("plots/site_relief_spatialeffect.png",
 # sort out the classes
 jlevs  <- ratify(jacmap)
 jclass <- levels(jlevs)[[1]]
-jclass[["class"]] <- c("shelf.unvegetated.soft.sediments",
+jclass[["class"]] <- c("Shelf.unvegetated.soft.sediments",
                        "Upper.slope.unvegetated.soft.sediments", 
                        "Mid.slope.sediments",
                        "Lower.slope.reef.and.sediments",
@@ -307,57 +317,68 @@ jmap_df <- as.data.frame(jacmap, xy = TRUE, na.rm = TRUE)
 colnames(jmap_df)[3] <- "classname"
 jmap_df$classname <- gsub("\\.", " ", jmap_df$classname)                            # replace . with space in names
 
-jacmap_utm <- projectRaster(jacmap, crs = sppcrs, method = "ngb")
-levels(jacmap_utm) <- jclass
-
-jmap_df_utm <- as.data.frame(jacmap_utm, xy = TRUE, na.rm = TRUE)
-colnames(jmap_df_utm)[3] <- "classname"
-jmap_df_utm$classname <- gsub("\\.", " ", jmap_df_utm$classname)                # replace . with space in names
-
-# set up dfs
-jmap_nth <- jmap_df_utm[(jmap_df_utm$y > 6985000 & jmap_df_utm$y < 7000000) & 
-                      (jmap_df_utm$x > 100000 & jmap_df_utm$x < 140000), ]
-
-jmap_sth <- jmap_df_utm[(jmap_df_utm$y > 6880000 & jmap_df_utm$y < 6900000) & 
-                      (jmap_df_utm$x > 125000 & jmap_df_utm$x < 170000), ]
+# jacmap_utm <- projectRaster(jacmap, crs = sppcrs, method = "ngb")
+# levels(jacmap_utm) <- jclass
+# 
+# jmap_df_utm <- as.data.frame(jacmap_utm, xy = TRUE, na.rm = TRUE)
+# colnames(jmap_df_utm)[3] <- "classname"
+# jmap_df_utm$classname <- gsub("\\.", " ", jmap_df_utm$classname)                # replace . with space in names
+# 
+# # set up dfs
+# jmap_nth <- jmap_df_utm[(jmap_df_utm$y > 6985000 & jmap_df_utm$y < 7000000) & 
+#                       (jmap_df_utm$x > 100000 & jmap_df_utm$x < 140000), ]
+# 
+# jmap_sth <- jmap_df_utm[(jmap_df_utm$y > 6880000 & jmap_df_utm$y < 6900000) & 
+#                       (jmap_df_utm$x > 125000 & jmap_df_utm$x < 170000), ]
 
 # plot
-jcls_cols <- scale_fill_manual(values = c("Upper slope unvegetated soft sediments" = "wheat4", 
-                                          "shelf unvegetated soft sediments" = "wheat2",
-                                          "Shallow coral reefs less than 30 m depth" = "coral2", 
-                                          "Mesophotic coral reefs" = "darkorange3",
-                                          "Rariophotic shelf reefs" = "steelblue2"))
-
-p6 <- ggplot() + 
-  geom_tile(data = jmap_nth, aes(x, y, fill = classname)) +
-  jcls_cols +
-  geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
-  labs(x= NULL, y = NULL, fill = NULL) +
-  guides(fill = "none") +
-  theme_minimal()
-
-p62 <- ggplot() + 
-  geom_tile(data = jmap_sth, aes(x, y, fill = classname)) +
-  jcls_cols +
-  geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
-  labs(x= NULL, y = NULL, fill = NULL) +
-  theme_minimal()
-
-p6 + p62 + plot_layout(widths = c(0.5, 0.44))
-ggsave("plots/npz_jmonk_natmap.png", width = 10, height = 6, dpi = 160)
+# jcls_cols <- scale_fill_manual(values = c("Upper slope unvegetated soft sediments" = "wheat4", 
+#                                           "shelf unvegetated soft sediments" = "wheat2",
+#                                           "Shallow coral reefs less than 30 m depth" = "coral2", 
+#                                           "Mesophotic coral reefs" = "darkorange3",
+#                                           "Rariophotic shelf reefs" = "steelblue2"))
+# 
+# p6 <- ggplot() + 
+#   geom_tile(data = jmap_nth, aes(x, y, fill = classname)) +
+#   jcls_cols +
+#   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
+#   labs(x= NULL, y = NULL, fill = NULL) +
+#   guides(fill = "none") +
+#   theme_minimal()
+# 
+# p62 <- ggplot() + 
+#   geom_tile(data = jmap_sth, aes(x, y, fill = classname)) +
+#   jcls_cols +
+#   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
+#   labs(x= NULL, y = NULL, fill = NULL) +
+#   theme_minimal()
+# 
+# p6 + p62 + plot_layout(widths = c(0.5, 0.44))
+# ggsave("plots/npz_jmonk_natmap.png", width = 10, height = 6, dpi = 160)
 
 jcls_cols <- scale_fill_manual(values = c(
   "Shallow coral reefs less than 30 m depth" = "coral2", 
-  "shelf unvegetated soft sediments" = "wheat2",
-  "Shelf vegetated sediments" = "springgreen4",
+  "Shelf unvegetated soft sediments" = "cornsilk1",
+  "Shelf vegetated sediments" = "seagreen3",
   "Mesophotic coral reefs" = "darkorange3",
-  "Rariophotic shelf reefs" = "steelblue2",
-  "Upper slope unvegetated soft sediments" = "wheat4",
-  "Mid slope sediments" = "khaki"))
+  "Rariophotic shelf reefs" = "steelblue3",
+  "Upper slope unvegetated soft sediments" = "wheat1",
+  "Mid slope sediments" = "#f7d29c"))  # navajowhite1 - made slightly darker
 
 waterr_cols <- scale_fill_manual(values = c("National Park" = "#c4cea6",
                                             "Nature Reserve" = "#e4d0bb"),
                                  guide = "none")
+
+# assign mpa colours - full levels are saved at end of script for future ref
+nmpa_cols <- scale_color_manual(breaks = c("National Park Zone", "Multiple Use Zone", "Special Purpose Zone"), values = c("National Park Zone" = "#7bbc63",
+                                          "Multiple Use Zone" = "#b9e6fb",
+                                          "Special Purpose Zone" = "#6daff4"
+))
+
+ab_nmp$ZoneName <- factor(ab_nmp$ZoneName, levels = c("Multiple Use Zone", "Special Purpose Zone",
+                                                      "Habitat Protection Zone","National Park Zone"
+                                                      ))
+
 
 p7 <- ggplot() +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
@@ -366,22 +387,32 @@ p7 <- ggplot() +
   new_scale_fill() +  
   geom_tile(data = jmap_df, aes(x, y, fill = classname)) +
   jcls_cols +
-  geom_sf(data = ab_npz, fill = NA, colour = "#7bbc63") +
+  geom_contour(data = bathdf, aes(x = x, y = y, z = Depth),
+               breaks = c(-30, -70, -200, - 700, - 7000), colour = "black", alpha = 1, size = 0.18) +
+  geom_sf(data = ab_nmp, fill = NA, aes(colour = ZoneName)) +
+  nmpa_cols+
+  labs(color = "Australian Marine Parks") +
+  new_scale_color() +
   geom_sf(data = cwatr, colour = "firebrick", alpha = 4/5, size = 0.2) +
-  scale_colour_manual(values = c("BRUV" = "indianred4",
-                                 "Drop Camera" = "seagreen4")) +
-  annotate("rect", xmin = 113.02, xmax = 113.29, ymin = -27.19, ymax = -27.08,
-           colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
-  annotate("text", x = 113.15, y = -27.05, size = 3, 
-           colour = "grey20", label = "swabrnpz09") +
-  annotate("rect", xmin = 113.24, xmax = 113.58, ymin = -28.13, ymax = -28.02,
-           colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
-  annotate("text", x = 113.42, y = -27.99, size = 3,
-           colour = "grey20", label = "swabrnpz06") +
-  coord_sf(xlim = c(112.8, 114.2), ylim = c(-28.1, -27.05)) +
+  # annotate("rect", xmin = 113.02, xmax = 113.29, ymin = -27.19, ymax = -27.08,
+  #          colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
+  # annotate("text", x = 113.15, y = -27.05, size = 3, 
+  #          colour = "grey20", label = "swabrnpz09") +
+  # annotate("rect", xmin = 113.24, xmax = 113.58, ymin = -28.13, ymax = -28.02,
+  #          colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
+  # annotate("text", x = 113.42, y = -27.99, size = 3,
+  #          colour = "grey20", label = "swabrnpz06") +
+  annotate("text", y = c(-27.875, -27.875,-27.875,-27.875,-27.875, -26.87), 
+           x = c(114.07, 113.41, 113.32, 113.15, 112.79, 113.167), 
+           label = c("30m", "30m", "70m", "200m", "700m", "70m"), size = 2) +
+  coord_sf(xlim = c(112.8, 114.3), ylim = c(-28.25, -26.7)) +
   labs(fill = "Habitat classification", x = NULL, y = NULL) +
+  annotate("point", y = c(-27.7115), x = c(114.1714), size = 0.75) +
+  annotate("text", y = c(-27.7115), x = c(114.275),
+           label = c("Kalbarri"), size = 3) +
   theme_minimal()
+
+png(filename = "plots/spatial/site_jmonk_natmap.png", width = 8, height = 6,
+    units = "in", res = 200)
 p7
-
-ggsave("plots/site_jmonk_natmap.png", dpi = 200, width = 8, height = 6)
-
+dev.off()
