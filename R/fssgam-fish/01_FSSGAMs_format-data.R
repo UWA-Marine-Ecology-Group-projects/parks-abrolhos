@@ -60,15 +60,16 @@ length <- bind_rows(boss.length,bruv.length)%>%
 
 #habitat
 allhab <- readRDS("data/Tidy/merged_habitat.rds")%>%
+  dplyr::select(-status) %>%
   ga.clean.names()%>%
   glimpse()
 
 allhab <- allhab %>%
-  transform(kelps = kelps / totalpts) %>%
-  transform(macroalgae = macroalgae / totalpts) %>%
-  transform(sand = sand / totalpts) %>%
-  transform(rock = rock / totalpts) %>%
-  transform(biog = biog / totalpts) %>%
+  transform(kelps = kelps / broad.total.points.annotated) %>%
+  transform(macroalgae = macroalgae / broad.total.points.annotated) %>%
+  transform(sand = sand / broad.total.points.annotated) %>%
+  transform(rock = rock / broad.total.points.annotated) %>%
+  transform(biog = biog / broad.total.points.annotated) %>%
   glimpse()
 
 names(maxn)
@@ -137,7 +138,7 @@ pred.vars = c("depth",
               "macroalgae", 
               "sand", 
               "biog", 
-              "relief",
+              "mean.relief",
               "tpi",
               "roughness",
               "detrended") 
@@ -192,7 +193,9 @@ fished.species <- length %>%
   dplyr::mutate(minlegal.wa = ifelse(scientific %in% c("Platycephalidae Platycephalus spp"), "280", minlegal.wa))%>%
   dplyr::filter(fishing.type %in% c("B/R","B/C/R","R","C/R","C"))%>%
   dplyr::filter(!family%in%c("Monacanthidae", "Scorpididae", "Mullidae"))%>%    # Brooke removed leatherjackets, sea sweeps and goat fish
-  dplyr::filter(!species%in%c("albimarginatus","longimanus")) 
+  dplyr::filter(!species%in%c("albimarginatus","longimanus")) %>%
+  dplyr::mutate(minlegal.wa = as.double(minlegal.wa)) %>%
+  glimpse()
 
 without.min.length <- fished.species %>%
   filter(is.na(minlegal.wa))%>%
@@ -251,7 +254,7 @@ pred.vars = c("depth",
               "macroalgae", 
               "sand", 
               "biog", 
-              "relief",
+              "mean.relief",
               "tpi",
               "roughness",
               "detrended") 

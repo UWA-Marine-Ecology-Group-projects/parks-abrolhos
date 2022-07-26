@@ -7,6 +7,8 @@
 # date:    Jun 2021
 ##
 
+rm(list = ls())
+
 library(sf)
 library(rgeos)
 library(rnaturalearth)

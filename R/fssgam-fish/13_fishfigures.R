@@ -39,7 +39,8 @@ p11 <- ggplot() +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
   scale_x_continuous(breaks = c(113.2,113.4,113.6))+
-  labs(x = NULL, y = NULL, fill = "Total Abundance")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+  labs(x = NULL, y = NULL, fill = "Total Abundance", title = "Whole assemblage")+
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
 p11
 
@@ -61,7 +62,8 @@ p31 <- ggplot() +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
   scale_x_continuous(breaks = c(113.2,113.4,113.6))+
-  labs(x = NULL, y = NULL, fill = "Legal")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+  labs(x = NULL, y = NULL, fill = "Legal", title = "Targeted assemblage") +
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
 p31
 
@@ -84,7 +86,8 @@ p1 <- ggplot() +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
   scale_x_continuous(breaks = c(113,113.10,113.2,113.3))+
-  labs(x = NULL, y = NULL, fill = "Total Abundance")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+  labs(x = NULL, y = NULL, fill = "Total Abundance", title = "Whole assemblage")+
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 p1
 
 #species richness
@@ -103,8 +106,9 @@ p3 <- ggplot() +
   scale_fill_viridis(direction = -1) +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
   theme_minimal() +
-  labs(x = NULL, y = NULL, fill = "Legal") +
-  scale_x_continuous(breaks = c(113,113.10,113.2,113.3))+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+  labs(x = NULL, y = NULL, fill = "Legal", title = "Targeted assemblage") +
+  scale_x_continuous(breaks = c(113,113.10,113.2,113.3)) +
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
 p3
 
@@ -128,5 +132,5 @@ gg.predictions.npz6
 gg.predictions.npz9 <- p1+p2+p3+p4 & theme(legend.justification = "left")       #, aspect.ratio=1
 gg.predictions.npz9
 
-ggsave("plots/site_fish_predictions-npz6.png", gg.predictions.npz6,width = 10, height = 4, dpi = 160)
-ggsave("plots/site_fish_predictions-npz9.png", gg.predictions.npz9,width = 10, height = 4, dpi = 160)
+ggsave("plots/fish/site_fish_predictions-npz6.png", gg.predictions.npz6,width = 10, height = 4, dpi = 160)
+ggsave("plots/fish/site_fish_predictions-npz9.png", gg.predictions.npz9,width = 10, height = 4, dpi = 160)

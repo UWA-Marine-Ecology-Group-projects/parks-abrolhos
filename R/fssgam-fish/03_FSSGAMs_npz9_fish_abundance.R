@@ -9,7 +9,7 @@
 rm(list=ls())
 
 # libraries----
-detach("package:plyr", unload=TRUE)#will error - don't worry
+# detach("package:plyr", unload=TRUE)#will error - don't worry
 library(tidyr)
 library(dplyr)
 options(dplyr.width = Inf) #enables head() to display all coloums
@@ -40,7 +40,7 @@ dat <- readRDS("data/Tidy/dat.maxn.rds")%>%
 
 # # Re-set the predictors for modeling----
 pred.vars <- c("depth", "macroalgae",
-               "biog", "relief","tpi","roughness","detrended") #macroalgae has no data but leave it in so tables match up
+               "biog", "mean.relief","tpi","roughness","detrended") #macroalgae has no data but leave it in so tables match up
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars <- unique(as.character(dat$scientific))

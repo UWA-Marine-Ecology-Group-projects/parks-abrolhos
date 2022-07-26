@@ -10,7 +10,7 @@
 rm(list=ls())
 
 ## librarys----
-detach("package:plyr", unload=TRUE)#will error - don't worry
+# detach("package:plyr", unload=TRUE)#will error - don't worry
 library(tidyr)
 library(dplyr)
 options(dplyr.width = Inf) #enables head() to display all coloums
@@ -44,7 +44,7 @@ dat <- readRDS("data/Tidy/dat.length.rds")%>%
 pred.vars = c("depth", 
               "macroalgae", 
               "biog", 
-              "relief",
+              "mean.relief",
               "tpi",
               "roughness",
               "detrended")

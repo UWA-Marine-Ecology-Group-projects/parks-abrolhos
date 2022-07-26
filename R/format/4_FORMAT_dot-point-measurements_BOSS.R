@@ -16,7 +16,7 @@ library(readr)
 library(ggplot2)
 
 # Study name ----
-study<-"2021-05_Abrolhos_BOSS" 
+study <- "2021-05_Abrolhos_BOSS" 
 
 ## Set your working directory ----
 working.dir <- getwd() # this only works through github projects
@@ -36,7 +36,7 @@ dir()
 # Read in metadata----
 metadata <- read_csv("2021-05_Abrolhos_BOSS_Metadata.csv") %>% # read in the file
   ga.clean.names() %>% # tidy the column names using GlobalArchive function 
-  dplyr::select(sample, latitude, longitude, date, site, location, successful.count) %>% # select only these columns to keep
+  dplyr::select(sample, latitude, longitude, date, site, location, successful.count, depth) %>% # select only these columns to keep
   mutate(sample=as.character(sample)) %>% # in this example dataset, the samples are numerical
   glimpse() # preview
 
@@ -51,41 +51,41 @@ points <- read.delim("2021-05_Abrolhos_BOSS_Dot Point Measurements.txt",header=T
   ga.clean.names() %>% # tidy the column names using GlobalArchive function
   mutate(sample=str_replace_all(.$filename,c(".png"="",".jpg"="",".JPG"=""))) %>%
   mutate(sample=as.character(sample)) %>% 
-  select(sample,image.row,image.col,broad,morphology,type,fieldofview) %>% # select only these columns to keep
+  dplyr::select(sample,image.row,image.col,broad,morphology,type,fieldofview) %>% # select only these columns to keep
   glimpse() # preview
 
 length(unique(points$sample)) # 75 samples
 
 no.annotations <- points%>%
   group_by(sample)%>%
-  summarise(points.annotated=n()) # 3 have 81
+  dplyr::summarise(points.annotated=n()) # 3 have 81
 
 relief <- read.delim("2021-05_Abrolhos_BOSS_Relief_Dot Point Measurements.txt",header=T,skip=4,stringsAsFactors=FALSE) %>% # read in the file
   ga.clean.names() %>% # tidy the column names using GlobalArchive function
   mutate(sample=str_replace_all(.$filename,c(".png"="",".jpg"="",".JPG"=""))) %>%
   mutate(sample=as.character(sample)) %>% 
-  select(sample,image.row,image.col,broad,morphology,type,fieldofview,relief) %>% # select only these columns to keep
+  dplyr::select(sample,image.row,image.col,broad,morphology,type,fieldofview,relief) %>% # select only these columns to keep
   glimpse() # preview
 
 length(unique(relief$sample)) # 75 samples
 
 no.annotations <- relief%>%
   group_by(sample)%>%
-  summarise(relief.annotated=n()) # all have 80
+  dplyr::summarise(relief.annotated=n()) # all have 80
 
 
 substrate <- read.delim("2021-05_Abrolhos_BOSS_Substrate-Relief_Dot Point Measurements.txt",header=T,skip=4,stringsAsFactors=FALSE) %>% # read in the file
   ga.clean.names() %>% # tidy the column names using GlobalArchive function
   mutate(sample=str_replace_all(.$filename,c(".png"="",".jpg"="",".JPG"=""))) %>%
   mutate(sample=as.character(sample)) %>% 
-  select(sample,image.row,image.col,broad,morphology,type,fieldofview) %>% # select only these columns to keep
+  dplyr::select(sample,image.row,image.col,broad,morphology,type,fieldofview) %>% # select only these columns to keep
   glimpse() # preview
 
 length(unique(substrate$sample)) # 75 samples
 
 no.annotations <- substrate%>%
   group_by(sample)%>%
-  summarise(substrate.annotated=n()) # all have 80
+  dplyr::summarise(substrate.annotated=n()) # all have 80
 
 habitat <- bind_rows(points, relief)
 
@@ -114,8 +114,7 @@ fov.percent.cover<-fov.points %>%
   glimpse()
 
 # CREATE catami_broad------
-# Only ran this one with direction, other ones won't run
-broad.points <- habitat%>%
+broad.points <- habitat %>%
   dplyr::select(-c(fieldofview,morphology,type,relief))%>%
   filter(!broad%in%c("",NA,"Unknown","Open.Water","Open Water")) %>%
   dplyr::mutate(broad=paste("broad",broad,sep = ".")) %>%
@@ -130,7 +129,7 @@ broad.points <- habitat%>%
   ga.clean.names() %>%
   glimpse
 
-broad.percent.cover<-broad.points %>%
+broad.percent.cover <- broad.points %>%
   group_by(sample)%>%
   mutate_at(vars(starts_with("broad")),funs(./broad.total.points.annotated*100))%>%
   dplyr::select(-c(broad.total.points.annotated))%>%
@@ -161,8 +160,15 @@ detailed.percent.cover<-detailed.points %>%
   dplyr::select(-c(detailed.total.points.annotated))%>%
   glimpse()
 
+# Add kelp onto broad points
+broad.points <- detailed.points %>%
+  dplyr::select(sample, detailed.macroalgae.largecanopy.forming.eckloniaradiata) %>%
+  left_join(broad.points) %>%
+  dplyr::rename(broad.kelps = detailed.macroalgae.largecanopy.forming.eckloniaradiata) %>%
+  glimpse()
+
 # Create relief----
-relief.grid<-habitat%>%
+relief.grid <- habitat%>%
   dplyr::filter(!broad%in%c("Open Water","Unknown"))%>%
   dplyr::filter(!relief%in%c("",NA))%>%
   dplyr::select(-c(broad,morphology,type,fieldofview,image.row,image.col))%>%
@@ -205,10 +211,10 @@ habitat.detailed.percent <- metadata%>%
   left_join(relief.grid)
 
 write.csv(habitat.broad.points,file=paste(study,"random-points_broad.habitat.csv",sep = "_"), row.names=FALSE)
-write.csv(habitat.detailed.points,file=paste(study,"random-points_detailed.habitat.csv",sep = "_"), row.names=FALSE)
+# write.csv(habitat.detailed.points,file=paste(study,"random-points_detailed.habitat.csv",sep = "_"), row.names=FALSE)
 
 
-write.csv(habitat.broad.percent,file=paste(study,"random-points_percent-cover_broad.habitat.csv",sep = "_"), row.names=FALSE)
-write.csv(habitat.detailed.percent,file=paste(study,"random-points_percent-cover_detailed.habitat.csv",sep = "_"), row.names=FALSE)
+# write.csv(habitat.broad.percent,file=paste(study,"random-points_percent-cover_broad.habitat.csv",sep = "_"), row.names=FALSE)
+# write.csv(habitat.detailed.percent,file=paste(study,"random-points_percent-cover_detailed.habitat.csv",sep = "_"), row.names=FALSE)
 
 setwd(working.dir)

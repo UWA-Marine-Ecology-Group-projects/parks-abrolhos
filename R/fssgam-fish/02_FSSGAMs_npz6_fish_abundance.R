@@ -9,7 +9,7 @@
 rm(list=ls())
 
 # libraries----
-detach("package:plyr", unload=TRUE)#will error - don't worry
+# detach("package:plyr", unload=TRUE)#will error - don't worry
 library(tidyr)
 library(dplyr)
 options(dplyr.width = Inf) #enables head() to display all coloums
@@ -40,7 +40,7 @@ dat <- readRDS("data/Tidy/dat.maxn.rds")%>%
 
 # # Re-set the predictors for modeling----
 pred.vars <- c("depth", "macroalgae",
-               "biog", "relief","tpi","roughness","detrended") 
+               "biog", "mean.relief","tpi","roughness","detrended") 
 
 # Check to make sure Response vector has not more than 80% zeros----
 unique.vars <- unique(as.character(dat$scientific))
@@ -60,7 +60,7 @@ str(use.dat)
 
 is.na(dat$status) 
 
-factor.vars <- c("status")# Status as a factors with 2 levels
+# factor.vars <- c("status")# Status as a factors with 2 levels
 out.all     <- list()
 var.imp     <- list()
 
@@ -77,7 +77,7 @@ for(i in 1:length(resp.vars)){
   model.set <- generate.model.set(use.dat = use.dat,
                                   test.fit = Model1,
                                   pred.vars.cont = pred.vars,
-                                  pred.vars.fact = factor.vars,
+                                  # pred.vars.fact = factor.vars,
                                   linear.vars = "depth",
                                   k = 3,
                                   factor.smooth.interactions = F,

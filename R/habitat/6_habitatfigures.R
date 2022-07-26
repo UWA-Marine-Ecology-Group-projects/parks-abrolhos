@@ -5,6 +5,7 @@
 # author:  Kingsley Griffin
 # date:    Nov-Dec 2021
 ##
+rm(list = ls())
 
 library(reshape2)
 library(ggplot2)
@@ -12,6 +13,16 @@ library(viridis)
 library(raster)
 library(patchwork)
 library(sf)
+library(dplyr)
+# library(reshape2)
+# library(ggplot2)
+# library(viridis)
+# library(raster)
+# library(patchwork)
+# library(ggnewscale)
+# library(sf)
+# library(dplyr)
+# library(rgdal)
 
 # bring in spatial layers
 aus    <- st_read("data/spatial/shp/cstauscd_r.mif")                            # geodata 100k coastline available: https://data.gov.au/dataset/ds-ga-a05f7892-eae3-7506-e044-00144fdd4fa6/
@@ -29,7 +40,7 @@ jacmap <- raster("data/spatial/raster/ecosystem-types-19class-naland.tif")      
 cropex <- extent(112, 116, -30, -26)
 jacmap <- crop(jacmap, cropex)
 habi   <- readRDS("data/tidy/merged_habitat.rds")
-habi$ns <- ifelse(habi$Latitude.1 > 6940000, 1, 0)
+habi$ns <- ifelse(habi$latitude.1 > 6940000, 1, 0)
 habi$method <- dplyr::recode(habi$method,
                              BOSS = "Drop Camera")
 st_crs(aus)         <- st_crs(aumpa)
@@ -38,18 +49,24 @@ terrnp <- st_read("data/spatial/shp/Legislated_Lands_and_Waters_DBCA_011.shp") %
 # reduce terrestrial parks
 terrnp <- st_crop(terrnp, xmin = 113, ymin = -30, xmax = 116, ymax = -26)       # just abrolhos area
 cwatr  <- readRDS('output/coastal_waters_limit_trimmed.rds')                    # coastal waters line trimmed in 'R/GA_coast_trim.R'
-bathdf <- readRDS("output/ga_bathy_trim.rds")                                   # bathymetry trimmed in 'R/GA_coast_trim.R'
-colnames(bathdf)[3] <- "Depth"
+# Bring in the bathy from raster - not working from the formatted dataframe for some reason
+bathy <- raster("data/spatial/raster/WA_500m_bathy.tif")
+e <- extent(112, 114, -29, -27)                                                 # Crop to the general Abrolhos area
+bathc <- crop(bathy, e)                                                         # Crop to the general Abrolhos area
+bathutm <- projectRaster(bathc, crs = sppcrs)                                   # Transform CRS to match with the CRS of the predictions
+bathdf <- as.data.frame(bathutm, xy = T, na.rm = T) %>%
+  dplyr::rename(Depth = WA_500m_bathy)
+
 # read in outputs from 'R/4_habitat_model.R'
 # preddf <- readRDS("output/broad_habitat_predictions.rds")
 spreddf <- readRDS("output/site_habitat_predictions.rds")                       # site predictions only
 spreddf$dom_tag <- as.factor(spreddf$dom_tag)
 spreddf$dom_tag <- dplyr::recode(spreddf$dom_tag,
-                          pkelps = "Kelp",
-                          pmacroalg = "Macroalgae",
-                          prock = "Rock",
-                          psand = "Sand",
-                          pbiogenic = "Sessile invertebrates")
+                          kelps = "Kelp",
+                          macroalg = "Macroalgae",
+                          rock = "Rock",
+                          sand = "Sand",
+                          biogenic = "Sessile invertebrates")
   
 spreddf$sitens <- ifelse(spreddf$y > 6940000, 1, 0)
 
@@ -62,51 +79,57 @@ hab_cols <- scale_fill_manual(values = c("Kelp" = "goldenrod1",
                                          "Sessile invertebrates" = "plum"
 ))
 
+test <- spreddf[spreddf$sitens == 0, ]
+extent(test)
+
 p1 <- ggplot() +
   geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = dom_tag)) +
   hab_cols +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
-  # geom_point(data = habi[habi$ns == 1, ], 
-  #            aes(Longitude.1, Latitude.1, colour = method), 
-  #            shape = 10, size = 1, alpha = 3/5) +
-  # scale_colour_manual(values = c("BRUV" = "indianred4", 
-  #                                "Drop Camera" = "navyblue")) +
+  geom_contour(data = bathdf, aes(x = x, y = y, z = Depth),breaks = c(0, - 30, -70, - 200) ,
+               colour = "grey54",
+               alpha = 1, size = 0.5) + # No 70m contour here
   labs(x = NULL, y = NULL, title = "Big Bank") +
   guides(fill = "none", colour = "none") +
-  coord_sf() +
+  coord_sf(xlim = c(105468.7, 134614.7), ylim = c(6979682, 6999626)) + 
   theme_minimal()
+p1
 
 p11 <- ggplot() +
   geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = dom_tag)) +
   hab_cols +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
-  # geom_point(data = habi[habi$ns == 0, ], 
-  #            aes(Longitude.1, Latitude.1, colour = method), 
-  #            shape = 10, size = 1, alpha = 3/5) +
-  # scale_colour_manual(values = c("BRUV" = "indianred4", 
-  #                                "Drop Camera" = "navyblue")) +
+  geom_contour(data = bathdf, aes(x = x, y = y, z = Depth),breaks = c(0, - 30, -70, - 200) ,
+                colour = "grey54",
+               alpha = 1, size = 0.5) +
+  coord_sf(xlim = c(123746.7, 164748.7), ylim = c(6880516, 6903507)) +
   labs(x = NULL, y = NULL, fill = "Habitat", colour = NULL,title = "Shallow Bank") +
+  annotate("text", x = c(149000, 145000, 131900), y = c(6889000, 6889000, 6889000), label = c("30m", "70m", "200m"),
+           size = 2, colour = "grey54")+
   theme_minimal()
+p11
 
 p1 + p11
-ggsave("plots/spatial/site_dominant_habitat.png", width = 12, height = 8, dpi = 160)
+ggsave("plots/habitat/site_dominant_habitat.png", width = 12, height = 8, dpi = 160)
 
 # fig 2: habitat multiplot
 # melt classes for faceting
-widehabit <- melt(spreddf, measure.vars = c(12:16))
+widehabit <- melt(spreddf, measure.vars = c(13:17))
 widehabit$variable <- dplyr::recode(widehabit$variable,
                                     pkelps = "Kelp",
                                     pmacroalg = "Macroalgae",
                                     prock = "Rock",
                                     psand = "Sand",
-                                    pbiogenic = "Biogenic Reef")
+                                    pbiogenic = "Sessile invertebrates")
+
+dep_ann <- data.frame(x = c(149500, 145500, 132000), y = c(6888000, 6888000, 6888000), label = c("30m", "70m", "200m"))
 
 p2 <- ggplot() +
   geom_tile(data = widehabit[widehabit$sitens == 1, ], 
             aes(x, y, fill = value)) +
   scale_fill_viridis(direction = -1, limits = c(0, max(widehabit$value))) +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
-  labs(x = NULL, y = NULL) +
+  labs(x = NULL, y = NULL, title = "Big Bank") +
   theme_minimal() +
   guides(fill = "none") +
   facet_wrap(~variable, ncol = 1)
@@ -116,13 +139,19 @@ p22 <- ggplot() +
             aes(x, y, fill = value)) +
   scale_fill_viridis(direction = -1, limits = c(0, max(widehabit$value))) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
-  labs(x = NULL, y = NULL, fill = "Habitat (p)") +
+  geom_contour(data = bathdf, aes(x, y, z = Depth),
+               breaks = c(0, -30, -70, -200), colour = "grey54",
+               alpha = 1, size = 0.5) +
+  geom_text(data = dep_ann,aes(x,y,label = label),inherit.aes = F, size = 2, colour = "grey36")+
+  coord_sf(xlim = c(123746.7, 164748.7), ylim = c(6880516, 6903507)) +
+  labs(x = NULL, y = NULL, fill = "Habitat (p)", title = "Shallow Bank") +
   theme_minimal() +
   facet_wrap(~variable, ncol = 1)
+# p22
 
 p2 + p22 + plot_layout(widths = c(0.82, 1)) &
-  theme(axis.text = element_text(size = 8))
-ggsave("plots/site_habitat_predicted.png", width = 10, height = 14, dpi = 160)
+  theme(axis.text = element_text(size = 9))
+ggsave("plots/habitat/site_habitat_predicted.png", width = 10, height = 14, dpi = 160)
 
 # # fig 3: biogenic reef
 # p3 <- ggplot(spreddf[widehabit$sitens == 1, ], aes(x, y)) +

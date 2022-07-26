@@ -10,7 +10,7 @@
 rm(list=ls())
 
 ## librarys----
-detach("package:plyr", unload=TRUE)#will error - don't worry
+# detach("package:plyr", unload=TRUE)#will error - don't worry
 library(tidyr)
 library(dplyr)
 options(dplyr.width = Inf) #enables head() to display all coloums
@@ -44,7 +44,7 @@ dat <- readRDS("data/Tidy/dat.length.rds")%>%
 pred.vars = c("depth", 
               "macroalgae", 
               "biog", 
-              "relief",
+              "mean.relief",
               "tpi",
               "roughness",
               "detrended")
@@ -71,7 +71,7 @@ str(use.dat)
 
 name<- paste(study,"length",sep="_")
 
-factor.vars=c("status")# Status as a Factor with two levels
+# factor.vars=c("status")# Status as a Factor with two levels
 out.all=list()
 var.imp=list()
 
@@ -87,7 +87,7 @@ for(i in 1:length(resp.vars)){
   model.set=generate.model.set(use.dat=use.dat,
                                test.fit=Model1,
                                pred.vars.cont=pred.vars,
-                               pred.vars.fact=factor.vars,
+                               # pred.vars.fact=factor.vars,
                                factor.smooth.interactions = NA,
                               # smooth.smooth.interactions = c("depth", "biog"),
                                k=3,

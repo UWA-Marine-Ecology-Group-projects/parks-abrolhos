@@ -1,6 +1,4 @@
-,modname,AICc,BIC,r2.vals,r2.vals.unique,edf,edf.less.1,delta.AICc,delta.BIC,wi.AICc,wi.BIC,depth,macroalgae,biog,relief,tpi,roughness,detrended,cumsum.wi
-greater than legal size.roughness+tpi,roughness+tpi,274.4255451,285.7031652,0.24959,NA,4.86,0,0,1.191,0.291,0.178,0,0,0,0,1,1,0,0.291
-greater than legal size.relief+roughness+tpi,relief+roughness+tpi,275.6204934,289.0049387,0.27269,NA,6.49,0,1.195,4.493,0.16,0.034,0,0,0,1,1,1,0,0.451
-greater than legal size.depth+roughness,depth+roughness,275.7767568,286.4651514,0.19179,NA,4.31,0,1.351,1.953,0.148,0.122,1,0,0,0,0,1,0,0.599
-greater than legal size.roughness,roughness,275.93686,284.5121647,0.15715,NA,3,0,1.511,0,0.137,0.324,0,0,0,0,0,1,0,0.736
-smaller than legal size,depth+roughness,177.4554092,189.2598037,0.19954,NA,5.18,0,0,0.952,0.478,0.233,1,0,0,0,0,1,0,0.478
+"","modname","AICc","BIC","r2.vals","r2.vals.unique","edf","edf.less.1","delta.AICc","delta.BIC","wi.AICc","wi.BIC","depth","macroalgae","biog","mean.relief","tpi","roughness","detrended","cumsum.wi"
+"greater than legal size.roughness+tpi","roughness+tpi",270.648885289087,281.926505442761,0.24959,NA,4.86,0,0,0.619,0.368,0.238,0,0,0,0,1,1,0,0.368
+"greater than legal size.mean.relief+roughness+tpi","mean.relief+roughness+tpi",272.226481691171,285.610926996873,0.27269,NA,6.49,0,1.578,4.303,0.167,0.038,0,0,0,1,1,1,0,0.535
+"smaller than legal size","depth+roughness",173.382234625505,185.186629130664,0.19954,NA,5.18,0,0,0,0.854,0.673,1,0,0,0,0,1,0,0.854
