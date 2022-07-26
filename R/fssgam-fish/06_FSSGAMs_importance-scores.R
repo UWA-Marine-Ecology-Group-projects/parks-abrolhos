@@ -40,10 +40,11 @@ dat.taxa.npz6 <- datnpz6 %>%
   mutate(label=NA)%>%
   dplyr::filter(!predictor %in% "status") %>%
   mutate(resp.var=factor(resp.var, levels = c("smaller than legal size","greater than legal size","species.richness","total.abundance")))%>%
-  mutate(label=ifelse(predictor=="relief"&resp.var=="total.abundance","X",label))%>%
+  mutate(label=ifelse(predictor=="mean.relief"&resp.var=="total.abundance","X",label))%>%
+  mutate(label=ifelse(predictor=="biog"&resp.var=="species.richness","X",label))%>%
   mutate(label=ifelse(predictor=="depth"&resp.var=="species.richness","X",label))%>%
+  mutate(label=ifelse(predictor=="tpi"&resp.var=="species.richness","X",label))%>%
   mutate(label=ifelse(predictor=="detrended"&resp.var=="greater than legal size","X",label))%>%
-  # mutate(label=ifelse(predictor=="status"&resp.var=="greater than legal size","X",label))%>%
   mutate(label=ifelse(predictor=="tpi"&resp.var=="smaller than legal size","X",label))%>%
   glimpse()
 
@@ -141,12 +142,14 @@ datnpz9 <- bind_rows(dat3,dat4)%>%
 
 dat.taxa.npz9 <- datnpz9 %>%
   mutate(label=NA)%>%
-  dplyr::filter(!predictor %in% "status") %>%
+  dplyr::filter(!predictor %in% c("status", "macroalgae")) %>%
   mutate(resp.var=factor(resp.var, levels = c("smaller than legal size","greater than legal size","species.richness","total.abundance")))%>%
-  mutate(label=ifelse(predictor=="relief"&resp.var=="total.abundance","X",label))%>%
+  mutate(label=ifelse(predictor=="mean.relief"&resp.var=="total.abundance","X",label))%>%
   mutate(label=ifelse(predictor=="roughness"&resp.var=="total.abundance","X",label))%>%
-  mutate(label=ifelse(predictor=="depth"&resp.var=="species.richness","X",label))%>%
+  mutate(label=ifelse(predictor=="mean.relief"&resp.var=="species.richness","X",label))%>%
+  mutate(label=ifelse(predictor=="roughness"&resp.var=="species.richness","X",label))%>%
   mutate(label=ifelse(predictor=="roughness"&resp.var=="greater than legal size","X",label))%>%
+  mutate(label=ifelse(predictor=="tpi"&resp.var=="greater than legal size","X",label))%>%
   mutate(label=ifelse(predictor=="depth"&resp.var=="smaller than legal size","X",label))%>%
   mutate(label=ifelse(predictor=="roughness"&resp.var=="smaller than legal size","X",label))%>%
   glimpse()
@@ -189,7 +192,7 @@ imp.trgt.npz9 <- ggplot(dat.taxa.npz9%>%dplyr::filter(resp.var%in%c("greater tha
   scale_fill_gradientn(legend_title, colours=c(re), na.value = "grey98",
                        limits = c(-1, 1))+
   scale_y_discrete(labels=c("Smaller than legal size","Greater than legal size"))+
-  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Macroalgae", "Relief","Roughness", 'TPI'))+
+  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Relief","Roughness", 'TPI'))+
   labs(x = NULL, y = NULL, title = "Targeted assemblage") +
   theme_classic()+
   Theme1+

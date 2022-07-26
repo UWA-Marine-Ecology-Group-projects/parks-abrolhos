@@ -71,10 +71,10 @@ unique(dat$scientific)
 # MODEL Total abundance (relief + roughness) ----
 dat.total <- dat %>% filter(scientific=="total.abundance")
 
-mod=gam(number~s(relief,k=3,bs='cr')+s(roughness,k=3,bs='cr'), family=tw,data=dat.total)
+mod=gam(number~s(mean.relief,k=3,bs='cr')+s(roughness,k=3,bs='cr'), family=tw,data=dat.total)
 
 # predict - relief ----
-testdata <- expand.grid(relief=seq(min(dat$relief),max(dat$relief),length.out = 20),
+testdata <- expand.grid(mean.relief=seq(min(dat$mean.relief),max(dat$mean.relief),length.out = 20),
                         roughness=mean(mod$model$roughness)) %>%
   distinct()%>%
   glimpse()
@@ -82,13 +82,13 @@ testdata <- expand.grid(relief=seq(min(dat$relief),max(dat$relief),length.out = 
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
 predicts.total.relief = testdata%>%data.frame(fits)%>%
-  group_by(relief)%>% #only change here
+  group_by(mean.relief)%>% #only change here
   summarise(number=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
 
 # predict - roughness ----
 testdata <- expand.grid(roughness=seq(min(dat$roughness),max(dat$roughness),length.out = 20),
-                        relief=mean(mod$model$relief)) %>%
+                        mean.relief=mean(mod$model$mean.relief)) %>%
   distinct()%>%
   glimpse()
 
@@ -104,10 +104,10 @@ predicts.total.roughness = testdata%>%data.frame(fits)%>%
 ggmod.total.relief<- ggplot() +
   ylab("")+
   xlab("Relief")+
-  geom_point(data=dat.total,aes(x=relief,y=number),  alpha=0.2, size=1,show.legend=F)+
-  geom_line(data=predicts.total.relief,aes(x=relief,y=number),alpha=0.5)+
-  geom_line(data=predicts.total.relief,aes(x=relief,y=number - se.fit),linetype="dashed",alpha=0.5)+
-  geom_line(data=predicts.total.relief,aes(x=relief,y=number + se.fit),linetype="dashed",alpha=0.5)+
+  geom_point(data=dat.total,aes(x=mean.relief,y=number),  alpha=0.2, size=1,show.legend=F)+
+  geom_line(data=predicts.total.relief,aes(x=mean.relief,y=number),alpha=0.5)+
+  geom_line(data=predicts.total.relief,aes(x=mean.relief,y=number - se.fit),linetype="dashed",alpha=0.5)+
+  geom_line(data=predicts.total.relief,aes(x=mean.relief,y=number + se.fit),linetype="dashed",alpha=0.5)+
   theme_classic()+
   Theme1+
   ggtitle("Total abundance") +
@@ -126,45 +126,72 @@ ggmod.total.roughness<- ggplot() +
   Theme1
 ggmod.total.roughness
 
-# MODEL species richness (depth) ----
+# MODEL species richness (mean.relief + roughness) ----
 dat.species <- dat %>% filter(scientific=="species.richness")
 
-mod=gam(number~s(depth,k=3,bs='cr'), family=tw,data=dat.species)
+mod=gam(number~s(mean.relief,k=3,bs='cr') + s(roughness,k=3,bs='cr'), family=tw,data=dat.species)
 
-# predict - depth ----
-testdata <- expand.grid(depth=seq(min(dat$depth),max(dat$depth),length.out = 20)) %>%
+# predict - mean.relief ----
+testdata <- expand.grid(mean.relief=seq(min(dat$mean.relief),max(dat$mean.relief),length.out = 20),
+                        roughness=mean(mod$model$roughness)) %>%
   distinct()%>%
   glimpse()
 
 fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
 
-predicts.species.depth = testdata%>%data.frame(fits)%>%
-  group_by(depth)%>% #only change here
+predicts.species.relief = testdata%>%data.frame(fits)%>%
+  group_by(mean.relief)%>% #only change here
+  summarise(number=mean(fit),se.fit=mean(se.fit))%>%
+  ungroup()
+
+# predict - roughness ----
+testdata <- expand.grid(roughness=seq(min(dat$roughness),max(dat$roughness),length.out = 20),
+                        mean.relief=mean(mod$model$mean.relief)) %>%
+  distinct()%>%
+  glimpse()
+
+fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
+
+predicts.species.roughness = testdata%>%data.frame(fits)%>%
+  group_by(roughness)%>% #only change here
   summarise(number=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
 
 # PLOTS for species richness ----
-# depth ----
-ggmod.species.depth<- ggplot() +
+# relief ----
+ggmod.species.relief<- ggplot() +
   ylab("")+
-  xlab("Depth")+
-  geom_point(data=dat.species,aes(x=depth,y=number),  alpha=0.2, size=1,show.legend=F)+
-  geom_line(data=predicts.species.depth,aes(x=depth,y=number),alpha=0.5)+
-  geom_line(data=predicts.species.depth,aes(x=depth,y=number - se.fit),linetype="dashed",alpha=0.5)+
-  geom_line(data=predicts.species.depth,aes(x=depth,y=number + se.fit),linetype="dashed",alpha=0.5)+
+  xlab("Relief")+
+  geom_point(data=dat.species,aes(x=mean.relief,y=number),  alpha=0.2, size=1,show.legend=F)+
+  geom_line(data=predicts.species.relief,aes(x=mean.relief,y=number),alpha=0.5)+
+  geom_line(data=predicts.species.relief,aes(x=mean.relief,y=number - se.fit),linetype="dashed",alpha=0.5)+
+  geom_line(data=predicts.species.relief,aes(x=mean.relief,y=number + se.fit),linetype="dashed",alpha=0.5)+
   theme_classic()+
   Theme1+
   ggtitle("Species richness") +
   theme(plot.title = element_text(hjust = 0))
-ggmod.species.depth
+ggmod.species.relief
+
+# roughness ----
+ggmod.species.roughness<- ggplot() +
+  ylab("")+
+  xlab("Roughness")+
+  geom_point(data=dat.species,aes(x=roughness,y=number),  alpha=0.2, size=1,show.legend=F)+
+  geom_line(data=predicts.species.roughness,aes(x=roughness,y=number),alpha=0.5)+
+  geom_line(data=predicts.species.roughness,aes(x=roughness,y=number - se.fit),linetype="dashed",alpha=0.5)+
+  geom_line(data=predicts.species.roughness,aes(x=roughness,y=number + se.fit),linetype="dashed",alpha=0.5)+
+  theme_classic()+
+  Theme1
+ggmod.species.roughness
 
 # MODEL Greater than legal size (roughness) ----
 dat.legal <- dat %>% filter(scientific=="greater than legal size")
 
-mod=gam(number~s(roughness,k=3,bs='cr'), family=tw,data=dat.legal)
+mod=gam(number~s(roughness,k=3,bs='cr') + s(tpi, k = 3, bs = "cr"), family=tw,data=dat.legal)
 
 # predict - roughness ----
-testdata <- expand.grid(roughness=seq(min(dat$roughness),max(dat$roughness),length.out = 20)) %>%
+testdata <- expand.grid(roughness=seq(min(dat$roughness),max(dat$roughness),length.out = 20),
+                        tpi = mean(mod$model$tpi)) %>%
   distinct()%>%
   glimpse()
 
@@ -175,8 +202,21 @@ predicts.legal.roughness = testdata%>%data.frame(fits)%>%
   summarise(number=mean(fit),se.fit=mean(se.fit))%>%
   ungroup()
 
+# predict - tpi ----
+testdata <- expand.grid(tpi=seq(min(dat$tpi),max(dat$tpi),length.out = 20),
+                        roughness = mean(mod$model$roughness)) %>%
+  distinct()%>%
+  glimpse()
+
+fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
+
+predicts.legal.tpi = testdata%>%data.frame(fits)%>%
+  group_by(tpi)%>% #only change here
+  summarise(number=mean(fit),se.fit=mean(se.fit))%>%
+  ungroup()
+
 # PLOTS for Greater than legal size ----
-# slope ----
+# roughness ----
 ggmod.legal.roughness<- ggplot() +
   ylab("")+
   xlab("Roughness")+
@@ -189,6 +229,18 @@ ggmod.legal.roughness<- ggplot() +
   ggtitle("Greater than legal size") +
   theme(plot.title = element_text(hjust = 0))
 ggmod.legal.roughness
+
+# tpi ----
+ggmod.legal.tpi<- ggplot() +
+  ylab("")+
+  xlab("TPI")+
+  geom_point(data=dat.legal,aes(x=tpi,y=number),  alpha=0.2, size=1,show.legend=F)+
+  geom_line(data=predicts.legal.tpi,aes(x=tpi,y=number),alpha=0.5)+
+  geom_line(data=predicts.legal.tpi,aes(x=tpi,y=number - se.fit),linetype="dashed",alpha=0.5)+
+  geom_line(data=predicts.legal.tpi,aes(x=tpi,y=number + se.fit),linetype="dashed",alpha=0.5)+
+  theme_classic()+
+  Theme1
+ggmod.legal.tpi
 
 # MODEL Smaller than legal size (depth + roughness) ----
 dat.sublegal <- dat %>% filter(scientific=="smaller than legal size")
@@ -253,11 +305,11 @@ library(cowplot)
 
 # view plots
 plot.grid.npz9 <- plot_grid(ggmod.total.relief, ggmod.total.roughness,
-                            ggmod.species.depth,NULL,
-                            ggmod.legal.roughness, NULL,
+                            ggmod.species.relief,ggmod.species.roughness,
+                            ggmod.legal.roughness, ggmod.legal.tpi,
                             ggmod.sublegal.depth, ggmod.sublegal.roughness,
-                            ncol = 2, labels = c('a','b','c','','d','','e','f'),align = "vh")
+                            ncol = 2, labels = c('a','b','c','d','e','f','g','h'),align = "vh")
 plot.grid.npz9
 
 #Save plots
-save_plot("plots/abrolhos.npz9.gam.png", plot.grid.npz9,base_height = 9,base_width = 8.5)
+save_plot("plots/fish/abrolhos.npz9.gam.png", plot.grid.npz9,base_height = 9,base_width = 8.5)

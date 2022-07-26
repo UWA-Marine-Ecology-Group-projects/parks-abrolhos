@@ -189,14 +189,14 @@ gg.npz6.sr <- ggplot(data = npz6, aes(x = year, y = species.richness, fill = sta
   ylab("Species richness")+
   xlab("Year")+
   labs(title = "a)")+
-  scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
+  scale_fill_manual(labels = c("Special Purpose Zone*", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
   Theme1
 gg.npz6.sr
 
 #greater than legal - including traffic light bands
 gg.npz6.l <- ggplot(data = npz6, aes(x = year, y = legal, fill = status))+
-  scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
+  scale_fill_manual(labels = c("Special Purpose Zone*", "National Park Zone"),values=c("#6daff4", "#7bbc63"))+
   # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 0.25, ymax = 1.5),fill = "#ffeec7")+
   # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 1.5, ymax = 2),fill = "#c7d6ff")+
   # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2, ymax = Inf),fill = "#caffc7")+
@@ -233,7 +233,7 @@ gg.npz6.cti <- ggplot()+
              size=0.5,alpha = 0.5)+
   ylab(expression(paste("Temperature (",degree~C,")")))+
   xlab("Year")+
-  scale_fill_manual(labels = c("Special Purpose Zone", "National Park Zone"),
+  scale_fill_manual(labels = c("Special Purpose Zone*", "National Park Zone"),
                     values=c("#6daff4", "#7bbc63"))+
   guides(fill=guide_legend(title = "Marine Park Zone"))+
   labs(title = "c)")+

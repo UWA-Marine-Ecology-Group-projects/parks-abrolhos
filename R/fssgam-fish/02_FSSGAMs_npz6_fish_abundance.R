@@ -117,3 +117,5 @@ all.mod.fits   <- do.call("rbind",out.all)
 all.var.imp    <- do.call("rbind",var.imp)
 write.csv(all.mod.fits[ , -2], file = paste(savedir, paste(name, "all.mod.fits.csv", sep = "_"), sep = "/"))
 write.csv(all.var.imp, file = paste(savedir, paste(name, "all.var.imp.csv", sep = "_"), sep = "/"))
+
+saveRDS(all.mod.fits, file = "data/Tidy/all.mod.fits.RDS")
