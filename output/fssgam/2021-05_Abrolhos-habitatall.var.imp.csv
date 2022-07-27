@@ -1,6 +1,6 @@
-"","depth","roughness","tpi","detrended"
-"kelps",0.999,0.96,0.999,0.036
-"rock",1,0,1,1
-"macroalgae",1,1,0,1
-"sand",1,1,1,0
-"biog",1,0,1,1
+,depth,roughness,tpi,detrended
+kelps,-0.999,0.96,0.999,0.036
+rock,-1,0,1,1
+macroalgae,-1,1,0,1
+sand,-1,-1,-1,0
+biog,1,0,1,1

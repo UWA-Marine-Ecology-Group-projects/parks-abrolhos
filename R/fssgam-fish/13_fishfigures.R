@@ -30,13 +30,27 @@ ab_npz <- st_transform(ab_npz, sppcrs)
 spreddf <- readRDS("output/site_fish_predictions.rds")                       # site predictions only
 spreddf$sitens <- ifelse(spreddf$y > 6940000, 1, 0)
 
+# Bring in the bathy from raster - not working from the formatted dataframe for some reason
+bathy <- raster("data/spatial/raster/WA_500m_bathy.tif")
+e <- extent(112, 114, -29, -27)                                                 # Crop to the general Abrolhos area
+bathc <- crop(bathy, e)                                                         # Crop to the general Abrolhos area
+bathutm <- projectRaster(bathc, crs = sppcrs)                                   # Transform CRS to match with the CRS of the predictions
+bathdf <- as.data.frame(bathutm, xy = T, na.rm = T) %>%
+  dplyr::rename(Depth = WA_500m_bathy)
+
 # plotting broad maps
 #npz6
 #total abundance
 p11 <- ggplot() +
   geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_totabund6)) +
   scale_fill_viridis(direction = -1) +
+  geom_contour(data = bathdf, aes(x = x, y = y, z = Depth),breaks = c(0, - 30, -70, - 200) ,
+               colour = "grey54",
+               alpha = 1, size = 0.5) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
+  coord_sf(xlim = c(123746.7, 164748.7), ylim = c(6880516, 6903507)) +
+  annotate("text", x = c(149000, 144500, 131200), y = c(6889000, 6889000, 6889000), label = c("30m", "70m", "200m"),
+           size = 2, colour = "grey54")+
   theme_minimal() +
   scale_x_continuous(breaks = c(113.2,113.4,113.6))+
   labs(x = NULL, y = NULL, fill = "Total Abundance", title = "Whole assemblage")+
@@ -48,7 +62,13 @@ p11
 p21 <- ggplot() +
   geom_raster(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_richness6)) +
   scale_fill_viridis(direction = -1) +
+  geom_contour(data = bathdf, aes(x = x, y = y, z = Depth),breaks = c(0, - 30, -70, - 200) ,
+               colour = "grey54",
+               alpha = 1, size = 0.5) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
+  coord_sf(xlim = c(123746.7, 164748.7), ylim = c(6880516, 6903507)) +
+  annotate("text", x = c(149000, 144500, 131200), y = c(6889000, 6889000, 6889000), label = c("30m", "70m", "200m"),
+           size = 2, colour = "grey54")+
   theme_minimal() +
   scale_x_continuous(breaks = c(113.2,113.4,113.6))+
   labs(x = NULL, y = NULL, fill = "Species Richness")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
@@ -59,7 +79,13 @@ p21
 p31 <- ggplot() +
   geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_legal6)) +
   scale_fill_viridis(direction = -1) +
+  geom_contour(data = bathdf, aes(x = x, y = y, z = Depth),breaks = c(0, - 30, -70, - 200) ,
+               colour = "grey54",
+               alpha = 1, size = 0.5) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
+  coord_sf(xlim = c(123746.7, 164748.7), ylim = c(6880516, 6903507)) +
+  annotate("text", x = c(149000, 144500, 131200), y = c(6889000, 6889000, 6889000), label = c("30m", "70m", "200m"),
+           size = 2, colour = "grey54")+
   theme_minimal() +
   scale_x_continuous(breaks = c(113.2,113.4,113.6))+
   labs(x = NULL, y = NULL, fill = "Legal", title = "Targeted assemblage") +
@@ -71,7 +97,13 @@ p31
 p41 <- ggplot() +
   geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = p_sublegal6)) +
   scale_fill_viridis(direction = -1) +
+  geom_contour(data = bathdf, aes(x = x, y = y, z = Depth),breaks = c(0, - 30, -70, - 200) ,
+               colour = "grey54",
+               alpha = 1, size = 0.5) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
+  coord_sf(xlim = c(123746.7, 164748.7), ylim = c(6880516, 6903507)) +
+  annotate("text", x = c(149000, 144500, 131200), y = c(6889000, 6889000, 6889000), label = c("30m", "70m", "200m"),
+           size = 2, colour = "grey54")+
   theme_minimal() +
   scale_x_continuous(breaks = c(113.2,113.4,113.6))+
   labs(x = NULL, y = NULL, fill = "Sublegal")+theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))

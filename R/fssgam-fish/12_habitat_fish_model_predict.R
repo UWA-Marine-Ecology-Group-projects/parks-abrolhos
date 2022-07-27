@@ -29,7 +29,7 @@ prel   <- readRDS("output/predicted_relief_raster.rds")                         
 
 # join habitat and relief predictions
 predsp <- SpatialPointsDataFrame(coords = cbind(preds$x, preds$y), data = preds)
-predsp$relief <- raster::extract(prel, predsp)
+predsp$mean.relief <- raster::extract(prel, predsp)
 preddf        <- as.data.frame(predsp, xy = TRUE, na.rm = TRUE)
 preddf$depth  <- preddf$Z * -1
 preddf$rock   <- preddf$prock
@@ -47,12 +47,12 @@ unique(fabund$scientific)
 # use formula from top model from FSSGam model selection
 #NPZ6
 #total abundance
-m_totabund6 <- gam(number ~ s(relief, k = 3, bs = "cr"), 
+m_totabund6 <- gam(number ~ s(mean.relief, k = 3, bs = "cr"), 
                data = fabund%>%dplyr::filter(scientific%in%"total.abundance",location%in%"NPZ6"), 
                method = "REML", family = tw())
 summary(m_totabund6)
 
-m_richness6 <- gam(number ~ s(depth, k = 3, bs = "cr"),  
+m_richness6 <- gam(number ~ s(biog, k = 3, bs = "cr") + s(depth, k = 3, bs = "cr") + s(tpi, k = 3, bs = "cr"),  
                      data = fabund%>%dplyr::filter(scientific%in%"species.richness",location%in%"NPZ6"), 
                      method = "REML", family = tw())
 summary(m_richness6)
@@ -70,18 +70,18 @@ summary(m_sublegal6)
 
 #NPZ9
 #total abundance
-m_totabund9 <- gam(number ~ s(relief, k = 3, bs = "cr")+s(roughness, k = 3, bs = "cr"), 
+m_totabund9 <- gam(number ~ s(mean.relief, k = 3, bs = "cr")+s(roughness, k = 3, bs = "cr"), 
                   data = fabund%>%dplyr::filter(scientific%in%"total.abundance",location%in%"NPZ9"), 
                   method = "REML", family = tw())
 summary(m_totabund9)
 
-m_richness9 <- gam(number ~ s(depth, k = 3, bs = "cr"),  
+m_richness9 <- gam(number ~ s(mean.relief, k = 3, bs = "cr")+s(roughness, k = 3, bs = "cr"),  
                   data = fabund%>%dplyr::filter(scientific%in%"species.richness",location%in%"NPZ9"), 
                   method = "REML", family = tw())
 summary(m_richness9)
 # gam.check(m_targetabund)
 # vis.gam(m_targetabund)
-m_legal9 <- gam(number ~ s(roughness, k = 3, bs = "cr"),  
+m_legal9 <- gam(number ~ s(roughness, k = 3, bs = "cr") + s(tpi, k = 3, bs = "cr"),  
                data = fabund%>%dplyr::filter(scientific%in%"greater than legal size",location%in%"NPZ9"), 
                method = "REML", family = tw())
 summary(m_legal9)
@@ -110,16 +110,14 @@ plot(prasts)
 # sprast <- mask(prasts, sbuff)
 # plot(sprast)
 
-plot(sprast$p_totabund9)
-plot(sprast$p_richness9)
-plot(sprast$p_legal9)
+plot(prasts$p_totabund9)
+plot(prasts$p_richness9)
+plot(prasts$p_legal9)
 
 # tidy and output data
-spreddf <- as.data.frame(sprast, xy = TRUE, na.rm = TRUE)
+spreddf <- as.data.frame(prasts, xy = TRUE, na.rm = TRUE)
 
 summary(spreddf)
 
 # saveRDS(preddf, "output/broad_fish_predictions.rds")
 saveRDS(spreddf, "output/site_fish_predictions.rds")
-
-

@@ -55,22 +55,18 @@ setwd(working.dir)
 
 # Load the dataset -
 #habitat
-dat <- readRDS("data/tidy/merged_habitat.rds")                                 # merged data from 'R/1_mergedata.R'
+habi <- readRDS("data/tidy/merged_habitat.rds") %>%                             # merged data from 'R/1_mergedata.R'
+  dplyr::select(sample, longitude, latitude, longitude.1, latitude.1, depth,
+                tri, tpi, roughness, slope, aspect, detrended, broad.total.points.annotated,
+                kelps, rock, macroalgae, sand, biog) %>%
+  dplyr::rename(totalpts = broad.total.points.annotated) %>%
+  glimpse()
 
-dat <- dat[ , -c(9:49)]
-
-colnames(dat)
-dat <- melt(dat, measure.vars = c(21:26))%>%                                  # collect all taxa tags for univariate stats   
+colnames(habi)
+dat <- melt(habi, measure.vars = c(14:18))%>%                                  # collect all taxa tags for univariate stats   
+  dplyr::rename(Taxa = variable, response = value) %>%
+  ga.clean.names() %>%
   glimpse() 
-
-dat <- dat %>%
-  mutate(logdepth = log(Depth)) %>%
-  # mutate(sqrttri = sqrt(tri)) %>%
-  mutate(sqrtrough = sqrt(roughness)) %>%
-  # mutate(sqrtslope = sqrt(slope)) %>%
-  rename(Taxa = variable) %>%
-  rename(response = value) %>%
-  ga.clean.names()
 
 # Manually make the most parsimonious GAM models for each taxa ----
 #### Abrolhos habitat ####
@@ -326,7 +322,7 @@ ggmod.biog.depth<- ggplot() +
   geom_line(data=predicts.biog.depth,aes(x=depth,y=response + se.fit),linetype="dashed",alpha=0.5)+
   theme_classic()+
   Theme1+
-  ggtitle("Biogenic reef") +
+  ggtitle("Sessile invertebrates") +
   theme(plot.title = element_text(hjust = 0))
 ggmod.biog.depth
 
@@ -555,4 +551,4 @@ plot.grid.habitat <- plot_grid(ggmod.kelp.depth, ggmod.kelp.roughness,ggmod.kelp
 plot.grid.habitat
 
 #save plots
-save_plot("plots/abrolhos.habitat.gam.png", plot.grid.habitat,base_height = 9,base_width = 8.5)
+save_plot("plots/habitat/abrolhos.habitat.gam.png", plot.grid.habitat,base_height = 9,base_width = 8.5)
