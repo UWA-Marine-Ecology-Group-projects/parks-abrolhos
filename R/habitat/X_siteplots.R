@@ -22,7 +22,7 @@ library(maptools)
 
 # get and sort spatial boundaries
 aus    <- st_read("data/spatial/shp/cstauscd_r.mif")                            # geodata 100k coastline available: https://data.gov.au/dataset/ds-ga-a05f7892-eae3-7506-e044-00144fdd4fa6/
-dirkh  <- aus[aus$ISLAND_NAME == "DIRK HARTOG ISLAND", ]                        # just dirk hartog island
+dirkh  <- aus[aus$ISLAND_NAME%in%c("DIRK HARTOG ISLAND", "DORRE ISLAND", "BERNIER ISLAND"), ]                        # just dirk hartog island
 aus    <- aus[aus$FEAT_CODE == "mainland", ]
 aumpa  <- st_read("data/spatial/shp/AustraliaNetworkMarineParks.shp")           # all aus mpas
 wampa  <- st_read("data/spatial/shp/WA_MPA_2018.shp")                           # all wa mpas
@@ -58,8 +58,8 @@ ab_mpa$waname <- dplyr::recode(ab_mpa$waname,
 
 # reduce terrestrial parks
 terrnp <- terrnp[terrnp$leg_catego %in% c("Nature Reserve", "National Park"), ] # exclude state forests etc
-terrnp <- st_crop(terrnp, xmin = 113, ymin = -30, xmax = 116, ymax = -26)       # just abrolhos area
-# plot(terrnp["leg_catego"])
+terrnp <- st_crop(terrnp, xmin = 113, ymin = -30, xmax = 116, ymax = -24)       # just abrolhos area
+plot(terrnp["leg_catego"])
 
 #Key Ecological Features
 kef <- st_read("data/spatial/shp/AU_DOEE_KEF_2015.shp")
@@ -117,11 +117,11 @@ p1 <- ggplot() +
   geom_sf(data = cwatr, colour = "firebrick", alpha = 4/5, size = 0.2) +
   labs(x = NULL, y = NULL, fill = "Australian Marine Parks") +
   guides(fill = guide_legend(order = 1)) +
-  annotate("rect", xmin = 112.8, xmax = 114.2, ymin = -28.1, ymax = -27.05,
-           colour = "grey15", fill = "white", alpha = 0.1, size = 0.1) +
-  annotate("point", y = c(-28.7761, - 27.7115), x = c(114.6113, 114.1714), size = 0.75) +
-  annotate("text", y = c(-28.7761, - 27.7115), x = c(115, 114.48),
-           label = c("Geraldton", "Kalbarri"), size = 3) +
+  annotate("rect", xmin = 113, xmax = 113.7, ymin = -28.15, ymax = -27.05,
+           colour = "goldenrod1", fill = "white", alpha = 0.2, size = 0.6) +
+  annotate("point", y = c(-28.7761, -27.7115, -24.8838), x = c(114.6113, 114.1714, 113.6571), size = 0.75) +
+  annotate("text", y = c(-28.7761, - 27.7115, -24.8838), x = c(115, 114.48, 114.075),
+           label = c("Geraldton", "Kalbarri", "Carnarvon"), size = 3) +
   coord_sf(xlim = c(109.4, 115.0607), ylim = c(-29.25, -24.4)) +
   theme_minimal()
 p1
@@ -290,7 +290,7 @@ ggsave("plots/sthsite.png", dpi = 200, width = 7, height = 4)
 # KEF colours
 kef_cols <- scale_fill_manual(values = c("Ancient coastline" = "#ff6db6",                             
                                          "Western rock lobster" = "#6db6ff",
-                                         "West coast canyons" = "#21828b",
+                                         "West coast canyons" = "#dbb865", # Too similar to west coast lagoons, changed
                                          "West coast lagoons" = "#188e8e",
                                          "Abrolhos Islands" = "#2bf446",
                                          "Western demersal fish" = "#016dda",
@@ -309,6 +309,7 @@ ab_nmpmerge <- as(ab_nmpmerge, "sf")
 # build basic plot elements
 p7 <- ggplot() +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
+  geom_sf(data = dirkh, fill = "seashell2", colour = "grey80", size = 0.1) +
   new_scale_fill() +
   geom_sf(data = terrnp, aes(fill = leg_catego), alpha = 4/5, colour = NA, show.legend = F) +
   labs(fill = "Terrestrial Managed Areas") +
@@ -321,7 +322,10 @@ p7 <- ggplot() +
   geom_sf(data = cwatr, colour = "firebrick", alpha = 4/5, size = 0.2) +
   labs(x = NULL, y = NULL,  fill = "Key Ecological Features") +
   guides(fill = guide_legend(order = 1)) +
-  coord_sf(xlim = c(109.4, 115.0607), ylim = c(-29.25, -24.4)) + 
+  coord_sf(xlim = c(109.4, 115.0607), ylim = c(-29.25, -24.4)) +
+  annotate("point", y = c(-28.7761, -27.7115, -24.8838), x = c(114.6113, 114.1714, 113.6571), size = 0.75) +
+  annotate("text", y = c(-28.7761, - 27.7115, -24.8838), x = c(115, 114.48, 114.075),
+           label = c("Geraldton", "Kalbarri", "Carnarvon"), size = 2.3) +
   theme_minimal()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 

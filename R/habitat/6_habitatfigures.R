@@ -14,15 +14,6 @@ library(raster)
 library(patchwork)
 library(sf)
 library(dplyr)
-# library(reshape2)
-# library(ggplot2)
-# library(viridis)
-# library(raster)
-# library(patchwork)
-# library(ggnewscale)
-# library(sf)
-# library(dplyr)
-# library(rgdal)
 
 # bring in spatial layers
 aus    <- st_read("data/spatial/shp/cstauscd_r.mif")                            # geodata 100k coastline available: https://data.gov.au/dataset/ds-ga-a05f7892-eae3-7506-e044-00144fdd4fa6/
@@ -89,8 +80,8 @@ p1 <- ggplot() +
   geom_contour(data = bathdf, aes(x = x, y = y, z = Depth),breaks = c(0, - 30, -70, - 200) ,
                colour = "grey54",
                alpha = 1, size = 0.5) + # No 70m contour here
-  labs(x = NULL, y = NULL, title = "Big Bank") +
-  guides(fill = "none", colour = "none") +
+  labs(x = NULL, y = NULL, title = "Big Bank", fill = "Habitat") +
+  guides() +
   coord_sf(xlim = c(105468.7, 134614.7), ylim = c(6979682, 6999626)) + 
   theme_minimal()
 p1
@@ -109,8 +100,8 @@ p11 <- ggplot() +
   theme_minimal()
 p11
 
-p1 + p11
-ggsave("plots/habitat/site_dominant_habitat.png", width = 12, height = 8, dpi = 160)
+p1 / p11 + plot_layout(guides = "collect")
+ggsave("plots/habitat/site_dominant_habitat.png", width = 8, height = 8, dpi = 160)
 
 # fig 2: habitat multiplot
 # melt classes for faceting
@@ -174,27 +165,28 @@ ggsave("plots/habitat/site_habitat_predicted.png", width = 10, height = 14, dpi 
 
 # adding spatial layers to the relief plot below, bit long as need separate scale + legend
 
-pred_df <- melt(spreddf, id.vars = c(1:2, 18))
-pred_df <- pred_df[pred_df$variable %in% c("Depth", "tpi", 
-                                           "roughness","detrended"), ]
-pred_df$value <- as.numeric(pred_df$value)
+# pred_df <- melt(spreddf, measure.vars = c(3, 5, 6, 9))
+# pred_df <- pred_df[pred_df$variable %in% c("Depth", "tpi", 
+#                                            "roughness","detrended"), ]
+# pred_df$value <- as.numeric(pred_df$value)
 
 # depth
 pd <- ggplot() +
-  geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = Depth)) +
+  geom_tile(data = spreddf[spreddf$sitens == 1, ], aes(x, y, fill = depth)) +
   scale_fill_viridis(option = "A", direction = -1,
-                     limits = c(0, max(spreddf$Depth))) +
+                     limits = c(0, max(spreddf$depth))) +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
-  labs(x= NULL, y = NULL) +
+  labs(x= NULL, y = NULL, title = "Big Bank") +
   guides(fill = "none") +
-  theme_minimal() 
+  theme_minimal()
+
 pdb <- ggplot() +
-  geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = Depth)) +
+  geom_tile(data = spreddf[spreddf$sitens == 0, ], aes(x, y, fill = depth)) +
   scale_fill_viridis(option = "A", direction = -1,
-                     limits = c(0, max(spreddf$Depth))) +
+                     limits = c(0, max(spreddf$depth))) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
   labs(x= NULL, y = NULL,
-       fill = "Depth") +
+       fill = "Depth", title = "Shallow Bank") +
   theme_minimal()
 pd + pdb
 
@@ -281,7 +273,7 @@ p42 <- ggplot() +
 
 # relief only
 p4 + p42 + plot_layout(widths = c(0.44, 0.56))
-ggsave("plots/site_relief_p.png", width = 10, height = 6, dpi = 160)
+ggsave("plots/spatial/site_relief_p.png", width = 10, height = 6, dpi = 160)
 
 # combined spatial layers
 
@@ -292,7 +284,7 @@ ggsave("plots/site_relief_p.png", width = 10, height = 6, dpi = 160)
   (p4 + p42) +
   plot_layout(widths = c(0.44, 0.56)) &
   theme(text = element_text(size = 8))
-ggsave("plots/site_spatial_layers.png", width = 10, height = 12, dpi = 160)
+ggsave("plots/spatial/site_spatial_layers.png", width = 10, height = 12, dpi = 160)
 
 
 # fig 4.1.2: spatial random effect
@@ -302,9 +294,9 @@ p5 <- ggplot() +
   scale_fill_viridis(option = "B", 
                      limits = c(min(pcelldf$p_sp), max(pcelldf$p_sp))) +
   geom_sf(data = ab_npz[ab_npz$parkid == 3, ], fill = NA, colour = "#7bbc63") +
-  geom_point(data = habi[habi$ns == 1, ], aes(Longitude.1, Latitude.1), 
+  geom_point(data = habi[habi$ns == 1, ], aes(longitude.1, latitude.1), 
              alpha = 0.7, colour = "grey70", size = 1, shape = 3) +
-  labs(x= NULL, y = NULL) +
+  labs(x= NULL, y = NULL, title = "Big Bank") +
   guides(fill = "none") +
   theme_minimal()
 
@@ -313,18 +305,24 @@ p52 <- ggplot() +
   scale_fill_viridis(option = "B", 
                      limits = c(min(pcelldf$p_sp), max(pcelldf$p_sp))) +
   geom_sf(data = ab_npz[ab_npz$parkid == 2, ], fill = NA, colour = "#7bbc63") +
-  geom_point(data = habi[habi$ns == 0, ], aes(Longitude.1, Latitude.1), 
+  geom_point(data = habi[habi$ns == 0, ], aes(longitude.1, latitude.1), 
              alpha = 0.7, colour = "grey70", size = 2, shape = 3) +
   labs(x= NULL, y = NULL, 
-       fill = "spatial\ndependence") +
+       fill = "Spatial\ndependence", title = "Shallow Bank") +
   theme_minimal()
 
 p5 + p52 + plot_layout(widths = c(0.44, 0.56))
-ggsave("plots/site_relief_spatialeffect.png", 
-       width = 10, height = 6, dpi = 160)
+ggsave("plots/spatial/site_relief_spatialeffect.png", 
+       width = 10, height = 3, dpi = 160)
 
 # jac's map, eh
 # sort out the classes
+sitebathy <- readRDS('output/ga_bathy_fine.rds')                                # finer bathy
+colnames(sitebathy)[3] <- "Depth"
+# sitebathy <- sitebathy[sitebathy$Depth > -1000, ]                               # trim to reduce legend
+sitebathy <- sitebathy[sitebathy$x > 112.7 & sitebathy$x < 114.4, ] 
+sitebathy <- sitebathy[sitebathy$y > -28.4 & sitebathy$y < -26.6, ]
+
 jlevs  <- ratify(jacmap)
 jclass <- levels(jlevs)[[1]]
 jclass[["class"]] <- c("Shelf.unvegetated.soft.sediments",
@@ -416,7 +414,7 @@ p7 <- ggplot() +
   new_scale_fill() +  
   geom_tile(data = jmap_df, aes(x, y, fill = classname)) +
   jcls_cols +
-  geom_contour(data = bathdf, aes(x = x, y = y, z = Depth),
+  geom_contour(data = sitebathy, aes(x = x, y = y, z = Depth),
                breaks = c(-30, -70, -200, - 700, - 7000), colour = "black", alpha = 1, size = 0.18) +
   geom_sf(data = ab_nmp, fill = NA, aes(colour = ZoneName)) +
   nmpa_cols+
@@ -431,9 +429,9 @@ p7 <- ggplot() +
   #          colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
   # annotate("text", x = 113.42, y = -27.99, size = 3,
   #          colour = "grey20", label = "swabrnpz06") +
-  annotate("text", y = c(-27.875, -27.875,-27.875,-27.875,-27.875, -26.87), 
-           x = c(114.07, 113.41, 113.32, 113.15, 112.79, 113.167), 
-           label = c("30m", "30m", "70m", "200m", "700m", "70m"), size = 2) +
+  annotate("text", y = c(-27.875, -27.875,-27.875,-27.875, -26.87), 
+           x = c(114.07,  113.32, 113.15, 112.79, 113.167), 
+           label = c("30m", "70m", "200m", "700m", "70m"), size = 2) +
   coord_sf(xlim = c(112.8, 114.3), ylim = c(-28.25, -26.7)) +
   labs(fill = "Habitat classification", x = NULL, y = NULL) +
   annotate("point", y = c(-27.7115), x = c(114.1714), size = 0.75) +

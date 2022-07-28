@@ -158,11 +158,11 @@ p4
 # gg.predictions.npz6 <- plot_grid(NULL,NULL,p11,p21,NULL,NULL,p31,p41,NULL,NULL,
 #                                  ncol = 2, align = "vh",rel_heights = c(-0.3,1,-0.5,1,0))
 
-gg.predictions.npz6 <- p11+p21+p31+p41 & theme(legend.justification = "left")    #, aspect.ratio=1
+gg.predictions.npz6 <- p11/p21/p31/p41 & theme(legend.justification = "left")    
 gg.predictions.npz6
 
-gg.predictions.npz9 <- p1+p2+p3+p4 & theme(legend.justification = "left")       #, aspect.ratio=1
+gg.predictions.npz9 <- p1/p2/p3/p4 & theme(legend.justification = "left")       
 gg.predictions.npz9
 
-ggsave("plots/fish/site_fish_predictions-npz6.png", gg.predictions.npz6,width = 10, height = 4, dpi = 160)
-ggsave("plots/fish/site_fish_predictions-npz9.png", gg.predictions.npz9,width = 10, height = 4, dpi = 160)
+ggsave("plots/fish/site_fish_predictions-npz6.png", gg.predictions.npz6,width = 7, height = 9, dpi = 160)
+ggsave("plots/fish/site_fish_predictions-npz9.png", gg.predictions.npz9,width = 7, height = 9, dpi = 160)
