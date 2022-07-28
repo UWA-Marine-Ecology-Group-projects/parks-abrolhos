@@ -167,7 +167,7 @@ bar.npz6
 bar.npz6.top.10<-ggplot(maxn.npz6.10%>%mutate(scientific=str_replace_all(.$scientific,
   c("miniatus"="miniatus*","auratus"="auratus*","rubescens"="rubescens*","nebulosus"="nebulosus*"))), aes(x=reorder(scientific,maxn), y=maxn)) +   
   geom_bar(stat="identity",colour="black",fill="lightgrey",position=position_dodge())+
-  ylim (0, 1140)+
+  ylim (0, 1180)+
   coord_flip()+
   xlab("Species")+
   ylab(expression(Overall~abundance~(Sigma~MaxN)))+
@@ -175,20 +175,20 @@ bar.npz6.top.10<-ggplot(maxn.npz6.10%>%mutate(scientific=str_replace_all(.$scien
   theme(axis.text.y = element_text(face="italic"))+
   theme_collapse+
   theme.larger.text+
-  annotation_raster(c.w, xmin=9.7,xmax=10.2,ymin=1080, ymax=1190)+
-  annotation_raster(c.a, xmin=8.65,xmax=9.35,ymin=785, ymax=995)+
-  annotation_raster(l.m, xmin=7.5, xmax=8.5, ymin=100, ymax=330)+
-  annotation_raster(c.au, xmin=6.5,xmax=7.5,ymin=90, ymax=340)+
-  annotation_raster(p.s, xmin=5.7,xmax=6.3,ymin=60, ymax=210)+
-  annotation_raster(c.r, xmin=4.6,xmax=5.4,ymin=55, ymax=265)+
-  annotation_raster(s.c, xmin=3.8,xmax=4.2,ymin=45, ymax=160)+
-  annotation_raster(n.o, xmin=2.75,xmax=3.25,ymin=45, ymax=170)+
-  annotation_raster(p.n, xmin=1.72,xmax=2.25,ymin=35, ymax=180)+
-  annotation_raster(l.n, xmin=0.5,xmax=1.5,ymin=35, ymax=265)
-bar.npz6.top.10
+  annotation_raster(c.w, xmin=9.85,xmax=10.15,ymin=1100, ymax=1180)+
+  annotation_raster(c.a, xmin=8.7,xmax=9.3,ymin=805, ymax=1005)+
+  annotation_raster(l.m, xmin=7.5, xmax=8.5, ymin=120, ymax=400)+
+  annotation_raster(c.au, xmin=6.5,xmax=7.5,ymin=110, ymax=405)+
+  annotation_raster(p.s, xmin=5.7,xmax=6.3,ymin=80, ymax=225)+
+  annotation_raster(c.r, xmin=4.6,xmax=5.4,ymin=75, ymax=330)+
+  annotation_raster(s.c, xmin=3.8,xmax=4.2,ymin=65, ymax=185)+
+  annotation_raster(n.o, xmin=2.75,xmax=3.25,ymin=65, ymax=190)+
+  annotation_raster(p.n, xmin=1.72,xmax=2.25,ymin=55, ymax=205)+
+  annotation_raster(l.n, xmin=0.5,xmax=1.5,ymin=55, ymax=330)
+# bar.npz6.top.10
 
 #save out plot
-ggsave("plots/stacked.bar.plot.npz6.png",bar.npz6.top.10,dpi=600,width=6.0)
+ggsave("plots/fish/stacked.bar.plot.npz6.png",bar.npz6.top.10,dpi=600,width=6.0, height = 6)
 
 #NPZ9
 
@@ -231,18 +231,18 @@ bar.npz9.top.10<-ggplot(maxn.npz9.10%>%mutate(scientific=str_replace_all(.$scien
   theme_collapse+
   theme.larger.text+
   annotation_raster(c.ass, xmin=9.75,xmax=10.25,ymin=168, ymax=183)+
-  annotation_raster(c.w, xmin=8.75,xmax=9.25,ymin=138, ymax=155)+
-  annotation_raster(l.m, xmin=7.5, xmax=8.5, ymin=75, ymax=110)+
-  annotation_raster(c.au, xmin=6.5,xmax=7.5,ymin=73, ymax=110)+
+  annotation_raster(c.w, xmin=8.8,xmax=9.2,ymin=138, ymax=153)+
+  annotation_raster(l.m, xmin=7.5, xmax=8.5, ymin=75, ymax=115)+
+  annotation_raster(c.au, xmin=6.5,xmax=7.5,ymin=73, ymax=117)+
   annotation_raster(s.d, xmin=5.5,xmax=6.5,ymin=30, ymax=80)+
   annotation_raster(p.m, xmin=4.5,xmax=5.5,ymin=29, ymax=75)+          
   annotation_raster(c.a, xmin=3.65,xmax=4.25,ymin=20, ymax=50)+
-  annotation_raster(p.spp, xmin=2.65,xmax=3.35,ymin=14, ymax=40)+
-  annotation_raster(p.s, xmin=1.6,xmax=2.4,ymin=13, ymax=38)
-bar.npz9.top.10
+  annotation_raster(p.spp, xmin=2.65,xmax=3.35,ymin=14, ymax=46)+
+  annotation_raster(p.s, xmin=1.65,xmax=2.35,ymin=13, ymax=42)
+# bar.npz9.top.10
 
 #save out plot
-ggsave("plots/stacked.bar.plot.npz9.png",bar.npz9.top.10,dpi=600,width=6.0)
+ggsave("plots/fish/stacked.bar.plot.npz9.png",bar.npz9.top.10,dpi=600,width=6.0, height = 6)
 
 #Recreationally targeted species
 #targeted species top 10 abundance
@@ -364,20 +364,23 @@ bar.fished.npz6<-ggplot(maxn.fished.npz6, aes(x=reorder(scientific,maxn), y=maxn
   theme(axis.text.y = element_text(face="italic"))+
   theme_collapse+
   theme.larger.text+
-  annotation_raster(l.m, xmin=9.8,xmax=10.2,ymin=90, ymax=110)+
-  annotation_raster(c.au, xmin=8.8,xmax=9.2,ymin=80, ymax=100)+
-  annotation_raster(c.r, xmin=7.75, xmax=8.25, ymin=50, ymax=70)+
-  annotation_raster(l.n, xmin=6.55,xmax=7.45,ymin=28, ymax=50)+
-  annotation_raster(s.h, xmin=5.6,xmax=6.3,ymin=20, ymax=40)+
-  annotation_raster(s.spp, xmin=4.6,xmax=5.4,ymin=10, ymax=30)+
+  annotation_raster(l.m, xmin=9.6,xmax=10.4,ymin=90, ymax=115)+
+  annotation_raster(c.au, xmin=8.6,xmax=9.4,ymin=80, ymax=105)+
+  annotation_raster(c.r, xmin=7.65, xmax=8.35, ymin=50, ymax=75)+
+  annotation_raster(l.n, xmin=6.55,xmax=7.45,ymin=28, ymax=55)+
+  annotation_raster(s.h, xmin=5.55,xmax=6.45,ymin=20, ymax=50)+
+  annotation_raster(s.spp, xmin=4.55,xmax=5.45,ymin=10, ymax=45)+
   annotation_raster(l.spp, xmin=3.7,xmax=4.3,ymin=7, ymax=25)+
   annotation_raster(l.spp, xmin=2.7,xmax=3.3,ymin=7, ymax=25)+
   annotation_raster(e.r, xmin=1.75,xmax=2.25,ymin=5, ymax=20)+
-  annotation_raster(c.p, xmin=0.5,xmax=1.5,ymin=3, ymax=40)
+  annotation_raster(c.p, xmin=0.4,xmax=1.6,ymin=5, ymax=50)
 # ggtitle("10 most abundant species") +
 # theme(plot.title = element_text(hjust = 0))
 bar.fished.npz6
   
+#save out plot
+ggsave("plots/fish/abundant.targets.npz6.png",bar.fished.npz6,dpi=600,width=6.0, height = 6.0)
+
 #NPZ9
 #1 Lethrinus miniatus
 #already loaded
@@ -413,7 +416,7 @@ g.b <- as.raster(readPNG("data/images/glaucosoma_buergeri_nb.png"))
 #npz9
 bar.fished.npz9<-ggplot(maxn.fished.npz9, aes(x=reorder(scientific,maxn), y=maxn)) +   
   geom_bar(stat="identity",colour="black",fill="lightgrey",position=position_dodge())+
-  ylim (0, 90)+
+  ylim (0, 92)+
   coord_flip()+
   xlab("Species")+
   ylab(expression(Overall~abundance~(Sigma~MaxN)))+
@@ -422,21 +425,20 @@ bar.fished.npz9<-ggplot(maxn.fished.npz9, aes(x=reorder(scientific,maxn), y=maxn
   theme_collapse+
   theme.larger.text+
   annotation_raster(l.m, xmin=9.55,xmax=10.45,ymin=73, ymax=93)+          #1
-  annotation_raster(c.au, xmin=8.55,xmax=9.45,ymin=73, ymax=90)+               #2
-  annotation_raster(p.m, xmin=7.65, xmax=8.35, ymin=30, ymax=55)+         #3
+  annotation_raster(c.au, xmin=8.55,xmax=9.45,ymin=73, ymax=95)+               #2
+  annotation_raster(p.m, xmin=7.55, xmax=8.45, ymin=30, ymax=53)+         #3
   annotation_raster(g.g, xmin=6.55,xmax=7.45,ymin=8, ymax=25)+               #4
   annotation_raster(s.h, xmin=5.6,xmax=6.3,ymin=7, ymax=33)+                #5
-  annotation_raster(p.t, xmin=4.6,xmax=5.4,ymin=7, ymax=25)+                 #6
-  annotation_raster(l.n, xmin=3.7,xmax=4.3,ymin=5, ymax=20)+                 #7
+  annotation_raster(p.t, xmin=4.6,xmax=5.4,ymin=7, ymax=27)+                 #6
+  annotation_raster(l.n, xmin=3.55,xmax=4.45,ymin=5, ymax=25)+                 #7
   annotation_raster(g.g, xmin=2.55,xmax=3.45,ymin=5, ymax=20)+              #8
-  annotation_raster(c.p, xmin=1.5,xmax=2.5,ymin=5, ymax=30)+                #9
+  annotation_raster(c.p, xmin=1.5,xmax=2.5,ymin=5, ymax=35)+                #9
   annotation_raster(g.b, xmin=0.55,xmax=1.45,ymin=4, ymax=20)                 #10
 # ggtitle("10 most abundant species") +
 # theme(plot.title = element_text(hjust = 0))
-bar.fished.npz9
+# bar.fished.npz9
 
-#save out plot
-ggsave("plots/fish/abundant.targets.npz6.png",bar.fished.npz6,dpi=600,width=6.0, height = 6.0)
+# Save out plot
 ggsave("plots/fish/abundant.targets.npz9.png",bar.fished.npz9,dpi=600,width=6.0, height = 6.0)
 
 
