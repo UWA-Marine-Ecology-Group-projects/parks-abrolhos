@@ -179,11 +179,11 @@ bar.npz6.top.10<-ggplot(maxn.npz6.10%>%mutate(scientific=str_replace_all(.$scien
   annotation_raster(c.a, xmin=8.7,xmax=9.3,ymin=805, ymax=1005)+
   annotation_raster(l.m, xmin=7.5, xmax=8.5, ymin=120, ymax=400)+
   annotation_raster(c.au, xmin=6.5,xmax=7.5,ymin=110, ymax=405)+
-  annotation_raster(p.s, xmin=5.7,xmax=6.3,ymin=80, ymax=225)+
+  annotation_raster(p.s, xmin=5.7,xmax=6.3,ymin=80, ymax=265)+
   annotation_raster(c.r, xmin=4.6,xmax=5.4,ymin=75, ymax=330)+
   annotation_raster(s.c, xmin=3.8,xmax=4.2,ymin=65, ymax=185)+
   annotation_raster(n.o, xmin=2.75,xmax=3.25,ymin=65, ymax=190)+
-  annotation_raster(p.n, xmin=1.72,xmax=2.25,ymin=55, ymax=205)+
+  annotation_raster(p.n, xmin=1.72,xmax=2.25,ymin=55, ymax=225)+
   annotation_raster(l.n, xmin=0.5,xmax=1.5,ymin=55, ymax=330)
 # bar.npz6.top.10
 

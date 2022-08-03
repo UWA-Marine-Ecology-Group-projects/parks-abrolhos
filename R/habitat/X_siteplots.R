@@ -96,9 +96,9 @@ waterr_cols <- scale_fill_manual(values = c("National Park" = "#c4cea6",
 p1 <- ggplot() +
   geom_contour_filled(data = bathdf, aes(x = x, y = y, z = Depth,
                                          fill = after_stat(level)),
-                      breaks = c(0, -30, -70, -200, -700, - 7000)) +
+                      breaks = c(-30, -70, -200, - 700, -2000 , -4000,-6000)) +
   geom_contour(data = bathdf, aes(x = x, y = y, z = Depth),
-  breaks = c(-30, -70, -200, - 700, - 7000), colour = "white", alpha = 3/5, size = 0.1) +
+  breaks = c(-30, -70, -200, - 700, -2000 , -4000,-6000), colour = "white", alpha = 3/5, size = 0.1) +
   scale_fill_grey(start = 1, end = 0.5, guide = "none") +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
   geom_sf(data = dirkh, fill = "seashell2", colour = "grey80", size = 0.1) +
@@ -296,15 +296,25 @@ kef_cols <- scale_fill_manual(values = c("Ancient coastline" = "#ff6db6",
                                          "Western demersal fish" = "#016dda",
                                          "Wallaby Saddle" = "#940000"))
 
+nmpa_colors <- scale_color_manual(values = c("National Park Zone" = "#7bbc63",
+                                          "Multiple Use Zone" = "#b9e6fb",
+                                          "Special Purpose Zone" = "#6daff4",
+                                          "Habitat Protection Zone" = "#fff8a3"
+))
+
 # Reorder KEFs so they plot in a sensible order
 kef$NAME <- factor(kef$NAME, levels = c("Western rock lobster", "Western demersal fish", "Wallaby Saddle", 
                                         "Abrolhos Islands", "Ancient coastline", 
                                         "West coast canyons", "West coast lagoons"))
 
+# Reorder aus national MPs so they plot in a sensible order
+ab_nmp$ZoneName <- factor(ab_nmp$ZoneName, levels = c("Multiple Use Zone", "Special Purpose Zone",
+                                                      "Habitat Protection Zone", "National Park Zone"))
+
 # Merge the zones into one polygon for each park
-ab_nmpspat <- as_Spatial(ab_nmp)
-ab_nmpmerge <- unionSpatialPolygons(ab_nmpspat, ab_nmpspat$ResName)
-ab_nmpmerge <- as(ab_nmpmerge, "sf")
+# ab_nmpspat <- as_Spatial(ab_nmp)
+# ab_nmpmerge <- unionSpatialPolygons(ab_nmpspat, ab_nmpspat$ResName)
+# ab_nmpmerge <- as(ab_nmpmerge, "sf")
 
 # build basic plot elements
 p7 <- ggplot() +
@@ -317,8 +327,9 @@ p7 <- ggplot() +
   new_scale_fill() +
   geom_sf(data = kef, aes(fill = NAME), alpha = 0.7, color = NA) +
   kef_cols+
-  # geom_sf(data = ab_mpa, fill = NA, alpha = 2/5, colour = "black", show.legend = F, size = 0.2) +
-  geom_sf(data = ab_nmpmerge, fill = NA, alpha = 2/5, color = "black", show.legend = F, size = 0.2) +
+  geom_sf(data = ab_nmp, fill = NA, alpha = 1, aes(color = ZoneName), show.legend = F, size = 0.4) +
+  nmpa_colors +
+  # geom_sf(data = ab_nmpmerge, fill = NA, alpha = 2/5, color = "black", show.legend = F, size = 0.2) +
   geom_sf(data = cwatr, colour = "firebrick", alpha = 4/5, size = 0.2) +
   labs(x = NULL, y = NULL,  fill = "Key Ecological Features") +
   guides(fill = guide_legend(order = 1)) +
