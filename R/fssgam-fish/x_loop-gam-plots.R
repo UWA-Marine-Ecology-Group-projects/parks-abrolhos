@@ -2,18 +2,18 @@ rm(list=ls())
 
 library(dplyr)
 library(tidyr)
-library(gridExtra)
-library(grid)
+# library(gridExtra)
+# library(grid)
 library(GlobalArchive)
 library(stringr)
 library(ggplot2)
 library(gamm4)
-library(ggmap)
-library(rgdal)
-library(raster)
-library(png)
-library(cowplot)
-library(tibble)
+# library(ggmap)
+# library(rgdal)
+# library(raster)
+# library(png)
+# library(cowplot)
+# library(tibble)
 library(purrr)
 
 # set theme
@@ -43,222 +43,142 @@ working.dir <- getwd()
 setwd(working.dir)
 #OR Set manually once
 
-# Bring in and format the  data----
+# Load and join the raw data ----
+# Maxn
 dat.maxn <- readRDS("data/Tidy/dat.maxn.rds")%>%
   dplyr::filter(location%in%"NPZ6")%>%
   dplyr::rename(number = maxn)%>%
   glimpse()
 
-dat.length <- readRDS("data/Tidy/dat.length.rds")%>%
-  dplyr::filter(location%in%"NPZ6")%>%
+# Lengths
+dat.length <- readRDS("data/Tidy/dat.length.rds") %>%
+  dplyr::filter(location%in%"NPZ6") %>%
   glimpse()
 
+# Stack both
 dat <- bind_rows(dat.maxn,dat.length)
 
+# Model outputs from fss-gam script - filtered to the top model for each taxa
+# This needs a bit of tidying in the original export
 topmodels <- readRDS("data/Tidy/all.mod.fits.RDS") %>%
-  dplyr::mutate(rownames = row.names(.)) %>% # they cooked - do manually
+  dplyr::mutate(rownames = row.names(.)) %>% # Need to fix this in the original export 
   dplyr::mutate(taxa = c("total.abundance", "total.abundance",
                          "total.abundance", "species.richness")) %>% # Need to fix this in the original exports - row names not correct
   tidyr::separate(col = modname, into = c("term1", "term2", "term3"), sep = "\\+", remove = F) %>%
-  dplyr::mutate(no.terms = rowSums(!is.na(select(., starts_with("term"))))) %>%
-  dplyr::group_by(taxa) %>%
-  dplyr::arrange(AICc, no.terms) %>%
-  slice(1) %>%
-  ungroup() %>%
+  dplyr::mutate(no.terms = rowSums(!is.na(dplyr::select(., starts_with("term"))))) %>%
+  dplyr::group_by(taxa) %>% # Per response
+  dplyr::arrange(AICc, no.terms) %>% # Sort it by AICc and the number of terms
+  slice(1) %>% # Slice off the top model
+  ungroup() %>% # Just to be safe
   glimpse()
   
-topmodels$formula <- gsub("\"","\'", topmodels$formula)
-topmodels$formula <- substr(topmodels$formula, 1, nchar(topmodels$formula) - 9)
+topmodels$formula <- gsub("\"","\'", topmodels$formula) # Swap the " for ' - otherwise errors when pasting in
+topmodels$formula <- substr(topmodels$formula, 1, nchar(topmodels$formula) - 9) # Remove the fixed effect for method
 
-test <- topmodels %>%
-  pivot_longer(cols = starts_with("term"), names_to = "NA", values_to = "terms") %>%
-  dplyr::select(taxa, terms) %>%
-  dplyr::filter(!is.na(terms)) %>%
-  group_by(taxa) %>%
-  dplyr::mutate(term.no = row_number()) %>%
-  ungroup() %>%
-  glimpse()
-
-resp.vars <- c("total.abundance","species.richness")
-
-# use.dat <- dat %>% dplyr::filter(scientific == "species.richness")
-# 
-# mod <- gam(number ~ s(biog, k = 3, bs = 'cr') + s(tpi, k = 3, bs = 'cr') + s(depth, k = 3, bs = 'cr'),
-#            family = tw, data = use.dat)
-# i <- 1
-
-unique(test$terms)
-colnames <- unique(test$terms)
-predicts <- data.frame(biog = mean(dat$biog),
-                       depth = mean(dat$depth),
-                       tpi = mean(dat$tpi),
-                       mean.relief = mean(dat$mean.relief))
-
-# for (i in 1:length(unique(dat$scientific))) {
-  use.dat <- as.data.frame(dat[which(dat$scientific == resp.vars[i]), ])
-  mod = gam(eval(parse(text=(paste0("number~", topmodels$formula[i])))), family = "tw",data = use.dat)
-  
-  for (i in 1:nrow(test)) {
-    
-    # First term in the model
-    colnames <- c(test$terms[i], test$terms[i + 1], name3 <- test$terms[i + 2])
-    
-    testdata <- expand.grid(name1 = seq(min(select(use.dat, c(test$terms[i]))),
-                                        max(select(use.dat, c(test$terms[i]))),length.out = 20), # Term 1
-                            name2 = sum(select(use.dat, c(test$terms[i + 1])))/nrow(select(use.dat, c(test$terms[i + 1]))), # Term 2
-                            name3 = sum(select(use.dat, c(test$terms[i + 2])))/nrow(select(use.dat, c(test$terms[i + 2])))) %>% # Term 3
-      distinct() %>%
-      glimpse()
-    
-    names(testdata) <- colnames
-    
-    fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
-    
-    tempdat <- testdata %>% 
-      data.frame(fits) %>%
-      group_by(biog)%>% #only change here test$terms[1]
-      summarise(number=mean(fit),se.fit=mean(se.fit))%>%
-      ungroup()
-    assign(as.character(paste(paste("predicts", test$taxa[i], sep = "."), test$terms[i], sep = ".")), tempdat)
-    
-    # Second term in the model
-    colnames <- c(test$terms[i + 1], test$terms[i], name3 <- test$terms[i + 2])
-    
-    testdata <- expand.grid(name2 = seq(min(select(use.dat, c(test$terms[i + 1]))),
-                                        max(select(use.dat, c(test$terms[i + 1]))),length.out = 20), # Term 1
-                            name1 = sum(select(use.dat, c(test$terms[i])))/nrow(select(use.dat, c(test$terms[i]))), # Term 2
-                            name3 = sum(select(use.dat, c(test$terms[i + 2])))/nrow(select(use.dat, c(test$terms[i + 2])))) %>% # Term 3
-      distinct() %>%
-      glimpse()
-    
-    names(testdata) <- colnames
-    
-    fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
-    
-    tempdat <- testdata %>% 
-      data.frame(fits) %>%
-      group_by(depth)%>% #only change here
-      summarise(number=mean(fit),se.fit=mean(se.fit))%>%
-      ungroup()
-    assign(as.character(paste(paste("predicts", test$taxa[i + 1], sep = "."), test$terms[i + 1], sep = ".")), tempdat)
-    
-    # Third term in the model
-    colnames <- c(test$terms[i + 2], test$terms[i], name3 <- test$terms[i + 1])
-    
-    testdata <- expand.grid(name3 = seq(min(select(use.dat, c(test$terms[i+2]))),
-                                        max(select(use.dat, c(test$terms[i+2]))),length.out = 20),
-                            name1 = sum(select(use.dat, c(test$terms[i])))/nrow(select(use.dat, c(test$terms[i]))),
-                            name2 = sum(select(use.dat, c(test$terms[i + 1])))/nrow(select(use.dat, c(test$terms[i + 1])))) %>%
-      distinct() %>%
-      glimpse()
-    
-    names(testdata) <- colnames
-    
-    fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
-    
-    tempdat <- testdata %>% 
-      data.frame(fits) %>%
-      group_by(tpi)%>% #only change here
-      summarise(number=mean(fit),se.fit=mean(se.fit))%>%
-      ungroup()
-    assign(as.character(paste(paste("predicts", test$taxa[i + 2], sep = "."), test$terms[i + 2], sep = ".")), tempdat)
-    
-  }  
-
-# Subset the dataframe to the model
-spec <- test %>%
-  dplyr::filter(taxa %in% "species.richness") %>%
-  glimpse()
-
-covars <- unique(spec$terms)
-
-specdat <- dat %>% 
-  dplyr::select(c(all_of(covars)))
-
-n.vars <- ncol(specdat)
-var.names <- colnames(specdat)
-
-# Sequence the data
-for (i in 1:n.vars) {
-  temp <- data.frame(sequ = seq(min(specdat[,i]), max(specdat[,i]), length = 20),
-                     var = var.names[i])
-  if (i == 1) {
-    sequence <- temp
-  }
-  else {
-    sequence <- rbind(sequence, temp)
-  }
-}
+resp.vars <- unique(topmodels$taxa) # Number of taxa from top-models fss-gam export
+factor.vars <- "" # Turn this on if you have factor variables in the model
 
 # Make the dataframes to predict data
-predict_gam <- function(data) {
+for (i in 1:length(resp.vars)) { # Start of loop to format the data - loop through each taxa
   
-  for (i in 1:n.vars) {
-    temp <- data.frame(sequ = seq(min(data[i]), max(data[i]), length = 20),
-                      var = var.names[i])
-    if (i == 1) {
-      sequence <- temp
-    }
-    else {
-      sequence <- rbind(sequence, temp)
-    }}
+  # Create table of model terms only
+  modterms <- topmodels %>% 
+    pivot_longer(cols = starts_with("term"), names_to = "NA", values_to = "terms") %>%
+    dplyr::select(taxa, terms) %>%
+    dplyr::filter(!is.na(terms)) %>%
+    group_by(taxa) %>%
+    dplyr::mutate(term.no = row_number()) %>%
+    ungroup() %>%
+    glimpse()
+  
+  # Filtered model information
+  modterms_f <- modterms %>% 
+    dplyr::filter(taxa %in% resp.vars[i]) %>%
+    glimpse()
+  
+  # List of covariates in the model
+  covars <- unique(modterms_f$terms) # Just the covariates of that model - same as var.names?
+  
+  # Raw covariate data
+  covar_f <- dat %>%
+    dplyr::select(c(all_of(covars))) # Only columns in the original data that match the covariates of the model
+  
+  # Raw data per taxa
+  dat_f <- dat %>%
+    dplyr::filter(scientific %in% resp.vars[i])
+  
+  # Set the model - from the top model dataframe loaded from fssgam output
+  mod <- gam(eval(parse(text=(paste0("number~", topmodels$formula[i])))), family = "tw",data = dat_f)
+  
+  n.vars <- ncol(covar_f) # Number of variables from the subset data
+  var.names <- colnames(covar_f) # Names of the covariates
+  
+  for (i in 1:n.vars) { # Start of the loop to predict the data
+    temp1 <- data.frame(sequ = seq(min(covar_f[i]), max(covar_f[i]), length = 20),
+                        var = var.names[i])
     
-    yeet <- setNames(split(sequence, sequence$var), paste0("testdata", unique(sequence$var)))
-    means <- tibble::rownames_to_column(data.frame(means = colMeans(data)), "var") %>%
+    means <- tibble::rownames_to_column(data.frame(means = colMeans(covar_f)), "var") %>%
       spread(var, means)
     means <- do.call("rbind", replicate(20, means, simplify = FALSE))
-    mod <- gam(number~s(biog,k=3,bs='cr') + s(depth,k=3,bs='cr')  + s(tpi,k=3,bs='cr'), 
-               family = tw, data = dat[dat$scientific == "species.richness"])
     
-    for (i in 1:n.vars) {
-    yeet[[i]] <- yeet[[i]] %>% 
+    temp1 <- temp1 %>%
       cbind(means) %>%
-      dplyr::select(-all_of(as.character(unique(yeet[[i]][2]))))
+      dplyr::select(-all_of(as.character(unique(temp1$var))))
     
-    names(yeet[[i]])[names(yeet[[i]]) == names(yeet[[i]][1])] <- as.character(unique(yeet[[i]][2]))
+    names(temp1)[names(temp1) == names(temp1[1])] <- as.character(unique(temp1[2]))
     
-    fits <- predict.gam(mod, newdata = yeet[[i]], type='response', se.fit=T)
+    fits <- predict.gam(mod, newdata = temp1, type = 'response', se.fit=T)
     
-    temp2 = yeet[[i]] %>% 
-      data.frame (fits)%>%
-      group_by_at(1)%>% # Only change here
-      dplyr::summarise(number=mean(fit),se.fit=mean(se.fit))%>%
+    temp2 = temp1 %>% 
+      data.frame (fits) %>%
+      group_by_at(1) %>% # Only change here
+      dplyr::summarise(number = mean(fit),se.fit = mean(se.fit)) %>%
+      dplyr::mutate(se.pos = number + se.fit,
+                    se.neg = number - se.fit) %>%
       ungroup()
-    assign(as.character(paste("predicts", names(yeet[[i]][1]), sep = ".")), temp2)
+    assign(as.character(paste(unique(modterms_f$taxa), names(temp1[1]), sep = ".")), temp2)
     
+    # Make the plots now
+    if (i == 1) {
+      # Make the plot including title
+      ggmod <- ggplot() +
+        ylab("")+
+        xlab(as.character(names(temp1[1])))+
+        geom_point(data = dat_f,aes_string(x = var.names[i], y = "number"),
+                   alpha = 0.2, size = 1,show.legend = F) +
+        geom_line(data = eval(parse(text = paste(unique(modterms_f$taxa), var.names[i], sep = "."))),
+                  aes_string(x = var.names[i],y = "number"),alpha = 0.5) +
+        geom_line(data = eval(parse(text = paste(unique(modterms_f$taxa), var.names[i], sep = "."))),
+                  aes_string(x = var.names[i],y = "se.pos"),
+                  linetype = "dashed",alpha = 0.5) +
+        geom_line(data = eval(parse(text = paste(unique(modterms_f$taxa), var.names[i], sep = "."))),
+                  aes_string(x = var.names[i],y = "se.neg"),
+                  linetype = "dashed",alpha = 0.5) +
+        theme_classic() +
+        Theme1 +
+        ggtitle(as.character(unique(modterms_f$taxa))) +
+        theme(plot.title = element_text(hjust = 0))
+      assign(paste("ggmod", as.character(paste(unique(modterms_f$taxa), names(temp1[1]), sep = ".")), sep = "."), ggmod)
     }
-  }
+    else {
+      # Make the plot without title - for second and third terms in the model
+      ggmod <- ggplot() +
+        ylab("")+
+        xlab(as.character(names(temp1[1])))+
+        geom_point(data = dat_f,aes_string(x = var.names[i], y = "number"),
+                   alpha = 0.2, size = 1,show.legend = F) +
+        geom_line(data = eval(parse(text = paste(unique(modterms_f$taxa), var.names[i], sep = "."))),
+                  aes_string(x = var.names[i],y = "number"),alpha = 0.5) +
+        geom_line(data = eval(parse(text = paste(unique(modterms_f$taxa), var.names[i], sep = "."))),
+                  aes_string(x = var.names[i],y = "se.pos"),
+                  linetype = "dashed",alpha = 0.5) +
+        geom_line(data = eval(parse(text = paste(unique(modterms_f$taxa), var.names[i], sep = "."))),
+                  aes_string(x = var.names[i],y = "se.neg"),
+                  linetype = "dashed",alpha = 0.5) +
+        theme_classic() +
+        Theme1
+      assign(paste("ggmod", as.character(paste(unique(modterms_f$taxa), names(temp1[1]), sep = ".")), sep = "."), ggmod)
+    }
+  } # End of the Predict loop
 
-predict_gam(specdat)
-
-
-# MODEL Total abundance (relief) ----
-dat.total <- dat %>% filter(scientific=="total.abundance")
-
-mod=gam(number~s(mean.relief,k=3,bs='cr'), family=tw,data=dat.total)
-# predict - relief ----
-testdata <- expand.grid(mean.relief=seq(min(dat$mean.relief),max(dat$mean.relief),length.out = 20)) %>%
-  distinct()%>%
-  glimpse()
-
-fits <- predict.gam(mod, newdata=testdata, type='response', se.fit=T)
-
-predicts.total.relief = testdata%>%data.frame(fits)%>%
-  group_by(mean.relief)%>% #only change here
-  summarise(number=mean(fit),se.fit=mean(se.fit))%>%
-  ungroup()
-
-# PLOTS for Total abundance ----
-# detrended bathy ----
-ggmod.total.relief<- ggplot() +
-  ylab("")+
-  xlab("Relief")+
-  geom_point(data=dat.total,aes(x=mean.relief,y=number),  alpha=0.2, size=1,show.legend=F)+
-  geom_line(data=predicts.total.relief,aes(x=mean.relief,y=number),alpha=0.5)+
-  geom_line(data=predicts.total.relief,aes(x=mean.relief,y=number - se.fit),linetype="dashed",alpha=0.5)+
-  geom_line(data=predicts.total.relief,aes(x=mean.relief,y=number + se.fit),linetype="dashed",alpha=0.5)+
-  theme_classic()+
-  Theme1+
-  ggtitle("Total abundance") +
-  theme(plot.title = element_text(hjust = 0))
-ggmod.total.relief
+} # End of the loop to format data 

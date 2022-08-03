@@ -119,13 +119,14 @@ gg.scatterpie.npz6 <- ggplot() +
                            "Kelp", "Sand"),
                   pie_scale = 0.45, color = NA) +
   labs(fill = "Habitat",x = 'Longitude', y = 'Latitude', title = "Shallow Bank")+
-  hab_cols+
+  hab_cols + 
+  annotate("text", x = c(113.47, 113.405, 113.278), y = c(-28.13, -28.13, -28.13), label = c("30m", "70m", "200m"),
+           size = 1.5, colour = "black")+
   coord_sf(xlim = c(113.169637818, 113.592952023), ylim = c(-28.147530871, -27.951387524))+
   theme_minimal()+
   theme(panel.background = element_rect(fill = "#b9d1d6"),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank())
-gg.scatterpie.npz6
 
 gg.scatterpie.npz9 <- ggplot() + 
   geom_contour_filled(data = bathdf, aes(x, y, z = Depth, fill = after_stat(level)), color = "black",
@@ -154,8 +155,8 @@ gg.scatterpie.npz9 <- ggplot() +
   theme(panel.background = element_rect(fill = "#b9d1d6"),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank())
-gg.scatterpie.npz9
 
 gg.scatterpie <- gg.scatterpie.npz9 / gg.scatterpie.npz6 + plot_layout(guide = "collect")
 
 save_plot("plots/habitat/scatterpies.png", gg.scatterpie,base_height = 6.5,base_width = 7)
+
