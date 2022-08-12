@@ -23,6 +23,9 @@ library(maptools)
 # get and sort spatial boundaries
 aus    <- st_read("data/spatial/shp/cstauscd_r.mif")                            # geodata 100k coastline available: https://data.gov.au/dataset/ds-ga-a05f7892-eae3-7506-e044-00144fdd4fa6/
 dirkh  <- aus[aus$ISLAND_NAME%in%c("DIRK HARTOG ISLAND", "DORRE ISLAND", "BERNIER ISLAND"), ]                        # just dirk hartog island
+abro    <- aus[aus$GROUP_NAME %in% c("WALLABI GROUP/HOUTMAN ABROLHOS", "EASTERN IS/EASTER GP/HOUTMAN ABROLHOS",
+                                   "EASTER GROUP/HOUTMAN ABROLHOS", "PELSAERT GROUP/HOUTMAN ABROLHOS",
+                                   "MANGROVE GP/PELSAERT GP/HOUTMAN ABROLHOS"), ]
 aus    <- aus[aus$FEAT_CODE == "mainland", ]
 aumpa  <- st_read("data/spatial/shp/AustraliaNetworkMarineParks.shp")           # all aus mpas
 wampa  <- st_read("data/spatial/shp/WA_MPA_2018.shp")                           # all wa mpas
@@ -37,6 +40,7 @@ terrnp <- st_read("data/spatial/shp/Legislated_Lands_and_Waters_DBCA_011.shp") %
   dplyr::filter(leg_catego %in% c("Nature Reserve", "National Park"))
 st_crs(aus)         <- st_crs(aumpa)
 st_crs(dirkh)       <- st_crs(aumpa) 
+st_crs(abro)       <- st_crs(aumpa) 
 
 roas <- st_read("data/spatial/shp/Abrolhos_ROAs.shp")                           # from matt's state reserve shapefile 
 
@@ -343,6 +347,51 @@ p7 <- ggplot() +
 png(filename = "plots/spatial/key-ecological-features.png", height = 4, width = 6,
     units = "in", res = 200)
 p7
+dev.off()
+
+
+# Old sea level map
+depth_cols <- scale_fill_manual(values = c("#b8d9a9","#8dbc80", "#5d9d52"),
+                                labels = c("9-10 Ka", "15-17 Ka", "20-30 Ka"),
+                                name = "Coastline age")
+
+# Convert back to a raster and smooth it out
+bath_r <- rasterFromXYZ(bathdf)
+e <- extent(111.5, 115.0607,-29.25, -24.4)
+bath_r <- crop(bath_r, e) # Crop to the map area
+bath_r <- disaggregate(bath_r, 5, method='bilinear')
+# Back to dataframe to plot
+bathdf <- as.data.frame(bath_r, xy = T)
+# Cut out shallow bits of the depth tile so it doesn't clash with the old coastlines
+bathdf_f <- bathdf %>%
+  dplyr::filter(Depth < -100)
+
+# build basic plot elements
+p8 <- ggplot() +
+  geom_tile(data = bathdf_f, aes(x = x, y = y, fill = Depth)) +
+  scale_fill_gradient2(low = "royalblue4", mid = "lightskyblue1", high = "white", name = "Depth (m)") +
+  new_scale_fill() +
+  geom_contour_filled(data = bathdf, aes(x = x, y = y, z = Depth,
+                                         fill = after_stat(level)),
+                      breaks = c(0, -40, -70, -125)) +
+  depth_cols +
+  new_scale_fill() +
+  geom_sf(data = aus, fill = "seashell2", colour = "grey62", size = 0.2) +
+  geom_sf(data = dirkh, fill = "seashell2", colour = "grey62", size = 0.2) +
+  geom_sf(data = abro, fill = "seashell2", colour = "grey62", size = 0.2) +
+  new_scale_fill() +
+  geom_sf(data = ab_nmp%>%dplyr::filter(!ZoneName %in% "National Park Zone"), colour = "grey61", size = 0.2, fill = NA) +
+  geom_sf(data = ab_nmp%>%dplyr::filter(ZoneName %in% "National Park Zone"), colour = "#7bbc63", size = 0.55, fill = NA) +
+  geom_sf(data = cwatr, colour = "firebrick", alpha = 0.7, size = 0.3) +
+  annotate("point", y = c(-28.7761, -27.7115, -24.8838), x = c(114.6113, 114.1714, 113.6571), size = 0.75) +
+  annotate("text", y = c(-28.7761, - 27.7115, -24.8838), x = c(114.9, 114.38, 113.975),
+           label = c("Geraldton", "Kalbarri", "Carnarvon"), size = 3) +
+  coord_sf(xlim = c(111.5, 115.0607), ylim = c(-29.25, -24.4)) +
+  labs(x = "Longitude", y = "Latitude") +
+  theme_minimal()+
+  theme(panel.background = element_rect(fill = "#b8d9a9"))
+png("plots/spatial/old-sealevel.png", res = 200, width = 7, height = 9, units = "in")
+p8
 dev.off()
 
 

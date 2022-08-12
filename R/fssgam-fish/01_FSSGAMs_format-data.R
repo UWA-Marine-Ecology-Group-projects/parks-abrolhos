@@ -46,6 +46,11 @@ bruv.maxn <- read.csv("data/Tidy/2021-05_Abrolhos_stereo-BRUVs.complete.maxn.csv
 maxn <- bind_rows(boss.maxn,bruv.maxn)%>%
   glimpse()
 
+npz9 <- maxn %>%
+  dplyr::filter(location %in% "NPZ9" & maxn > 0)
+length(unique(npz6$scientific))
+test <- data.frame(unique(npz9$scientific))
+
 #length
 boss.length <- read.csv("data/Tidy/2021-05_Abrolhos_BOSS.complete.length.csv")%>%
   dplyr::mutate(method = "BOSS")%>%

@@ -112,7 +112,7 @@ imp.trgt.npz6 <- ggplot(dat.taxa.npz6%>%dplyr::filter(resp.var%in%c("greater tha
   scale_fill_gradientn(legend_title, colours=c(re), na.value = "grey98",
                        limits = c(-1, 1))+
   scale_y_discrete(labels=c("Smaller than legal size","Greater than legal size"))+
-  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Macroalgae", "Relief","Roughness", 'TPI'))+
+  scale_x_discrete(labels = c("Inverts", "Depth", "Detrended", "Macroalgae", "Relief","Roughness", 'TPI'))+
   labs(x = NULL, y = NULL, title = "Targeted assemblage") +
   theme_classic()+
   Theme1+
@@ -192,7 +192,7 @@ imp.trgt.npz9 <- ggplot(dat.taxa.npz9%>%dplyr::filter(resp.var%in%c("greater tha
   scale_fill_gradientn(legend_title, colours=c(re), na.value = "grey98",
                        limits = c(-1, 1))+
   scale_y_discrete(labels=c("Smaller than legal size","Greater than legal size"))+
-  scale_x_discrete(labels = c("Biogenic", "Depth", "Detrended", "Relief","Roughness", 'TPI'))+
+  scale_x_discrete(labels = c("Inverts", "Depth", "Detrended", "Relief","Roughness", 'TPI'))+
   labs(x = NULL, y = NULL, title = "Targeted assemblage") +
   theme_classic()+
   Theme1+

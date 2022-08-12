@@ -1,6 +1,7 @@
 ### MAP of different sea levels ---
 
 ### Load libraries ----
+rm(list = ls())
 
 library(ggplot2)
 library(ggthemes)
@@ -38,10 +39,6 @@ library(smoothr)
 library(units)
 library(RColorBrewer)
 
-
-# Clear memory ----
-rm(list=ls())
-
 setwd(getwd())
 
 # Set CRS
@@ -69,9 +66,13 @@ SPZ <- cmr[cmr$ZoneName=="Special Purpose Zone (Mining Exclusion)",]
 # read Australia poly ----
 # wa <- readOGR("data/spatial/shp/")
 wa    <- st_read("data/spatial/shp/cstauscd_r.mif")
-wa    <- wa[wa$FEAT_CODE == "mainland", ]
+st_crs(wa) <- wgscrs
+
+abro    <- wa[wa$GROUP_NAME %in% c("WALLABI GROUP/HOUTMAN ABROLHOS", "EASTERN IS/EASTER GP/HOUTMAN ABROLHOS",
+                               "EASTER GROUP/HOUTMAN ABROLHOS", "PELSAERT GROUP/HOUTMAN ABROLHOS",
+                               "MANGROVE GP/PELSAERT GP/HOUTMAN ABROLHOS"), ]
+wa <- wa[wa$FEAT_CODE == "island", ]
 plot(wa)
-crs(cmr)
 
 # read state reserves ----
 wamp <- readOGR("data/spatial/shp/WA_MPA_2018.shp")
@@ -82,20 +83,21 @@ cw <- readOGR("data/spatial/shp/amb_coastal_waters_limit.shp")
 cw
 
 ## Read Bathy ----
-bathy <- raster(paste(r.dir, "GB-SW_250mBathy.tif", sep='/'))
+bathdf <- readRDS("output/ga_bathy_trim.rds")                                   # bathymetry trimmed in 'R/GA_coast_trim.R'
+bathy <- rasterFromXYZ(bathdf)
+e <- extent(110, 116, -30, -24)
+bathy1 <- crop(bathy, e)
 plot(bathy)
-
 
 # set extent --
 #ext1 <- extent( 114.1401 ,  115.8426, -34.64244, -32.87244)
 #e <- drawExtent()
-ext1 <- extent(114.1463, 115.8601, -34.63865, -33.07346)
+ext1 <- extent(110, 116, -30, -24)
 
 # crop polys ----
 cmr1 <- crop(cmr, ext1)
 wa1 <- crop(wa, ext1)
 wamp1 <- crop(wamp, ext1)
-bathy1 <- crop(bathy, ext1)
 cw1 <- crop(cw, ext1)
 
 # check
@@ -117,7 +119,7 @@ ybf21k[ybf21k > (-125)] <- 1
 ybf11k <- bathy1
 ybf11k[ybf11k < (-40)] <- NA
 plot(ybf11k, col="red")
-plot(wa1, add=T)
+# plot(wa1, add=T)
 ybf11k[ybf11k > (-40)] <- 1
 
 
@@ -160,8 +162,6 @@ plot(k11)
 # plot(k11b, col='red')
 # k11b$OBJECTID
 
-
-
 # Read land locations ----
 df <- read.csv(paste(s.dir, "Locations.csv", sep = '/'))
 df
@@ -195,7 +195,7 @@ map <- tm_shape(cmr1)  + tm_borders(col ='white', lwd = 1.5) +
   tm_grid(n.x = 3, n.y = 3, labels.size = 1.5, lines = FALSE) 
 map
 
-map0 <- map + tm_shape(bathy2) + tm_raster(palette=viridis(40, direction =-1), style = 'cont', legend.reverse = TRUE) +
+map0 <- map + tm_shape(bathy1) + tm_raster(palette=viridis(40, direction =-1), style = 'cont', legend.reverse = TRUE) +
   tm_layout(legend.text.size = 1.7,
             legend.outside = TRUE,
             legend.outside.position = 'right',

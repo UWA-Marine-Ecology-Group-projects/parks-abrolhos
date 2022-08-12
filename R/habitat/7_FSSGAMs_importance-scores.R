@@ -11,6 +11,8 @@ rm(list=ls())
 # Plotting defaults----
 library(ggplot2)
 library(dplyr)
+library(tidyr)
+library(cowplot)
 
 ## Set working directory----
 working.dir <- getwd()
@@ -70,7 +72,7 @@ gg.importance.scores <- ggplot(dat.taxa, aes(x=predictor,y=resp.var,fill=importa
    geom_tile(show.legend=T) +
    scale_fill_gradientn(legend_title, colours=c(re), na.value = "grey98",
                          limits = c(-1, 1))+
-      scale_y_discrete( labels=c("Sessile invertebrates","Kelp", "Macroalgae", "Rock", "Sand"))+
+      scale_y_discrete(labels=c("Sessile invertebrates","Kelp", "Macroalgae", "Rock", "Sand"))+
    scale_x_discrete(labels = c("Depth","Detrended","Roughness", "TPI"))+
    xlab(NULL)+
    ylab(NULL)+
