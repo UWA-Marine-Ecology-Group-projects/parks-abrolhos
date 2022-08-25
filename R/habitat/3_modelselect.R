@@ -8,7 +8,7 @@
 # Part 1-FSS modeling----
 
 # librarys----
-detach("package:plyr", unload=TRUE)#will error - don't worry
+# detach("package:plyr", unload=TRUE)#will error - don't worry
 library(tidyr)
 library(dplyr)
 options(dplyr.width = Inf) #enables head() to display all coloums

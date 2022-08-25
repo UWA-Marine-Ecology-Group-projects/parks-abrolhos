@@ -41,7 +41,7 @@ wgscrs  <- CRS("+proj=longlat +datum=WGS84")
 sppcrs  <- CRS("+proj=utm +zone=50 +south +datum=WGS84 +units=m +no_defs")     # crs for sp objects
 proj4string(fbath) <- wgscrs
 fbath_t <- projectRaster(fbath, crs = sppcrs)
-
+plot(fbath_t)
 # reduce bathy area further to keep lightweight
 fbath_t <- crop(fbath_t, extent(c(105000, 165000, 6880000, 7000000)))
 
