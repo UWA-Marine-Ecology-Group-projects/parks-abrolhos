@@ -355,13 +355,19 @@ depth_cols <- scale_fill_manual(values = c("#b8d9a9","#8dbc80", "#5d9d52"),
                                 labels = c("9-10 Ka", "15-17 Ka", "20-30 Ka"),
                                 name = "Coastline age")
 
+# read in and merge GA coarse bathy tiles from https://ecat.ga.gov.au/geonetwork/srv/eng/catalog.search#/metadata/67703
+cbaths <- list.files("data/spatial/raster", "*tile", full.names = TRUE)
+cbathy <- lapply(cbaths, function(x){read.table(file = x, header = TRUE, sep = ",")})
+bathdf <- do.call("rbind", lapply(cbathy, as.data.frame))
+
 # Convert back to a raster and smooth it out
 bath_r <- rasterFromXYZ(bathdf)
-e <- extent(111.5, 115.0607,-29.25, -24.4)
+e <- extent(111, 115.2,-29.75, -24)
 bath_r <- crop(bath_r, e) # Crop to the map area
-bath_r <- disaggregate(bath_r, 5, method='bilinear')
+bath_r <- disaggregate(bath_r, 5, method = 'bilinear')
 # Back to dataframe to plot
 bathdf <- as.data.frame(bath_r, xy = T)
+colnames(bathdf)[3] <- "Depth"
 # Cut out shallow bits of the depth tile so it doesn't clash with the old coastlines
 bathdf_f <- bathdf %>%
   dplyr::filter(Depth < -100)
