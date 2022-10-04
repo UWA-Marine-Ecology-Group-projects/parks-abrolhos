@@ -97,6 +97,7 @@ p1 <- ggplot() +
   labs(x = "Distance from coast (km)", y = "Elevation (m)") +
   geom_segment(data = paleo, aes(x = distance.from.coast, xend = distance.from.coast + 10, 
                                  y = depth, yend = depth), linetype = 2, alpha = 0.5) +
+  annotate("segment", x = -5.556, xend = -5.556, y = -29, yend = 0, colour = "red") +
   geom_text(data = paleo, aes(x = distance.from.coast + 13, y = depth, label = label), size = 2)
 p1
 
@@ -153,6 +154,7 @@ p2 <- ggplot() +
   labs(x = "Distance from coast (km)", y = "Elevation (m)") +
   geom_segment(data = paleo, aes(x = distance.from.coast, xend = distance.from.coast + 10, 
                                  y = depth, yend = depth), linetype = 2, alpha = 0.5) +
+  annotate("segment", x = -5.556, xend = -5.556, y = -66, yend = 0, colour = "red") +
   geom_text(data = paleo, aes(x = distance.from.coast + 13, y = depth, label = label), size = 2)
 p2
 
@@ -208,6 +210,9 @@ p3 <- ggplot() +
                                  y = depth, yend = depth), linetype = 2, alpha = 0.5) +
   annotate("text", x = -70, y = 30, label = "Southern Group", size = 2.5) +
   annotate("text", x = 0, y = 80, label = "Geraldton", size = 2.5) +
+  annotate("segment", x = -5.556, xend = -5.556, y = -21, yend = 0, colour = "red") +
+  annotate("segment", x = -79.13277, xend = -79.13277, y = -69, yend = 0, colour = "red") +
+  annotate("segment", x = -52.07578, xend = -52.07578, y = -39, yend = 0, colour = "red") +
   geom_text(data = paleo, aes(x = distance.from.coast + 13, y = depth, label = label), size = 2)
 p3
 
