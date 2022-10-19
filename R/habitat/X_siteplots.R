@@ -191,13 +191,12 @@ p3 <- ggplot() +
   labs(x = NULL, y = NULL, fill = "Australian Marine Park") +
   geom_contour(data = sitebathy, aes(x = x, y = y, z = Depth), 
                breaks = c(0, -30, -70, -200, - 700, - 9000), colour = "white", alpha = 1, size = 0.2) +
-  geom_point(data = bruvd, aes(Longitude, Latitude, colour = "BRUV"), 
+  geom_point(data = bruvd, aes(Longitude, Latitude, colour = "indianred4"), 
              alpha = 3/5, shape = 10) +
-  geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"), 
-             alpha = 3/5, shape = 10) +
+  # geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"), 
+  #            alpha = 3/5, shape = 10) +
   geom_sf(data = cwatr, colour = "firebrick", alpha = 4/5, size = 0.2) +
-  scale_colour_manual(values = c("BRUV" = "indianred4",
-                                 "Drop Camera" = "seagreen4")) +
+  # scale_colour_manual(values = c("BRUV" = "indianred4","Drop Camera" = "seagreen4")) + 
   annotate("rect", xmin = 113.02, xmax = 113.29, ymin = -27.19, ymax = -27.08,
            colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
   annotate("text", x = 113.15, y = -27.05, size = 3, 
@@ -238,16 +237,16 @@ p4 <- ggplot() +
   geom_text_contour(data = nsitebathy, aes(x = x, y = y, z = Depth), 
                     binwidth = 10, size = 2.5,
                     label.placer = label_placer_n(1)) +
-  geom_sf(data = ab_nmp, aes(colour = ZoneName), alpha = 4/5, fill = NA) +
+  geom_sf(data = ab_nmp, aes(colour = ZoneName), alpha = 4/5, fill = NA, show.legend = F) +
   snmpa_cols + 
   labs(x = NULL, y = NULL, colour = NULL) +
   new_scale_colour() +
-  geom_point(data = bruvd, aes(Longitude, Latitude, colour = "BRUV"), 
-             alpha = 3/5, shape = 10) +
-  geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"), 
-             alpha = 3/5, shape = 10) +
-  scale_colour_manual(values = c("BRUV" = "indianred4",
-                                 "Drop Camera" = "navyblue")) +
+  geom_point(data = bruvd, aes(Longitude, Latitude, colour = "indianred4"), 
+             alpha = 3/5, shape = 10, show.legend = F) +
+  # geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"), 
+  #            alpha = 3/5, shape = 10) +
+  # scale_colour_manual(values = c("BRUV" = "indianred4",
+  #                                "Drop Camera" = "navyblue")) +
   coord_sf(xlim = c(113.02, 113.28), ylim = c(-27.18, -27.08)) +
   labs(colour = NULL, x = NULL, y = NULL) +
   theme_minimal()
@@ -273,22 +272,27 @@ p5 <- ggplot() +
   geom_text_contour(data = ssitebathy, aes(x = x, y = y, z = Depth), 
                     binwidth = 20, size = 2.5, label.placer = label_placer_n(1)) +
   geom_sf(data = aus, fill = "seashell2", colour = "grey80", size = 0.1) +
-  geom_sf(data = sab_nmp, aes(colour = ZoneName), alpha = 1, fill = NA) +
+  geom_sf(data = sab_nmp, aes(colour = ZoneName), alpha = 1, fill = NA, show.legend = F) +
   snmpa_cols + 
   labs(x = NULL, y = NULL, colour = NULL) +
   new_scale_colour() +
-  geom_point(data = bruvd, aes(Longitude, Latitude, colour = "BRUV"), 
-             alpha = 3/5, shape = 10) +
-  geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"), 
-             alpha = 3/5, shape = 10) +
-  scale_colour_manual(values = c("BRUV" = "indianred4",
-                                 "Drop Camera" = "navyblue")) +
+  geom_point(data = bruvd, aes(Longitude, Latitude, colour = "indianred4"), 
+             alpha = 3/5, shape = 10, show.legend = F) +
+  # geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"), 
+  #            alpha = 3/5, shape = 10) +
+  # scale_colour_manual(values = c("BRUV" = "indianred4",
+  #                                "Drop Camera" = "navyblue")) +
   coord_sf(xlim = c(113.24, 113.58), ylim = c(-28.125, -28.03)) +
   labs(colour = NULL, x = NULL, y = NULL) +
   theme_minimal()
 p5
 
 ggsave("plots/sthsite.png", dpi = 200, width = 7, height = 4)
+
+formolly <- p4/p5
+formolly
+
+ggsave("plots/mollyforthesis.png", dpi = 200, width = 7, height = 8)
 
 # Key Ecological Features plot
 # KEF colours
