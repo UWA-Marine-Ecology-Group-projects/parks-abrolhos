@@ -289,7 +289,7 @@ p5
 
 ggsave("plots/sthsite.png", dpi = 200, width = 7, height = 4)
 
-formolly <- p4/p5
+formolly <- p4/p5 + plot_annotation(tag_levels = "a")
 formolly
 
 ggsave("plots/mollyforthesis.png", dpi = 200, width = 7, height = 8)
