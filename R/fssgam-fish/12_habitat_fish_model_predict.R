@@ -105,6 +105,9 @@ preddf <- cbind(preddf,
 prasts <- rasterFromXYZ(preddf[, c(1, 2, 27:34)], res = c(247, 277)) 
 plot(prasts)
 
+crs(prasts) <- "+proj=utm +zone=50 +south +datum=WGS84 +units=m +no_defs"
+saveRDS(prasts, file = "output/fssgam - fish/abrolhos-fish-spatial_UTM50.rds")
+
 ## No need for this anymore, just used the masked habitat predictions to start with
 # subset to 10km from sites only 
 # sprast <- mask(prasts, sbuff)

@@ -13,6 +13,7 @@ library(mgcv)
 library(ggplot2)
 library(viridis)
 library(raster)
+library(tidyverse)
 
 # read in
 habi   <- readRDS("data/tidy/merged_habitat.rds") %>%                              # merged data from 'R/1_mergedata.R'
@@ -103,6 +104,11 @@ plot(prasts)
 sprast <- mask(prasts, sbuff)
 plot(sprast)
 
+crs(sprast) <- "+proj=utm +zone=50 +south +datum=WGS84 +units=m +no_defs"
+plot(sprast[[11:15]]) 
+
+saveRDS(sprast, file = "output/fssgam/abrolhos-habitat-spatial_UTM50.rds")
+
 # tidy and output data
 spreddf         <- as.data.frame(sprast, xy = TRUE, na.rm = T)
 
@@ -111,5 +117,17 @@ spreddf$dom_tag <- apply(spreddf[13:17], 1,
                         FUN = function(x){names(which.max(x))})
 spreddf$dom_tag <- sub('.', '', spreddf$dom_tag)
 head(spreddf)
+
+test <- spreddf[,c(1:2,18)]
+test$dom_tag <- as.factor(test$dom_tag)
+test$ndom_tag <- as.numeric(test$dom_tag)
+head(test)
+testraster <- rasterFromXYZ(test[,c("x", "y", "ndom_tag")], 
+                            crs = "+proj=utm +zone=50 +south +datum=WGS84 +units=m +no_defs")
+plot(testraster)
+testraster[] = factor(levels(test$dom_tag)[testraster[]])
+plot(testraster)
+
+saveRDS(testraster, file = "output/fssgam/abrolhos-dominant-habitat_UTM50.rds")
 
 saveRDS(spreddf, "output/site_habitat_predictions.rds")
