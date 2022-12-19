@@ -90,14 +90,16 @@ rm("temp", "dat")
 
 p1 <- ggplot() +
   geom_rect(aes(xmin = min(bath_slice1$distance.from.coast), xmax = 9, ymin =-Inf, ymax = 0), fill = "#12a5db", alpha = 0.5) +
+  annotate("segment", x = -5.556, xend = -5.556, y = -29, yend = 0, colour = "red") +
+  annotate("segment", x = -57.6, xend = -57.6, y = -49, yend = 0, colour = "#7bbc63") + # Inside
+  annotate("segment", x = -88, xend = -88, y = -210, yend = 0, colour = "#7bbc63") + # Outside
   geom_line(data = bath_slice1, aes(y = depth, x = distance.from.coast)) +
   geom_ribbon(data = bath_slice1, aes(ymin = -Inf, ymax = depth, x = distance.from.coast), fill = "tan") +
   theme_classic() +
   scale_x_continuous(expand = c(0,0), limits = c(min(bath_slice1$distance.from.coast), 15)) +
-  labs(x = "Distance from coast (km)", y = "Elevation (m)") +
+  labs(x = "Distance from coast (km)", y = "Elevation (m)", title = "b) Shallow Bank") +
   geom_segment(data = paleo, aes(x = distance.from.coast, xend = distance.from.coast + 10, 
                                  y = depth, yend = depth), linetype = 2, alpha = 0.5) +
-  annotate("segment", x = -5.556, xend = -5.556, y = -29, yend = 0, colour = "red") +
   geom_text(data = paleo, aes(x = distance.from.coast + 13, y = depth, label = label), size = 2)
 p1
 
@@ -145,16 +147,18 @@ p2 <- ggplot() +
   geom_rect(aes(xmin = min(bath_slice2$distance.from.coast), 
                 xmax = 9, ymin =-Inf, ymax = 0), 
             fill = "#12a5db", alpha = 0.5) +
+  annotate("segment", x = -5.556, xend = -5.556, y = -66, yend = 0, colour = "red") +
+  annotate("segment", x = -52.2, xend = -52.2, y = -104, yend = 0, colour = "#7bbc63") + # Inside
+  annotate("segment", x = -73.5, xend = -73.5, y = -143, yend = 0, colour = "#7bbc63") + # Outside
   geom_line(data = bath_slice2, aes(y = depth, x = distance.from.coast)) +
   geom_ribbon(data = bath_slice2, 
               aes(ymin = -Inf, ymax = depth, x = distance.from.coast), 
               fill = "tan") +
   theme_classic() +
   scale_x_continuous(expand = c(0,0), limits = c(min(bath_slice2$distance.from.coast), 15)) +
-  labs(x = "Distance from coast (km)", y = "Elevation (m)") +
+  labs(x = "Distance from coast (km)", y = "Elevation (m)", title = "a) Big Bank") +
   geom_segment(data = paleo, aes(x = distance.from.coast, xend = distance.from.coast + 10, 
                                  y = depth, yend = depth), linetype = 2, alpha = 0.5) +
-  annotate("segment", x = -5.556, xend = -5.556, y = -66, yend = 0, colour = "red") +
   geom_text(data = paleo, aes(x = distance.from.coast + 13, y = depth, label = label), size = 2)
 p2
 
@@ -205,7 +209,7 @@ p3 <- ggplot() +
   geom_ribbon(data = bath_slice3, aes(ymin = -Inf, ymax = depth, x = distance.from.coast), fill = "tan") +
   theme_classic() +
   scale_x_continuous(expand = c(0,0), limits = c(min(bath_slice3$distance.from.coast), 15)) +
-  labs(x = "Distance from coast (km)", y = "Elevation (m)") +
+  labs(x = "Distance from coast (km)", y = "Elevation (m)", title = "c) Southern Group") +
   geom_segment(data = paleo, aes(x = distance.from.coast, xend = distance.from.coast + 10, 
                                  y = depth, yend = depth), linetype = 2, alpha = 0.5) +
   annotate("text", x = -70, y = 30, label = "Southern Group", size = 2.5) +

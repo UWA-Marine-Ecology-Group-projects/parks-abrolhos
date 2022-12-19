@@ -3,7 +3,7 @@
 # Project: Parks - Abrolhos Post-Survey
 # Data:    BRUVS, BOSS
 # Task:    Overview maps
-# author:  Kingsley Griffin
+# author:  Kingsley Griffin & Claude Spencer
 # date:    Jun 2021
 ##
 
@@ -171,8 +171,8 @@ swampa_cols <- scale_fill_manual(values = c(
 sitebathy <- readRDS('output/ga_bathy_fine.rds')                                # finer bathy
 colnames(sitebathy)[3] <- "Depth"
 # sitebathy <- sitebathy[sitebathy$Depth > -1000, ]                               # trim to reduce legend
-sitebathy <- sitebathy[sitebathy$x > 112.7 & sitebathy$x < 114.4, ] 
-sitebathy <- sitebathy[sitebathy$y > -28.4 & sitebathy$y < -26.6, ]
+sitebathy <- sitebathy[sitebathy$x > 112.7 & sitebathy$x < 115, ] 
+sitebathy <- sitebathy[sitebathy$y > -30 & sitebathy$y < -26.6, ]
 
 p3 <- ggplot() +
   # geom_raster(data = sitebathy, aes(x, y, fill = Depth), alpha = 4/5) +
@@ -193,25 +193,33 @@ p3 <- ggplot() +
                breaks = c(0, -30, -70, -200, - 700, - 9000), colour = "white", alpha = 1, size = 0.2) +
   geom_point(data = bruvd, aes(Longitude, Latitude, colour = "indianred4"), 
              alpha = 3/5, shape = 10) +
-  # geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"), 
-  #            alpha = 3/5, shape = 10) +
+  geom_point(data = bossd, aes(Longitude, Latitude, colour = "Drop Camera"),
+             alpha = 3/5, shape = 10) +
   geom_sf(data = cwatr, colour = "firebrick", alpha = 4/5, size = 0.2) +
-  # scale_colour_manual(values = c("BRUV" = "indianred4","Drop Camera" = "seagreen4")) + 
+  scale_colour_manual(values = c("BRUV" = "indianred4","Drop Camera" = "seagreen4")) +
   annotate("rect", xmin = 113.02, xmax = 113.29, ymin = -27.19, ymax = -27.08,
            colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
   annotate("text", x = 113.15, y = -27.05, size = 3, 
-           colour = "grey20", label = "swabrnpz09") +
+           colour = "grey20", label = "Big Bank") +
   annotate("rect", xmin = 113.24, xmax = 113.58, ymin = -28.13, ymax = -28.02,
            colour = "grey25", fill = "white", alpha = 1/5, size = 0.2) +
   annotate("text", x = 113.42, y = -27.99, size = 3,
-           colour = "grey20", label = "swabrnpz06") +
-  coord_sf(xlim = c(112.8, 114.3), ylim = c(-28.25, -26.7)) +
+           colour = "grey20", label = "Shallow Bank") +
+  coord_sf(xlim = c(112.8, 115), ylim = c(-28.9, -26.7)) +
   annotate("text", y = c(-27.875,-27.875,-27.875,-27.875, -26.87), 
            x = c(114.07,113.32, 113.15, 112.79, 113.167), 
            label = c("30m", "70m", "200m", "700m", "70m"), size = 2) +
-  annotate("point", y = c(-27.7115), x = c(114.1714), size = 0.75) +
-  annotate("text", y = c(-27.7115), x = c(114.275),
-           label = c("Kalbarri"), size = 3) +
+  annotate("point", y = c(-27.7115, -28.7761), x = c(114.1714, 114.6113), size = 0.75) +
+  annotate("text", y = c(-27.7115, -28.7761), x = c(114.275 + 0.05, 114.6113 + 0.16),
+           label = c("Kalbarri", "Geraldton"), size = 3) +
+  annotate(geom = "segment", linetype = "dashed", 
+           x = c(113.2362, 112.8363, 113.7188), 
+           xend = c(114.3337, 114.0763, 114.8787), 
+           y = c(-28.07, -27.13, -28.91),                                       # Shallow Bank, Big Bank, Southern Group
+           yend = c(-28.07, -27.13, -28.91), alpha = 0.5, size = 0.2) +
+  annotate(geom = "text", x = c(114.3337 + 0.05, 114.0763 + 0.05, 114.8787 + 0.05), 
+           y = c(-28.07, -27.13, -28.91),
+           label = c("b)", "a)", "c)"), size = 2) +
   labs(colour = "Sample", x = NULL, y = NULL) +
   theme_minimal()
 
@@ -219,7 +227,7 @@ png(filename = "plots/spatial/siteplot.png", units = "in", res = 200, width = 8,
 p3
 dev.off()
 
-ggsave("plots/spatial/siteplot.png", dpi = 200, width = 8, height = 6)
+# ggsave("plots/spatial/siteplot.png", dpi = 200, width = 8, height = 6)
 
 ## single site zoom plots
 snmpa_cols <- scale_colour_manual(values = c("National Park Zone" = "#7bbc63"))
@@ -357,7 +365,7 @@ dev.off()
 # Old sea level map
 depth_cols <- scale_fill_manual(values = c("#b8d9a9","#8dbc80", "#5d9d52"),
                                 labels = c("9-10 Ka", "15-17 Ka", "20-30 Ka"),
-                                name = "Coastline age")
+                                name = "Shoreline age")
 
 # read in and merge GA coarse bathy tiles from https://ecat.ga.gov.au/geonetwork/srv/eng/catalog.search#/metadata/67703
 cbaths <- list.files("data/spatial/raster", "*tile", full.names = TRUE)
