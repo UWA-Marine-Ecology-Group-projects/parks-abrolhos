@@ -28,3 +28,9 @@ write.table(boss, "data/staging/CHECKEMTEST_2021-05_Abrolhos_BOSS_Dot Point Meas
 
 write.table(bruv, "data/staging/CHECKEMTEST_2021-05_Abrolhos_stereo-BRUVs_Forwards_Dot Point Measurements.txt",
             sep = "\t", row.names = F, col.names = T, quote = F, na = "")
+
+boss.r <- read.delim("data/raw/TM Export/2021-05_Abrolhos_BOSS_Relief_Dot Point Measurements.txt",
+                     header = T, skip = 4, stringsAsFactors = FALSE) %>%
+  glimpse()
+
+bruv.r
