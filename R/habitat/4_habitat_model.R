@@ -94,7 +94,7 @@ preddf <- cbind(preddf,
                 "pmacroalg" = predict(m_macro, preddf, type = "response"),
                 "psand" = predict(m_sand, preddf, type = "response"),
                 "prock" = predict(m_rock, preddf, type = "response"),
-                "pbiogenic" = predict(m_biogenic, preddf, type = "response"))
+                "pbiogenic" = predict(m_biogenic, preddf, type = "response", se.fit = T))
 
 # prasts$dom_tag <- which.max(prasts[[13:17]])
 prasts <- rasterFromXYZ(preddf, res = c(247, 277))

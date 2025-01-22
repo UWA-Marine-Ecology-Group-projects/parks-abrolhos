@@ -33,7 +33,7 @@ predsp$mean.relief <- raster::extract(prel, predsp)
 preddf        <- as.data.frame(predsp, xy = TRUE, na.rm = TRUE)
 preddf$depth  <- preddf$Z * -1
 preddf$rock   <- preddf$prock
-preddf$biog   <- preddf$pbiogenic
+preddf$biog   <- preddf$pbiogenic.fit
 preddf$macroalgae   <- preddf$pmacroalg
 head(preddf)
 
@@ -95,14 +95,14 @@ summary(m_sublegal9)
 preddf <- cbind(preddf, 
                 "p_totabund6" = predict(m_totabund6, preddf, type = "response"),
                 "p_richness6" = predict(m_richness6, preddf, type = "response"),
-                "p_legal6" = predict(m_legal6, preddf, type = "response"),
+                "p_legal6" = predict(m_legal6, preddf, type = "response", se.fit = T),
                 "p_sublegal6" = predict(m_sublegal6, preddf, type = "response"),
                 "p_totabund9" = predict(m_totabund9, preddf, type = "response"),
                 "p_richness9" = predict(m_richness9, preddf, type = "response"),
-                "p_legal9" = predict(m_legal9, preddf, type = "response"),
+                "p_legal9" = predict(m_legal9, preddf, type = "response", se.fit = T),
                 "p_sublegal9" = predict(m_sublegal9, preddf, type = "response"))
 
-prasts <- rasterFromXYZ(preddf[, c(1, 2, 27:34)], res = c(247, 277)) 
+prasts <- rasterFromXYZ(preddf[, c(1, 2, 28:37)], res = c(247, 277)) 
 plot(prasts)
 
 crs(prasts) <- "+proj=utm +zone=50 +south +datum=WGS84 +units=m +no_defs"
